@@ -664,137 +664,167 @@ html, body {
   .page-title { font-size: 18px; letter-spacing: 0.2em; }
 }
 
-/* ================== 印刷時 (A4縦 1ページ最適化) ================== */
+/* ================== 印刷時 (A4縦 1ページ最適化、モバイルもデスクトップも統一) ================== */
 @media print {
-  @page { size: A4 portrait; margin: 10mm; }
+  @page { size: A4 portrait; margin: 6mm; }
   html, body {
-    background: #fff;
-    color: #000;
-    font-size: 9.5pt;
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 8.5pt !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
   .app-header, .btn-row, nav, .no-print { display: none !important; }
   .page {
-    margin: 0;
-    box-shadow: none;
-    max-width: none;
-    padding: 0;
-    min-height: 0;
+    margin: 0 !important;
+    box-shadow: none !important;
+    max-width: none !important;
+    width: auto !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+    display: block !important;
   }
   .page-title {
-    font-size: 15pt;
-    letter-spacing: 0.25em;
-    margin: 0 0 5pt;
+    font-size: 13pt !important;
+    letter-spacing: 0.2em !important;
+    margin: 0 0 3pt !important;
   }
 
   /* モバイル専用相談内容行は印刷時は非表示 */
   .topic-mobile-row { display: none !important; }
 
   /* ----- 鑑定書 ----- */
-  .form-table { font-size: 9pt; margin-bottom: 4pt; page-break-inside: avoid; }
-  .form-table th, .form-table td { padding: 2pt 4pt; vertical-align: middle; }
-  .form-table th { width: auto; min-width: 4em; font-size: 8.5pt; }
-  .form-table input, .form-table select, .form-table textarea {
-    font-size: 9pt;
-    padding: 0;
+  .form-table {
+    font-size: 8.5pt !important;
+    margin-bottom: 3pt !important;
+    page-break-inside: avoid !important;
+    table-layout: auto !important;
+    width: 100% !important;
   }
-  .form-table .dt-picker select { font-size: 9pt; padding: 0 1pt; }
-  .form-table .dt-picker .unit { font-size: 8pt; }
-  .form-table textarea { resize: none; }
+  .form-table th, .form-table td {
+    padding: 1.5pt 3pt !important;
+    vertical-align: middle !important;
+    letter-spacing: 0 !important;
+  }
+  .form-table th {
+    width: auto !important;
+    min-width: 4em !important;
+    font-size: 8pt !important;
+  }
+  .form-table input, .form-table select, .form-table textarea {
+    font-size: 8.5pt !important;
+    padding: 0 !important;
+  }
+  .form-table .dt-picker select { font-size: 8.5pt !important; padding: 0 1pt !important; min-width: 0 !important; }
+  .form-table .dt-picker .unit { font-size: 7.5pt !important; }
+  .form-table .dt-picker .wareki { display: none !important; }
+  .form-table textarea { resize: none !important; }
   .form-table td.td-topic {
-    vertical-align: top;
-    padding: 3pt 4pt;
+    vertical-align: top !important;
+    padding: 2pt 3pt !important;
   }
   .form-table td.td-topic textarea {
-    min-height: 45pt;
-    width: 100%;
-    font-size: 9pt;
-    line-height: 1.4;
+    min-height: 32pt !important;
+    height: 32pt !important;
+    width: 100% !important;
+    font-size: 8.5pt !important;
+    line-height: 1.3 !important;
   }
   .form-table th.th-topic {
-    font-size: 9.5pt;
-    padding: 3pt 4pt;
-    vertical-align: top;
+    font-size: 8.5pt !important;
+    padding: 2pt 3pt !important;
+    vertical-align: top !important;
   }
-  /* 命式・相談日九星: 高さを揃える */
+  /* 命式・相談日九星: 高さを揃える (モバイル!importantを上書き) */
   .form-table th.th-meishiki,
   .form-table td.td-meishiki {
-    height: 18pt;
-    line-height: 1.4;
+    height: 14pt !important;
+    line-height: 14pt !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    padding: 0 4pt !important;
   }
-  .form-table th.th-meishiki { font-size: 8.5pt; min-width: 5em; }
-  .form-table td.td-meishiki .auto { font-size: 9pt; }
+  .form-table th.th-meishiki { font-size: 8pt !important; min-width: 5em !important; }
+  .form-table td.td-meishiki .auto { font-size: 8pt !important; letter-spacing: 0 !important; line-height: 14pt !important; }
 
   .bans-row {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2pt;
-    margin: 2pt 0;
-    page-break-inside: avoid;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 2pt !important;
+    margin: 2pt 0 !important;
+    page-break-inside: avoid !important;
   }
-  .ban-cell { width: 100%; }
-  .ban-label { font-size: 8pt; margin-bottom: 0; line-height: 1.1; }
-  .ban-sub { font-size: 6.5pt; margin-bottom: 1pt; line-height: 1.1; }
+  .ban-cell { width: 100% !important; }
+  .ban-label { font-size: 7.5pt !important; margin-bottom: 0 !important; line-height: 1.1 !important; }
+  .ban-sub { font-size: 6pt !important; margin-bottom: 1pt !important; line-height: 1.1 !important; }
   .ban {
-    border-width: 0.7px;
-    aspect-ratio: 1 / 1;
-    max-height: 32mm;
+    border-width: 0.7px !important;
+    aspect-ratio: 1 / 1 !important;
+    max-height: 28mm !important;
   }
   .ban-cell-inner {
-    font-size: 6.5pt;
-    padding: 0;
-    border-width: 0.4px;
+    font-size: 6pt !important;
+    padding: 0 !important;
+    border-width: 0.4px !important;
   }
-  .ban-cell-inner .star { font-size: 9pt; }
-  .ban-cell-inner .kakka { font-size: 5pt; top: 0; left: 1px; }
-  .ban-cell-inner .branch { font-size: 6pt; bottom: 0; right: 1px; }
-  .ban-cell-inner .mark { font-size: 6.5pt; top: 0; right: 1px; }
+  .ban-cell-inner .star { font-size: 8.5pt !important; }
+  .ban-cell-inner .kakka { font-size: 5pt !important; top: 0 !important; left: 1px !important; }
+  .ban-cell-inner .branch { font-size: 5.5pt !important; bottom: 0 !important; right: 1px !important; }
+  .ban-cell-inner .mark { font-size: 6pt !important; top: 0 !important; right: 1px !important; }
 
   .bottom-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 3pt;
-    margin-top: 3pt;
-    page-break-inside: avoid;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 3pt !important;
+    margin-top: 3pt !important;
+    page-break-inside: avoid !important;
   }
   .bottom-cell {
-    font-size: 8.5pt;
-    min-height: 15pt;
-    grid-template-columns: 5em 1fr;
-    page-break-inside: avoid;
+    font-size: 8pt !important;
+    min-height: 13pt !important;
+    grid-template-columns: 5em 1fr !important;
+    page-break-inside: avoid !important;
   }
   .bottom-cell .lbl {
-    padding: 1pt 3pt;
-    font-size: 8pt;
+    padding: 1pt 3pt !important;
+    font-size: 7.5pt !important;
   }
-  .bottom-cell .val { padding: 1pt 3pt; }
+  .bottom-cell .val { padding: 1pt 3pt !important; }
   .bottom-cell textarea {
-    min-height: 13pt;
-    font-size: 8pt;
-    padding: 0;
+    min-height: 11pt !important;
+    height: 11pt !important;
+    font-size: 7.5pt !important;
+    padding: 0 !important;
   }
 
   .eto-wheel {
-    padding: 2pt 0;
-    font-size: 9pt;
-    line-height: 1.3;
+    padding: 1pt 0 !important;
+    font-size: 8.5pt !important;
+    line-height: 1.2 !important;
   }
-  .eto-wheel .row { gap: 2em; }
-  .eto-wheel span[data-branch] { width: 1.4em; height: 1.4em; }
-  .eto-wheel-legend { font-size: 6.5pt !important; margin-top: 1pt !important; }
+  .eto-wheel.eto-wheel-row {
+    padding: 0 !important;
+    font-size: 8.5pt !important;
+  }
+  .eto-wheel .row { gap: 2em !important; }
+  .eto-wheel span[data-branch] { width: 1.3em !important; height: 1.3em !important; }
+  .eto-wheel-legend { font-size: 6pt !important; margin-top: 1pt !important; }
 
   .kaijin-table {
-    font-size: 8pt;
-    margin-top: 3pt;
-    page-break-inside: avoid;
+    font-size: 7.5pt !important;
+    margin-top: 3pt !important;
+    page-break-inside: avoid !important;
     display: table !important;
-    width: 100%;
+    width: 100% !important;
   }
   .kaijin-table th, .kaijin-table td {
-    padding: 1pt 1pt;
-    border-width: 0.5px;
+    padding: 1pt 1pt !important;
+    border-width: 0.5px !important;
   }
-  /* page をフレックスではなく通常のブロック扱いに */
-  .page { display: block; }
 
   /* ----- 判断書 ----- */
   .handan-grid {
