@@ -163,21 +163,26 @@ html, body {
 }
 /* デスクトップでは モバイル用 相談内容 行を非表示 */
 .topic-mobile-row { display: none; }
-/* 命式・相談日九星: 同じ高さで揃える */
+/* 命式・相談日九星: 同じ高さで揃える (1行表示優先) */
 .form-table th.th-meishiki,
 .form-table td.td-meishiki {
+  min-height: 22px;
   height: 22px;
   line-height: 1.4;
-  white-space: nowrap;
-  overflow: hidden;
+  vertical-align: middle;
 }
 .form-table th.th-meishiki { width: 5em; }
-.form-table td.td-meishiki { padding: 2px 6px; }
+.form-table td.td-meishiki {
+  padding: 2px 6px;
+  overflow: hidden;
+}
 .form-table td.td-meishiki .auto {
   font-size: 13px;
   letter-spacing: 0.02em;
-  display: inline-block;
   white-space: nowrap;
+  display: block;
+  overflow: hidden;
+  text-overflow: clip;
 }
 /* 生年月日行: dt-picker + 性別 + 年齢 を横並び */
 .form-table td.td-dt-extra {
@@ -634,25 +639,25 @@ html, body {
     resize: vertical;
     display: block;
   }
-  /* 命式 / 相談日九星 ラベル幅縮小、高さ統一 */
+  /* モバイル: 命式 / 相談日九星 高さ統一、1行表示 */
   .form-table th.th-meishiki,
   .form-table td.td-meishiki {
     height: 20px;
+    min-height: 20px;
     line-height: 1.2;
-    overflow: hidden;
-    white-space: nowrap;
+    vertical-align: middle;
   }
   .form-table th.th-meishiki {
-    width: 3.5em;
     padding: 2px;
     font-size: 10px;
   }
-  .form-table td.td-meishiki { padding: 2px 4px; }
+  .form-table td.td-meishiki { padding: 2px 4px; overflow: hidden; }
   .form-table td.td-meishiki .auto {
-    font-size: 11px;
-    letter-spacing: -0.02em;
+    font-size: 10.5px;
+    letter-spacing: -0.04em;
     white-space: nowrap;
-    display: inline-block;
+    display: block;
+    overflow: hidden;
   }
   /* 性別/年齢 (生年月日行に inline) */
   .form-table .ga-inline {
@@ -732,27 +737,27 @@ html, body {
 
   .bans-row {
     grid-template-columns: repeat(4, 1fr);
-    gap: 3pt;
-    margin: 3pt 0;
+    gap: 2pt;
+    margin: 2pt 0;
     page-break-inside: avoid;
   }
   .ban-cell { width: 100%; }
-  .ban-label { font-size: 8.5pt; margin-bottom: 1pt; line-height: 1.1; }
-  .ban-sub { font-size: 7pt; margin-bottom: 1pt; line-height: 1.1; }
+  .ban-label { font-size: 8pt; margin-bottom: 0; line-height: 1.1; }
+  .ban-sub { font-size: 6.5pt; margin-bottom: 1pt; line-height: 1.1; }
   .ban {
-    border-width: 0.8px;
+    border-width: 0.7px;
     aspect-ratio: 1 / 1;
-    max-height: 38mm;
+    max-height: 32mm;
   }
   .ban-cell-inner {
-    font-size: 7pt;
-    padding: 1px;
-    border-width: 0.5px;
+    font-size: 6.5pt;
+    padding: 0;
+    border-width: 0.4px;
   }
-  .ban-cell-inner .star { font-size: 10pt; }
-  .ban-cell-inner .kakka { font-size: 5.5pt; top: 1px; left: 1px; }
-  .ban-cell-inner .branch { font-size: 6.5pt; bottom: 0; right: 1px; }
-  .ban-cell-inner .mark { font-size: 7pt; top: 1px; right: 1px; }
+  .ban-cell-inner .star { font-size: 9pt; }
+  .ban-cell-inner .kakka { font-size: 5pt; top: 0; left: 1px; }
+  .ban-cell-inner .branch { font-size: 6pt; bottom: 0; right: 1px; }
+  .ban-cell-inner .mark { font-size: 6.5pt; top: 0; right: 1px; }
 
   .bottom-grid {
     grid-template-columns: 1fr 1fr;
@@ -790,11 +795,15 @@ html, body {
     font-size: 8pt;
     margin-top: 3pt;
     page-break-inside: avoid;
+    display: table !important;
+    width: 100%;
   }
   .kaijin-table th, .kaijin-table td {
     padding: 1pt 1pt;
     border-width: 0.5px;
   }
+  /* page をフレックスではなく通常のブロック扱いに */
+  .page { display: block; }
 
   /* ----- 判断書 ----- */
   .handan-grid {
