@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="九星履歴">
+<meta name="theme-color" content="#2b1a0e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+<title>履歴</title>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>干支九星気学</h1>
+  <nav>
+    <a href="index.html">鑑定書</a>
+    <a href="handan.html">判断書</a>
+    <a href="history.html" class="active">履歴</a>
+  </nav>
+</header>
+
+<main class="page">
+  <h2 class="page-title">鑑定履歴</h2>
+
+  <div class="btn-row no-print">
+    <a class="btn" href="index.html">+ 新規鑑定</a>
+    <button class="btn secondary" id="btn-export">エクスポート (JSON)</button>
+    <label class="btn secondary" style="cursor:pointer;">
+      インポート
+      <input type="file" id="file-import" accept=".json" style="display:none">
+    </label>
+    <button class="btn danger" id="btn-clear">全削除</button>
+  </div>
+
+  <p style="font-size:12px;color:#888;">
+    データは本端末のブラウザに保存されます。バックアップ・他端末への移行はエクスポート/インポートで行えます。
+  </p>
+
+  <ul class="history-list" id="list"></ul>
+</main>
+
+<script src="js/storage.js"></script>
+<script>
+(function () {
+  const list = document.getElementById('list');
+  function render() {
+    const records = Storage.loadAll();
+    list.innerHTML = '';
+    if (records.length === 0) {
+      list.innerHTML = '<li style="color:#888;padding:20px;text-align:center;">まだ鑑定がありません</li>';
+      return;
+    }
+    records.forEach(r => {
+      const li = document.createElement('li');
+      const left = document.createElement('div');
+      const title = document.createElement('a');
+      title.href = 'index.html?id=' + r.id;
+      title.textContent = r.name || '(無名)';
+      title.style.fontSize = '15px';
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = `生:${r.birth || '-'} / 相談:${r.consult || '-'} / ${r.topic || ''}`;
+      left.appendChild(title);
+      left.appendChild(meta);
+      const right = document.createElement('div');
+      const handanLink = document.createElement('a');
+      handanLink.href = 'handan.html?id=' + r.id;
+      handanLink.textContent = '判断書';
+      handanLink.style.marginRight = '12px';
+      const del = document.createElement('button');
+      del.className = 'btn danger';
+      del.style.padding = '4px 10px';
+      del.style.fontSize = '12px';
+      del.textContent = '削除';
+      del.onclick = () => {
+        if (confirm('「' + (r.name || '無名') + '」を削除しますか?')) {
+          Storage.remove(r.id);
+          render();
+        }
+      };
+      right.appendChild(handanLink);
+      right.appendChild(del);
+      li.appendChild(left);
+      li.appendChild(right);
+      list.appendChild(li);
+    });
+  }
+  render();
+
+  document.getElementById('btn-export').onclick = () => {
+    const blob = new Blob([Storage.exportJSON()], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'kyusei-records-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  document.getElementById('file-import').onchange = (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        Storage.importJSON(reader.result);
+        render();
+        alert('インポートしました');
+      } catch (err) {
+        alert('インポート失敗: ' + err.message);
+      }
+    };
+    reader.readAsText(f);
+  };
+
+  document.getElementById('btn-clear').onclick = () => {
+    if (confirm('全データを削除しますか? この操作は取り消せません')) {
+      localStorage.removeItem('kyusei_records_v1');
+      render();
+    }
+  };
+})();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

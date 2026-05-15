@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="九星判断">
+<meta name="theme-color" content="#2b1a0e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+<title>九星 判断書</title>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>干支九星気学</h1>
+  <nav>
+    <a href="index.html">鑑定書</a>
+    <a href="handan.html" class="active">判断書</a>
+    <a href="history.html">履歴</a>
+  </nav>
+</header>
+
+<main class="page">
+  <h2 class="page-title">九星　判断書</h2>
+
+  <div class="btn-row no-print">
+    <a class="btn secondary" href="index.html" id="btn-back">← 鑑定書</a>
+    <button class="btn" id="btn-recalc">再計算</button>
+    <button class="btn secondary" id="btn-save">保存</button>
+    <button class="btn secondary" id="btn-print">印刷 / PDF保存</button>
+  </div>
+
+  <div id="o-meta" style="font-size:13px;margin-bottom:8px;color:#555;font-family:var(--font-jp);"></div>
+
+  <!-- 相談事情 -->
+  <div class="handan-section handan-soudan">
+    <h3>相談事情</h3>
+    <div class="body"><textarea id="m-soudan"></textarea></div>
+  </div>
+
+  <!-- 2列レイアウト: 左に流年法、右に本人運気・年月運・内蔵法 -->
+  <div class="handan-grid" style="margin-top:10px;">
+    <!-- 左: 流年法 -->
+    <div>
+      <div class="handan-section">
+        <h3>流年法 (年月) / 月日</h3>
+        <div class="body" style="display:flex;gap:6px;">
+          <table class="flow-table" style="flex:1;">
+            <thead><tr><th>年齢</th><th>年</th><th>月</th></tr></thead>
+            <tbody id="flow-60"></tbody>
+          </table>
+          <table class="flow-table" style="flex:1.2;">
+            <thead><tr><th>歳</th><th>年月</th><th>本命星位</th></tr></thead>
+            <tbody id="flow-detail"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右: 本人運気・年月運・内蔵法 -->
+    <div>
+      <div class="handan-section">
+        <h3>本人運気　宮傾斜</h3>
+        <div class="body">
+          <div id="o-keisha" style="margin-bottom:4px;font-family:var(--font-jp);"></div>
+          <textarea id="m-honnin"></textarea>
+        </div>
+      </div>
+
+      <div class="handan-section" style="margin-top:10px;">
+        <h3>年月運</h3>
+        <div class="body">
+          <table style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-jp);">
+            <tr>
+              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">年同会</td>
+              <td style="border:1px solid #888;padding:3px 6px;" id="o-doukai-toshi"></td>
+              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">被同会</td>
+              <td style="border:1px solid #888;padding:3px 6px;" id="o-hidoukai-toshi"></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">月同会</td>
+              <td style="border:1px solid #888;padding:3px 6px;" id="o-doukai-tsuki"></td>
+              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">被同会</td>
+              <td style="border:1px solid #888;padding:3px 6px;" id="o-hidoukai-tsuki"></td>
+            </tr>
+          </table>
+          <textarea id="m-nengetsu" style="margin-top:4px;"></textarea>
+        </div>
+      </div>
+
+      <div class="handan-section" style="margin-top:10px;">
+        <h3>内蔵法</h3>
+        <div class="body">
+          <table style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-jp);">
+            <tr>
+              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">蔵気年月</td>
+              <td style="border:1px solid #888;padding:3px 6px;" id="o-kuraki-nm"></td>
+              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">宿命年月</td>
+              <td style="border:1px solid #888;padding:3px 6px;" id="o-shukumei-nm"></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">蔵気月日</td>
+              <td style="border:1px solid #888;padding:3px 6px;" id="o-kuraki-md"></td>
+              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">宿命月日</td>
+              <td style="border:1px solid #888;padding:3px 6px;" id="o-shukumei-md"></td>
+            </tr>
+          </table>
+          <textarea id="m-naizou" style="margin-top:4px;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 総合判断 -->
+  <div class="handan-section handan-sougou" style="margin-top:14px;">
+    <h3>総合判断</h3>
+    <div class="body"><textarea id="m-sougou"></textarea></div>
+  </div>
+
+</main>
+
+<script src="js/solar-terms.js"></script>
+<script src="js/eto.js"></script>
+<script src="js/kyusei.js"></script>
+<script src="js/kantei.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/handan.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

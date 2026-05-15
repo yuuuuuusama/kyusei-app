@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="九星鑑定">
+<meta name="theme-color" content="#2b1a0e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+<title>九星 鑑定書</title>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>干支九星気学</h1>
+  <nav>
+    <a href="index.html" class="active">鑑定書</a>
+    <a href="handan.html">判断書</a>
+    <a href="history.html">履歴</a>
+  </nav>
+</header>
+
+<main class="page">
+  <h2 class="page-title">九星　鑑定書</h2>
+
+  <!-- ===== 入力ヘッダー ===== -->
+  <table class="form-table">
+    <tbody>
+      <tr>
+        <th class="th-name"><span class="label-full">相談者氏名</span><span class="label-short">氏名</span></th>
+        <td class="td-name"><input type="text" id="f-name" placeholder="氏名"></td>
+        <th class="th-gender">性別</th>
+        <td class="td-gender">
+          <select id="f-gender">
+            <option value="">—</option>
+            <option value="男">男</option>
+            <option value="女">女</option>
+          </select>
+        </td>
+        <th class="th-age">年齢</th>
+        <td class="td-age"><input type="number" id="f-age" min="0" max="120" inputmode="numeric" placeholder="歳"></td>
+        <th class="th-topic" colspan="2">相談内容</th>
+      </tr>
+      <tr>
+        <th>生年月日</th>
+        <td class="td-dt" colspan="5"><div class="dt-picker" data-target="f-birth"></div></td>
+        <td class="td-topic" colspan="2" rowspan="4"><textarea id="f-topic" rows="8" placeholder="相談内容"></textarea></td>
+      </tr>
+      <tr>
+        <th class="th-meishiki">命式</th>
+        <td class="td-meishiki" colspan="5"><span id="o-meishiki" class="auto"></span></td>
+      </tr>
+      <tr>
+        <th>相談日</th>
+        <td class="td-dt" colspan="5"><div class="dt-picker" data-target="f-consult"></div></td>
+      </tr>
+      <tr>
+        <th class="th-meishiki">相談日九星</th>
+        <td class="td-meishiki" colspan="5"><span id="o-consult-summary" class="auto"></span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="btn-row no-print">
+    <button class="btn" id="btn-compute">計算する</button>
+    <button class="btn secondary" id="btn-save">保存</button>
+    <button class="btn secondary" id="btn-print">印刷 / PDF保存</button>
+    <button class="btn secondary" id="btn-new">新規</button>
+    <a class="btn secondary" href="handan.html" id="btn-handan">判断書へ →</a>
+  </div>
+
+  <!-- ===== 上段4盤: 相談日 年・月・日・時 ===== -->
+  <div class="bans-row">
+    <div class="ban-cell">
+      <div class="ban-label">年</div>
+      <div class="ban-sub" id="ban-y-info"></div>
+      <div class="ban" id="ban-y"></div>
+    </div>
+    <div class="ban-cell">
+      <div class="ban-label">月</div>
+      <div class="ban-sub" id="ban-m-info"></div>
+      <div class="ban" id="ban-m"></div>
+    </div>
+    <div class="ban-cell">
+      <div class="ban-label">日</div>
+      <div class="ban-sub" id="ban-d-info"></div>
+      <div class="ban" id="ban-d"></div>
+    </div>
+    <div class="ban-cell">
+      <div class="ban-label">時</div>
+      <div class="ban-sub" id="ban-h-info"></div>
+      <div class="ban" id="ban-h"></div>
+    </div>
+  </div>
+
+  <!-- ===== 下段4盤: 生年月日 ===== -->
+  <div class="bans-row">
+    <div class="ban-cell">
+      <div class="ban-label">生年</div>
+      <div class="ban-sub" id="ban-by-info"></div>
+      <div class="ban" id="ban-by"></div>
+    </div>
+    <div class="ban-cell">
+      <div class="ban-label">生月</div>
+      <div class="ban-sub" id="ban-bm-info"></div>
+      <div class="ban" id="ban-bm"></div>
+    </div>
+    <div class="ban-cell">
+      <div class="ban-label">生日</div>
+      <div class="ban-sub" id="ban-bd-info"></div>
+      <div class="ban" id="ban-bd"></div>
+    </div>
+    <div class="ban-cell">
+      <div class="ban-label">生時</div>
+      <div class="ban-sub" id="ban-bh-info"></div>
+      <div class="ban" id="ban-bh"></div>
+    </div>
+  </div>
+
+  <!-- ===== 下部宮位エリア ===== -->
+  <div class="bottom-grid">
+    <div>
+      <div class="bottom-cell"><div class="lbl">本命</div><div class="val" id="o-honmei"></div></div>
+      <div class="bottom-cell"><div class="lbl">対冲</div><div class="val" id="o-taichu"></div></div>
+      <div class="bottom-cell"><div class="lbl">右宮</div><div class="val" id="o-migi"></div></div>
+      <div class="bottom-cell"><div class="lbl">左宮</div><div class="val" id="o-hidari"></div></div>
+      <div class="bottom-cell"><div class="lbl">本宮</div><div class="val" id="o-hongu"></div></div>
+      <div class="bottom-cell"><div class="lbl">中宮</div><div class="val" id="o-chukyu"></div></div>
+      <div class="bottom-cell"><div class="lbl">時</div><div class="val" id="o-toki"></div></div>
+      <div class="bottom-cell"><div class="lbl">月</div><div class="val" id="o-tsuki"></div></div>
+      <div class="bottom-cell"><div class="lbl">年</div><div class="val" id="o-toshi"></div></div>
+    </div>
+    <div>
+      <div class="bottom-cell"><div class="lbl">解決</div><div class="val" id="o-kaiketsu"></div></div>
+      <div class="bottom-cell"><div class="lbl">時本命</div><div class="val" id="o-jihonmei"></div></div>
+      <div class="bottom-cell"><div class="lbl">時本宮</div><div class="val" id="o-jihongu"></div></div>
+      <div class="bottom-cell"><div class="lbl">内蔵</div><div class="val"><textarea id="m-naizou"></textarea></div></div>
+      <div class="bottom-cell"><div class="lbl">宿命</div><div class="val"><textarea id="m-shukumei"></textarea></div></div>
+      <div class="bottom-cell" style="grid-column: 1 / -1;">
+        <div class="lbl">干支吉凶</div>
+        <div class="val">
+          <div class="eto-wheel">
+            <div class="row"><span data-branch="巳">巳</span><span data-branch="午">午</span><span data-branch="未">未</span></div>
+            <div class="row"><span data-branch="辰">辰</span><span class="ew-blank">　</span><span data-branch="申">申</span></div>
+            <div class="row"><span data-branch="卯">卯</span><span class="ew-blank">　</span><span data-branch="酉">酉</span></div>
+            <div class="row"><span data-branch="寅">寅</span><span class="ew-blank">　</span><span data-branch="戌">戌</span></div>
+            <div class="row"><span data-branch="丑">丑</span><span data-branch="子">子</span><span data-branch="亥">亥</span></div>
+          </div>
+          <div class="eto-wheel-legend" style="text-align:center;font-size:9px;color:#666;margin-top:2px;">
+            <span style="color:#c00;">●</span>生年
+            <span style="color:#06c;">●</span>生月
+            <span style="color:#080;">●</span>生日
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 解神 + 十二支吉凶象意表 -->
+  <table class="kaijin-table">
+    <thead>
+      <tr>
+        <th>解神</th>
+        <th>子</th><th>丑</th><th>寅</th><th>卯</th><th>辰</th><th>巳</th>
+        <th>午</th><th>未</th><th>申</th><th>酉</th><th>戌</th><th>亥</th>
+        <th>結果</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr id="eto-by-row">
+        <td id="eto-by-label">生年</td>
+        <td id="ey-0"></td><td id="ey-1"></td><td id="ey-2"></td><td id="ey-3"></td>
+        <td id="ey-4"></td><td id="ey-5"></td><td id="ey-6"></td><td id="ey-7"></td>
+        <td id="ey-8"></td><td id="ey-9"></td><td id="ey-10"></td><td id="ey-11"></td>
+        <td></td>
+      </tr>
+      <tr id="eto-bm-row">
+        <td id="eto-bm-label">生月</td>
+        <td id="em-0"></td><td id="em-1"></td><td id="em-2"></td><td id="em-3"></td>
+        <td id="em-4"></td><td id="em-5"></td><td id="em-6"></td><td id="em-7"></td>
+        <td id="em-8"></td><td id="em-9"></td><td id="em-10"></td><td id="em-11"></td>
+        <td></td>
+      </tr>
+      <tr id="eto-bd-row">
+        <td id="eto-bd-label">生日</td>
+        <td id="ed-0"></td><td id="ed-1"></td><td id="ed-2"></td><td id="ed-3"></td>
+        <td id="ed-4"></td><td id="ed-5"></td><td id="ed-6"></td><td id="ed-7"></td>
+        <td id="ed-8"></td><td id="ed-9"></td><td id="ed-10"></td><td id="ed-11"></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+</main>
+
+<script src="js/solar-terms.js"></script>
+<script src="js/eto.js"></script>
+<script src="js/kyusei.js"></script>
+<script src="js/kantei.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/dt-picker.js"></script>
+<script src="js/eto-table.js"></script>
+<script src="js/app.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

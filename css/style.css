@@ -1,0 +1,784 @@
+/* 干支九星気学 鑑定アプリ */
+
+:root {
+  --c-border: #222;
+  --c-bg: #fff;
+  --c-input-bg: #fafafa;
+  --c-highlight: #fff48a;
+  --c-link: #0a5;
+  --font-jp: "ヒラギノ明朝 ProN", "Hiragino Mincho ProN", "游明朝", "YuMincho", "Yu Mincho", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Helvetica Neue", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #eee;
+  font-family: var(--font-sans);
+  color: #111;
+  font-size: 14px;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ================== ヘッダー ================== */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #2b1a0e;
+  color: #fff;
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,.2);
+}
+.app-header h1 {
+  margin: 0;
+  font-size: 16px;
+  font-family: var(--font-jp);
+  letter-spacing: 0.1em;
+}
+.app-header nav a {
+  color: #fff;
+  margin-left: 12px;
+  text-decoration: none;
+  font-size: 13px;
+  opacity: 0.85;
+}
+.app-header nav a:active,
+.app-header nav a.active { opacity: 1; text-decoration: underline; }
+
+/* ================== ページ ================== */
+.page {
+  background: #fff;
+  margin: 12px auto;
+  max-width: 820px;
+  padding: 14px 14px 60px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  min-height: 90vh;
+}
+.page-title {
+  font-family: var(--font-jp);
+  text-align: center;
+  font-size: 22px;
+  letter-spacing: 0.3em;
+  margin: 4px 0 18px;
+}
+
+/* ================== フォーム ================== */
+.form-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 14px;
+  font-size: 13px;
+  table-layout: auto;
+}
+.form-table th, .form-table td {
+  border: 1px solid var(--c-border);
+  padding: 6px 8px;
+  vertical-align: middle;
+}
+.form-table th {
+  background: var(--c-input-bg);
+  font-weight: normal;
+  white-space: nowrap;
+  font-family: var(--font-jp);
+  width: 6em;
+}
+.form-table input[type="text"],
+.form-table input[type="number"],
+.form-table input[type="date"],
+.form-table input[type="time"],
+.form-table input[type="datetime-local"],
+.form-table textarea,
+.form-table select {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 2px 0;
+  outline: none;
+}
+.form-table select {
+  -webkit-appearance: menulist;
+  appearance: menulist;
+  min-width: 4em;
+}
+/* 年齢欄: 3桁が必ず表示されるよう最低幅を確保 */
+.form-table td.td-age {
+  width: 4em;
+  min-width: 4em;
+}
+.form-table td.td-age input {
+  min-width: 3em;
+  width: 100%;
+  text-align: left;
+  padding-left: 2px;
+}
+.form-table input[type="number"]::-webkit-outer-spin-button,
+.form-table input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.form-table input[type="number"] {
+  -moz-appearance: textfield;
+}
+.form-table th.th-gender, .form-table th.th-age {
+  width: 3em;
+}
+.form-table td.td-gender { width: 4em; }
+
+/* デスクトップでも氏名は無制限ではなく適度に */
+.label-short { display: none; }
+.label-full { display: inline; }
+
+/* 生年月日 + 相談日 の横並び行 */
+.form-table th.th-birth, .form-table th.th-consult { width: 5em; }
+.form-table td.td-dt { padding: 4px 6px; }
+/* 相談内容 (右側、上部に横書きラベル + 縦全部 textarea) */
+.form-table th.th-topic {
+  width: 5em;
+  white-space: nowrap;
+  text-align: center;
+  font-size: 13px;
+}
+.form-table td.td-topic {
+  width: 30%;
+  vertical-align: top;
+  padding: 4px;
+  height: 100%;
+}
+.form-table td.td-topic textarea {
+  min-height: 150px;
+  height: 100%;
+  width: 100%;
+  resize: vertical;
+  vertical-align: top;
+  box-sizing: border-box;
+  display: block;
+}
+/* 命式・相談日九星: ラベル幅は他と揃え、表示は出力テキストのまま */
+.form-table th.th-meishiki { width: 5em; white-space: nowrap; }
+.form-table td.td-meishiki { padding: 2px 6px; }
+.form-table td.td-meishiki .auto { font-size: 13px; letter-spacing: 0.02em; }
+/* 生年月日行: dt-picker + 性別 + 年齢 を横並び */
+.form-table td.td-dt-extra {
+  display: table-cell;
+}
+.form-table .dt-inline {
+  display: inline-flex !important;
+  align-items: baseline;
+  vertical-align: middle;
+}
+.form-table .ga-inline {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.form-table .ga-inline .ga-label {
+  font-size: 11px;
+  color: #444;
+  margin-right: 2px;
+  font-family: var(--font-jp);
+}
+.form-table .ga-inline select {
+  font-size: 13px;
+  min-width: 3em;
+  padding: 1px 2px;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+}
+.form-table .ga-inline input.ga-age {
+  font-size: 13px;
+  width: 3em;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  text-align: center;
+  padding: 1px 2px;
+}
+.form-table textarea {
+  min-height: 38px;
+  resize: vertical;
+  display: block;
+}
+.form-table .group {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+.form-table .group label {
+  font-size: 11px;
+  color: #555;
+  white-space: nowrap;
+}
+.form-table .group input {
+  width: 4em;
+  border-bottom: 1px solid #aaa;
+  text-align: center;
+}
+.form-table .group input.wide { width: 5.5em; }
+
+/* 日時プルダウン (1行で必ず Y M D H m がおさまる) */
+.dt-picker {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1px;
+  align-items: baseline;
+  width: 100%;
+}
+.dt-picker select {
+  font-family: inherit;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  background: #fff;
+  -webkit-appearance: menulist;
+  appearance: menulist;
+  font-size: 13px;
+  padding: 2px 0 2px 1px;
+  min-width: 0;
+  width: auto;
+  flex: 0 0 auto;
+}
+.dt-picker select.y { min-width: 4.4em; flex: 0 0 auto; }
+.dt-picker select.M, .dt-picker select.d { min-width: 2.6em; }
+.dt-picker select.h, .dt-picker select.mi { min-width: 2.8em; }
+.dt-picker .unit {
+  font-size: 11px;
+  color: #444;
+  margin: 0 1px;
+  font-family: var(--font-jp);
+  flex: 0 0 auto;
+}
+.dt-picker .wareki {
+  font-size: 10px;
+  color: #888;
+  margin-left: 4px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+@media (max-width: 640px) {
+  /* モバイル: 1行に収めるためギリギリまで圧縮 */
+  .dt-picker {
+    gap: 0;
+    align-items: center;
+  }
+  .dt-picker select {
+    font-size: 12px;
+    padding: 1px 0 1px 1px;
+    border-width: 1px;
+  }
+  .dt-picker select.y { min-width: 3.8em; }
+  .dt-picker select.M, .dt-picker select.d { min-width: 2.3em; }
+  .dt-picker select.h, .dt-picker select.mi { min-width: 2.5em; }
+  .dt-picker .unit {
+    font-size: 9px;
+    margin: 0 0 0 0;
+  }
+  .dt-picker .wareki { display: none; }
+}
+
+.btn-row { display: flex; gap: 8px; margin: 10px 0 18px; flex-wrap: wrap; }
+.btn {
+  padding: 8px 14px;
+  background: #2b1a0e;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.btn:active { opacity: 0.7; }
+.btn.secondary { background: #888; }
+.btn.danger { background: #b54; }
+
+/* ================== 八盤エリア ================== */
+.bans-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 10px 0;
+}
+.ban-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ban-label {
+  font-family: var(--font-jp);
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+.ban-sub {
+  font-size: 10px;
+  color: #555;
+  margin-bottom: 4px;
+  text-align: center;
+}
+.ban {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border: 1.4px solid var(--c-border);
+  background: #fff;
+}
+.ban-cell-inner {
+  border: 0.7px solid #888;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  line-height: 1.05;
+  font-family: var(--font-jp);
+  position: relative;
+  padding: 1px;
+}
+.ban-cell-inner .star {
+  font-size: 12px;
+  font-weight: 500;
+}
+.ban-cell-inner .kakka {
+  font-size: 8px;
+  color: #888;
+  position: absolute;
+  top: 1px;
+  left: 2px;
+}
+.ban-cell-inner .branch {
+  font-size: 9px;
+  color: #444;
+  position: absolute;
+  bottom: 0px;
+  right: 2px;
+  letter-spacing: -0.5px;
+}
+.ban-cell-inner.center { background: #f8f0d8; font-weight: bold; }
+.ban-cell-inner.honmei { background: #ffe6b3; }
+.ban-cell-inner.taichu { background: #cfe7ff; }
+
+/* 暗剣殺 (ア赤) / 破 (ハ青) マーク */
+.ban-cell-inner .mark {
+  position: absolute;
+  top: 1px;
+  right: 2px;
+  font-size: 10px;
+  font-weight: bold;
+  font-family: var(--font-jp);
+  line-height: 1;
+  z-index: 2;
+}
+.ban-cell-inner .mark.anken { color: #d00; }
+.ban-cell-inner .mark.ha    { color: #06c; }
+@media (min-width: 641px) {
+  .ban-cell-inner .mark { font-size: 11px; }
+}
+@media print {
+  .ban-cell-inner .mark { font-size: 8pt; }
+}
+
+@media (min-width: 641px) {
+  .ban-cell-inner .star { font-size: 14px; }
+  .ban-cell-inner .kakka { font-size: 9px; }
+  .ban-cell-inner .branch { font-size: 10px; }
+}
+
+/* ================== 下部宮位エリア ================== */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-top: 12px;
+}
+.bottom-cell {
+  border: 1px solid var(--c-border);
+  display: grid;
+  grid-template-columns: 6em 1fr;
+  font-size: 13px;
+  min-height: 36px;
+}
+.bottom-cell .lbl {
+  background: #f0e8d8;
+  font-family: var(--font-jp);
+  padding: 4px 6px;
+  border-right: 1px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.bottom-cell .val {
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  font-family: var(--font-jp);
+}
+.bottom-cell .val .auto { color: #06a; }
+.bottom-cell textarea {
+  border: none;
+  width: 100%;
+  font-size: 12px;
+  font-family: inherit;
+  padding: 2px;
+  resize: vertical;
+  min-height: 30px;
+  outline: none;
+  background: transparent;
+}
+
+/* 干支吉凶 ローゼット */
+.eto-wheel {
+  text-align: center;
+  font-family: var(--font-jp);
+  padding: 8px 0;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.eto-wheel .row { display: flex; justify-content: center; gap: 3em; }
+.eto-wheel span[data-branch] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: 50%;
+  position: relative;
+}
+/* 生年: 赤, 生月: 青, 生日: 緑 (重なる場合は複数色のリング) */
+.eto-wheel span.eto-year   { box-shadow: 0 0 0 1.5px #c00 inset; color: #c00; font-weight: bold; }
+.eto-wheel span.eto-month  { box-shadow: 0 0 0 1.5px #06c inset; color: #06c; font-weight: bold; }
+.eto-wheel span.eto-day    { box-shadow: 0 0 0 1.5px #080 inset; color: #080; font-weight: bold; }
+.eto-wheel span.eto-year.eto-month { box-shadow: 0 0 0 1.5px #c00 inset, 0 0 0 3px #06c inset; }
+.eto-wheel span.eto-year.eto-day   { box-shadow: 0 0 0 1.5px #c00 inset, 0 0 0 3px #080 inset; }
+.eto-wheel span.eto-month.eto-day  { box-shadow: 0 0 0 1.5px #06c inset, 0 0 0 3px #080 inset; }
+.eto-wheel span.eto-year.eto-month.eto-day {
+  box-shadow: 0 0 0 1.5px #c00 inset, 0 0 0 3px #06c inset, 0 0 0 4.5px #080 inset;
+}
+
+/* 解神 + 十二支吉凶象意 テーブル */
+.kaijin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 11px;
+  font-family: var(--font-jp);
+}
+.kaijin-table th, .kaijin-table td {
+  border: 1px solid var(--c-border);
+  text-align: center;
+  padding: 3px 1px;
+  vertical-align: middle;
+}
+.kaijin-table th { background: var(--c-highlight); }
+/* 吉凶の記号別カラー */
+.kaijin-table .eto-sym-◎ { color: #c00; font-weight: bold; }
+.kaijin-table .eto-sym-☆ { color: #d80; font-weight: bold; }
+.kaijin-table .eto-sym-〇 { color: #555; }
+.kaijin-table .eto-sym-▲ { color: #06c; }
+.kaijin-table .eto-sym-× { color: #800; font-weight: bold; }
+.kaijin-table .eto-sym-● { color: #800; font-weight: bold; }
+
+/* ================== 判断書 ================== */
+.handan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.handan-section { border: 1px solid var(--c-border); padding: 0; overflow: hidden; }
+.handan-section h3 {
+  background: var(--c-highlight);
+  margin: 0;
+  padding: 5px 8px;
+  font-size: 13px;
+  font-family: var(--font-jp);
+  border-bottom: 1px solid var(--c-border);
+}
+.handan-section .body { padding: 6px 8px; font-size: 12px; }
+.handan-section textarea {
+  width: 100%;
+  border: none;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px;
+  resize: vertical;
+  outline: none;
+  background: var(--c-input-bg);
+  min-height: 60px;
+}
+.handan-soudan textarea { min-height: 120px; }
+.handan-sougou textarea { min-height: 200px; }
+
+.flow-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.flow-table th, .flow-table td {
+  border: 1px solid #888;
+  padding: 2px 4px;
+  text-align: center;
+  font-family: var(--font-jp);
+}
+.flow-table th { background: var(--c-highlight); }
+.flow-table td.left { text-align: left; padding-left: 6px; }
+
+/* ================== 履歴 ================== */
+.history-list { list-style: none; margin: 0; padding: 0; }
+.history-list li {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.history-list li a { color: var(--c-link); text-decoration: none; }
+.history-list .meta { color: #888; font-size: 11px; }
+
+/* ================== モバイル ================== */
+@media (max-width: 640px) {
+  .bans-row { grid-template-columns: repeat(2, 1fr); }
+  .bottom-grid { grid-template-columns: 1fr; }
+  .handan-grid { grid-template-columns: 1fr; }
+  .form-table { font-size: 12px; table-layout: fixed; width: 100%; }
+  .form-table th {
+    font-size: 11px;
+    padding: 4px 2px;
+    white-space: nowrap;
+    text-align: center;
+    letter-spacing: -0.02em;
+    overflow: visible;
+  }
+  .form-table td { padding: 4px 3px; }
+  /* モバイルでは「氏名」省略表示に切替 */
+  .label-full { display: none; }
+  .label-short { display: inline; }
+  /*
+   * 1段目の列幅を固定で割り当てる。第1列は「相談日九星」(5文字) が
+   * 収まる幅 (約6em = 66px @ 11px font) が必要。
+   * 合計幅: 6 + (氏名) + 2.4 + 3.4 + 2.4 + 3.6 ≈ 17.8em + name_input
+   * iPhone 縦 (約 25em) で name_input に ~7em の余裕。
+   */
+  .form-table th.th-name,
+  .form-table tr > th:first-child { width: 6em; }
+  .form-table td.td-name   { width: auto; }
+  .form-table td.td-name input { width: 100%; max-width: 100%; }
+  .form-table th.th-gender { width: 2.6em; padding: 4px 1px; }
+  .form-table td.td-gender { width: 3.4em; }
+  .form-table td.td-gender select { font-size: 12px; width: 100%; min-width: 0; padding: 2px 1px; }
+  .form-table th.th-age    { width: 2.6em; padding: 4px 1px; }
+  .form-table td.td-age    { width: 3.6em; min-width: 3.6em; }
+  .form-table td.td-age input { width: 100%; min-width: 0; font-size: 13px; padding: 2px 2px; text-align: left; }
+  .form-table td.td-dt, .form-table td.td-dt-extra { padding: 3px 2px; }
+  /* 相談内容: 上部横書きラベル、縦全部 textarea */
+  .form-table th.th-topic {
+    width: 4em;
+    padding: 2px 4px;
+    font-size: 10px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .form-table td.td-topic { width: 26%; padding: 2px; vertical-align: top; }
+  .form-table td.td-topic textarea {
+    min-height: 130px;
+    height: 130px;
+    font-size: 11px;
+    line-height: 1.3;
+    padding: 4px;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+  }
+  /* 命式 / 相談日九星 ラベル幅縮小 */
+  .form-table th.th-meishiki {
+    width: 3.5em;
+    padding: 4px 2px;
+    font-size: 10px;
+    line-height: 1.1;
+  }
+  .form-table td.td-meishiki .auto {
+    font-size: 11px;
+    word-break: break-all;
+    line-height: 1.2;
+  }
+  /* 性別/年齢 (生年月日行に inline) */
+  .form-table .ga-inline {
+    margin-left: 4px;
+    flex-wrap: wrap;
+    gap: 1px;
+  }
+  .form-table .ga-inline .ga-label { font-size: 9px; }
+  .form-table .ga-inline select { font-size: 11px; min-width: 2.5em; padding: 1px 0; }
+  .form-table .ga-inline input.ga-age { font-size: 12px; width: 2.5em; padding: 1px 0; }
+  .page-title { font-size: 18px; letter-spacing: 0.2em; }
+}
+
+/* ================== 印刷時 (A4縦 1ページ) ================== */
+@media print {
+  @page { size: A4 portrait; margin: 8mm; }
+  html, body {
+    background: #fff;
+    color: #000;
+    font-size: 8.5pt;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .app-header, .btn-row, nav, .no-print { display: none !important; }
+  .page {
+    margin: 0;
+    box-shadow: none;
+    max-width: none;
+    padding: 0;
+    min-height: 0;
+  }
+  .page-title {
+    font-size: 13pt;
+    letter-spacing: 0.2em;
+    margin: 0 0 4pt;
+  }
+
+  /* ----- 鑑定書 ----- */
+  .form-table { font-size: 7.5pt; margin-bottom: 2pt; page-break-inside: avoid; }
+  .form-table th, .form-table td { padding: 1pt 2pt; }
+  .form-table th { width: auto; min-width: 3.5em; font-size: 7pt; }
+  .form-table input, .form-table select, .form-table textarea {
+    font-size: 7.5pt;
+    padding: 0;
+  }
+  .form-table .dt-picker select { font-size: 7.5pt; padding: 0 1pt; }
+  .form-table .dt-picker .unit { font-size: 6.5pt; }
+  .form-table textarea { min-height: 14pt; resize: none; }
+  .form-table td.td-topic { width: 28%; }
+  .form-table td.td-topic textarea { min-height: 100pt; height: 100%; }
+  .form-table th.th-topic {
+    font-size: 8pt;
+    padding: 1pt 2pt;
+    text-align: center;
+  }
+  .form-table th.th-meishiki {
+    width: 4em;
+    font-size: 7pt;
+    padding: 1pt 2pt;
+  }
+  .form-table td.td-meishiki { padding: 1pt 2pt; }
+  .form-table td.td-meishiki .auto { font-size: 8pt; }
+  .form-table .ga-inline { margin-left: 4pt; gap: 1pt; }
+  .form-table .ga-inline .ga-label { font-size: 6.5pt; }
+  .form-table .ga-inline select,
+  .form-table .ga-inline input.ga-age { font-size: 7pt; padding: 0; }
+
+  .bans-row {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2pt;
+    margin: 2pt 0;
+    page-break-inside: avoid;
+  }
+  .ban-cell { width: 100%; }
+  .ban-label { font-size: 7pt; margin-bottom: 0; line-height: 1.1; }
+  .ban-sub { font-size: 5.5pt; margin-bottom: 1pt; line-height: 1; }
+  .ban {
+    border-width: 0.7px;
+    aspect-ratio: 1 / 0.9;
+    max-height: 30mm;
+  }
+  .ban-cell-inner {
+    font-size: 6pt;
+    padding: 0;
+    border-width: 0.4px;
+  }
+  .ban-cell-inner .star { font-size: 8pt; }
+  .ban-cell-inner .kakka { font-size: 4.5pt; top: 0; left: 1px; }
+  .ban-cell-inner .branch { font-size: 5.5pt; bottom: 0; right: 1px; }
+  .ban-cell-inner .mark { font-size: 5.5pt; top: 0; right: 1px; }
+
+  .bottom-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2pt;
+    margin-top: 2pt;
+    page-break-inside: avoid;
+  }
+  .bottom-cell {
+    font-size: 7pt;
+    min-height: 12pt;
+    grid-template-columns: 4.5em 1fr;
+    page-break-inside: avoid;
+  }
+  .bottom-cell .lbl {
+    padding: 0.5pt 2pt;
+    font-size: 6.5pt;
+  }
+  .bottom-cell .val { padding: 0.5pt 2pt; }
+  .bottom-cell textarea {
+    min-height: 11pt;
+    font-size: 6.5pt;
+    padding: 0;
+  }
+
+  .eto-wheel {
+    padding: 1pt 0;
+    font-size: 7pt;
+    line-height: 1.15;
+  }
+  .eto-wheel .row { gap: 1.5em; }
+  .eto-wheel span[data-branch] { width: 1.2em; height: 1.2em; }
+  .eto-wheel-legend { font-size: 5.5pt !important; margin-top: 0 !important; }
+
+  .kaijin-table {
+    font-size: 6pt;
+    margin-top: 2pt;
+    page-break-inside: avoid;
+  }
+  .kaijin-table th, .kaijin-table td {
+    padding: 0.5pt 0;
+    border-width: 0.4px;
+  }
+
+  /* ----- 判断書 ----- */
+  .handan-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3pt;
+  }
+  .handan-section { border-width: 0.5px; }
+  .handan-section h3 {
+    font-size: 9pt;
+    padding: 2pt 4pt;
+    border-bottom-width: 0.5px;
+  }
+  .handan-section .body {
+    padding: 2pt 3pt;
+    font-size: 8pt;
+  }
+  .handan-section textarea {
+    font-size: 7pt;
+    min-height: 30pt;
+    padding: 2pt;
+  }
+  .handan-soudan textarea { min-height: 55pt; }
+  .handan-sougou textarea { min-height: 110pt; }
+  #o-meta { font-size: 8pt !important; margin-bottom: 3pt !important; }
+
+  .flow-table { font-size: 6.5pt; }
+  .flow-table th, .flow-table td {
+    padding: 0.5pt 1pt;
+    border-width: 0.5px;
+  }
+
+  /* テキストエリア共通 (印刷時も枠線を見せて区切る) */
+  textarea {
+    border: 0.5px solid #999 !important;
+    background: transparent !important;
+    color: #000 !important;
+  }
+  input[type="text"], input[type="number"], select {
+    border: none !important;
+    background: transparent !important;
+    color: #000 !important;
+  }
+}
