@@ -161,6 +161,8 @@ html, body {
   box-sizing: border-box;
   display: block;
 }
+/* デスクトップでは モバイル用 相談内容 行を非表示 */
+.topic-mobile-row { display: none; }
 /* 命式・相談日九星: ラベル幅は他と揃え、表示は出力テキストのまま */
 .form-table th.th-meishiki { width: 5em; white-space: nowrap; }
 .form-table td.td-meishiki { padding: 2px 6px; }
@@ -577,24 +579,25 @@ html, body {
   .form-table td.td-age    { width: 3.6em; min-width: 3.6em; }
   .form-table td.td-age input { width: 100%; min-width: 0; font-size: 13px; padding: 2px 2px; text-align: left; }
   .form-table td.td-dt, .form-table td.td-dt-extra { padding: 3px 2px; }
-  /* 相談内容: 上部横書きラベル、縦全部 textarea */
-  .form-table th.th-topic {
+  /* モバイル: デスクトップ用 相談内容 (右側 rowspan) は非表示にして
+     代わりに表の下に全幅で 相談内容 行を表示 */
+  .form-table th.th-topic,
+  .form-table td.td-topic { display: none !important; }
+  .topic-mobile-row { display: table-row !important; }
+  .topic-mobile-row th {
     width: 4em;
-    padding: 2px 4px;
-    font-size: 10px;
     text-align: center;
-    white-space: nowrap;
-  }
-  .form-table td.td-topic { width: 26%; padding: 2px; vertical-align: top; }
-  .form-table td.td-topic textarea {
-    min-height: 130px;
-    height: 130px;
     font-size: 11px;
-    line-height: 1.3;
-    padding: 4px;
-    box-sizing: border-box;
-    display: block;
+    vertical-align: middle;
+  }
+  .topic-mobile-row textarea {
     width: 100%;
+    box-sizing: border-box;
+    font-size: 13px;
+    min-height: 80px;
+    padding: 4px;
+    line-height: 1.4;
+    resize: vertical;
   }
   /* 命式 / 相談日九星 ラベル幅縮小 */
   .form-table th.th-meishiki {
@@ -620,13 +623,13 @@ html, body {
   .page-title { font-size: 18px; letter-spacing: 0.2em; }
 }
 
-/* ================== 印刷時 (A4縦 1ページ) ================== */
+/* ================== 印刷時 (A4縦 1ページ最適化) ================== */
 @media print {
-  @page { size: A4 portrait; margin: 8mm; }
+  @page { size: A4 portrait; margin: 10mm; }
   html, body {
     background: #fff;
     color: #000;
-    font-size: 8.5pt;
+    font-size: 9.5pt;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -639,105 +642,115 @@ html, body {
     min-height: 0;
   }
   .page-title {
-    font-size: 13pt;
-    letter-spacing: 0.2em;
-    margin: 0 0 4pt;
+    font-size: 15pt;
+    letter-spacing: 0.25em;
+    margin: 0 0 5pt;
   }
 
+  /* モバイル専用相談内容行は印刷時は非表示 */
+  .topic-mobile-row { display: none !important; }
+
   /* ----- 鑑定書 ----- */
-  .form-table { font-size: 7.5pt; margin-bottom: 2pt; page-break-inside: avoid; }
-  .form-table th, .form-table td { padding: 1pt 2pt; }
-  .form-table th { width: auto; min-width: 3.5em; font-size: 7pt; }
+  .form-table { font-size: 9pt; margin-bottom: 4pt; page-break-inside: avoid; }
+  .form-table th, .form-table td { padding: 2pt 4pt; vertical-align: middle; }
+  .form-table th { width: auto; min-width: 4em; font-size: 8.5pt; }
   .form-table input, .form-table select, .form-table textarea {
-    font-size: 7.5pt;
+    font-size: 9pt;
     padding: 0;
   }
-  .form-table .dt-picker select { font-size: 7.5pt; padding: 0 1pt; }
-  .form-table .dt-picker .unit { font-size: 6.5pt; }
-  .form-table textarea { min-height: 14pt; resize: none; }
-  .form-table td.td-topic { width: 28%; }
-  .form-table td.td-topic textarea { min-height: 100pt; height: 100%; }
+  .form-table .dt-picker select { font-size: 9pt; padding: 0 1pt; }
+  .form-table .dt-picker .unit { font-size: 8pt; }
+  .form-table textarea { resize: none; }
+  .form-table td.td-topic {
+    width: 30%;
+    vertical-align: top;
+    padding: 4pt;
+  }
+  .form-table td.td-topic textarea {
+    min-height: 85pt;
+    height: 100%;
+    width: 100%;
+    font-size: 9pt;
+    line-height: 1.4;
+  }
   .form-table th.th-topic {
-    font-size: 8pt;
-    padding: 1pt 2pt;
+    font-size: 9.5pt;
+    padding: 2pt 4pt;
     text-align: center;
   }
-  .form-table th.th-meishiki {
-    width: 4em;
-    font-size: 7pt;
-    padding: 1pt 2pt;
+  /* 命式・相談日九星: 高さを揃える */
+  .form-table th.th-meishiki,
+  .form-table td.td-meishiki {
+    height: 18pt;
+    line-height: 1.4;
   }
-  .form-table td.td-meishiki { padding: 1pt 2pt; }
-  .form-table td.td-meishiki .auto { font-size: 8pt; }
-  .form-table .ga-inline { margin-left: 4pt; gap: 1pt; }
-  .form-table .ga-inline .ga-label { font-size: 6.5pt; }
-  .form-table .ga-inline select,
-  .form-table .ga-inline input.ga-age { font-size: 7pt; padding: 0; }
+  .form-table th.th-meishiki { font-size: 8.5pt; min-width: 5em; }
+  .form-table td.td-meishiki .auto { font-size: 9pt; }
 
   .bans-row {
     grid-template-columns: repeat(4, 1fr);
-    gap: 2pt;
-    margin: 2pt 0;
+    gap: 3pt;
+    margin: 3pt 0;
     page-break-inside: avoid;
   }
   .ban-cell { width: 100%; }
-  .ban-label { font-size: 7pt; margin-bottom: 0; line-height: 1.1; }
-  .ban-sub { font-size: 5.5pt; margin-bottom: 1pt; line-height: 1; }
+  .ban-label { font-size: 8.5pt; margin-bottom: 1pt; line-height: 1.1; }
+  .ban-sub { font-size: 7pt; margin-bottom: 1pt; line-height: 1.1; }
   .ban {
-    border-width: 0.7px;
-    aspect-ratio: 1 / 0.9;
-    max-height: 30mm;
+    border-width: 0.8px;
+    aspect-ratio: 1 / 1;
+    max-height: 38mm;
   }
   .ban-cell-inner {
-    font-size: 6pt;
-    padding: 0;
-    border-width: 0.4px;
+    font-size: 7pt;
+    padding: 1px;
+    border-width: 0.5px;
   }
-  .ban-cell-inner .star { font-size: 8pt; }
-  .ban-cell-inner .kakka { font-size: 4.5pt; top: 0; left: 1px; }
-  .ban-cell-inner .branch { font-size: 5.5pt; bottom: 0; right: 1px; }
-  .ban-cell-inner .mark { font-size: 5.5pt; top: 0; right: 1px; }
+  .ban-cell-inner .star { font-size: 10pt; }
+  .ban-cell-inner .kakka { font-size: 5.5pt; top: 1px; left: 1px; }
+  .ban-cell-inner .branch { font-size: 6.5pt; bottom: 0; right: 1px; }
+  .ban-cell-inner .mark { font-size: 7pt; top: 1px; right: 1px; }
 
   .bottom-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 2pt;
-    margin-top: 2pt;
+    gap: 3pt;
+    margin-top: 3pt;
     page-break-inside: avoid;
   }
   .bottom-cell {
-    font-size: 7pt;
-    min-height: 12pt;
-    grid-template-columns: 4.5em 1fr;
+    font-size: 8.5pt;
+    min-height: 15pt;
+    grid-template-columns: 5em 1fr;
     page-break-inside: avoid;
   }
   .bottom-cell .lbl {
-    padding: 0.5pt 2pt;
-    font-size: 6.5pt;
+    padding: 1pt 3pt;
+    font-size: 8pt;
   }
-  .bottom-cell .val { padding: 0.5pt 2pt; }
+  .bottom-cell .val { padding: 1pt 3pt; }
   .bottom-cell textarea {
-    min-height: 11pt;
-    font-size: 6.5pt;
+    min-height: 13pt;
+    font-size: 8pt;
     padding: 0;
   }
 
   .eto-wheel {
-    padding: 1pt 0;
-    font-size: 7pt;
-    line-height: 1.15;
+    padding: 2pt 0;
+    font-size: 9pt;
+    line-height: 1.3;
   }
-  .eto-wheel .row { gap: 1.5em; }
-  .eto-wheel span[data-branch] { width: 1.2em; height: 1.2em; }
-  .eto-wheel-legend { font-size: 5.5pt !important; margin-top: 0 !important; }
+  .eto-wheel .row { gap: 2em; }
+  .eto-wheel span[data-branch] { width: 1.4em; height: 1.4em; }
+  .eto-wheel-legend { font-size: 6.5pt !important; margin-top: 1pt !important; }
 
   .kaijin-table {
-    font-size: 6pt;
-    margin-top: 2pt;
+    font-size: 8pt;
+    margin-top: 3pt;
     page-break-inside: avoid;
   }
   .kaijin-table th, .kaijin-table td {
-    padding: 0.5pt 0;
-    border-width: 0.4px;
+    padding: 1pt 1pt;
+    border-width: 0.5px;
   }
 
   /* ----- 判断書 ----- */
