@@ -139,30 +139,26 @@ html, body {
 /* 生年月日 + 相談日 の横並び行 */
 .form-table th.th-birth, .form-table th.th-consult { width: 5em; }
 .form-table td.td-dt { padding: 4px 6px; }
-/* 相談内容 (右側、上部に横書きラベル + 縦全部 textarea) */
+/* 相談内容 (相談日九星の下の独立行、全幅) */
 .form-table th.th-topic {
-  width: 5em;
+  width: 6em;
   white-space: nowrap;
-  text-align: center;
-  font-size: 13px;
+  vertical-align: top;
+  padding: 6px 8px;
 }
 .form-table td.td-topic {
-  width: 30%;
   vertical-align: top;
   padding: 4px;
-  height: 100%;
 }
 .form-table td.td-topic textarea {
-  min-height: 150px;
-  height: 100%;
   width: 100%;
-  resize: vertical;
-  vertical-align: top;
+  min-height: 80px;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 4px;
   box-sizing: border-box;
-  display: block;
+  resize: vertical;
 }
-/* デスクトップでは モバイル用 相談内容 行を非表示 */
-.topic-mobile-row { display: none; }
 /* 命式・相談日九星: 同じ高さで揃える (1行表示優先) */
 .form-table th.th-meishiki,
 .form-table td.td-meishiki {
@@ -615,33 +611,21 @@ html, body {
   .form-table td.td-age    { width: 3.6em; min-width: 3.6em; }
   .form-table td.td-age input { width: 100%; min-width: 0; font-size: 13px; padding: 2px 2px; text-align: left; }
   .form-table td.td-dt, .form-table td.td-dt-extra { padding: 3px 2px; }
-  /* モバイル: 相談内容は右側rowspanのまま、テキストが折り返すよう調整 */
+  /* モバイル: 相談内容 (相談日九星の下の独立行) */
   .form-table th.th-topic {
-    width: 4em;
-    padding: 2px 0;
+    padding: 4px 2px;
     font-size: 11px;
-    text-align: center;
-    white-space: nowrap;
-  }
-  .form-table td.td-topic {
-    width: 38%;
-    min-width: 38%;
-    padding: 2px;
     vertical-align: top;
   }
+  .form-table td.td-topic { padding: 2px; vertical-align: top; }
   .form-table td.td-topic textarea {
     width: 100%;
-    height: auto;
-    min-height: 130px;
-    font-size: 12px;
-    line-height: 1.35;
+    min-height: 100px;
+    font-size: 13px;
+    line-height: 1.4;
     padding: 4px;
     box-sizing: border-box;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
     resize: vertical;
-    display: block;
   }
   /* モバイル: 命式 / 相談日九星 高さ完全統一 */
   .form-table th.th-meishiki,
@@ -719,21 +703,19 @@ html, body {
   .form-table .dt-picker .unit { font-size: 8pt; }
   .form-table textarea { resize: none; }
   .form-table td.td-topic {
-    width: 30%;
     vertical-align: top;
-    padding: 4pt;
+    padding: 3pt 4pt;
   }
   .form-table td.td-topic textarea {
-    min-height: 85pt;
-    height: 100%;
+    min-height: 45pt;
     width: 100%;
     font-size: 9pt;
     line-height: 1.4;
   }
   .form-table th.th-topic {
     font-size: 9.5pt;
-    padding: 2pt 4pt;
-    text-align: center;
+    padding: 3pt 4pt;
+    vertical-align: top;
   }
   /* 命式・相談日九星: 高さを揃える */
   .form-table th.th-meishiki,
