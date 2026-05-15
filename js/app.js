@@ -13,26 +13,10 @@
 
   let currentRecordId = null;
 
-  // 相談内容: モバイル用 textarea と デスクトップ用 textarea を双方向同期
-  function setupTopicSync() {
-    const a = $('f-topic'), b = $('f-topic-mobile');
-    if (!a || !b) return;
-    let syncing = false;
-    const copyTo = (src, dst) => {
-      if (syncing) return;
-      syncing = true;
-      dst.value = src.value;
-      syncing = false;
-    };
-    a.addEventListener('input', () => copyTo(a, b));
-    b.addEventListener('input', () => copyTo(b, a));
-  }
-
   // ===== 起動時 =====
   document.addEventListener('DOMContentLoaded', () => {
     // 1) プルダウン日時入力をセットアップ
     DtPicker.setupAll();
-    setupTopicSync();
 
     // 2) 相談日 = 現在時刻
     const now = new Date();

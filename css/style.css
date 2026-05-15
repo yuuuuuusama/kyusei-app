@@ -579,25 +579,33 @@ html, body {
   .form-table td.td-age    { width: 3.6em; min-width: 3.6em; }
   .form-table td.td-age input { width: 100%; min-width: 0; font-size: 13px; padding: 2px 2px; text-align: left; }
   .form-table td.td-dt, .form-table td.td-dt-extra { padding: 3px 2px; }
-  /* モバイル: デスクトップ用 相談内容 (右側 rowspan) は非表示にして
-     代わりに表の下に全幅で 相談内容 行を表示 */
-  .form-table th.th-topic,
-  .form-table td.td-topic { display: none !important; }
-  .topic-mobile-row { display: table-row !important; }
-  .topic-mobile-row th {
+  /* モバイル: 相談内容は右側rowspanのまま、テキストが折り返すよう調整 */
+  .form-table th.th-topic {
     width: 4em;
-    text-align: center;
+    padding: 2px 0;
     font-size: 11px;
-    vertical-align: middle;
+    text-align: center;
+    white-space: nowrap;
   }
-  .topic-mobile-row textarea {
+  .form-table td.td-topic {
+    width: 38%;
+    min-width: 38%;
+    padding: 2px;
+    vertical-align: top;
+  }
+  .form-table td.td-topic textarea {
     width: 100%;
-    box-sizing: border-box;
-    font-size: 13px;
-    min-height: 80px;
+    height: auto;
+    min-height: 130px;
+    font-size: 12px;
+    line-height: 1.35;
     padding: 4px;
-    line-height: 1.4;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
     resize: vertical;
+    display: block;
   }
   /* 命式 / 相談日九星 ラベル幅縮小 */
   .form-table th.th-meishiki {
