@@ -448,7 +448,7 @@ html, body {
   background: transparent;
 }
 
-/* 干支吉凶 ローゼット */
+/* 干支吉凶 ローゼット (旧式・5行表示) */
 .eto-wheel {
   text-align: center;
   font-family: var(--font-jp);
@@ -457,6 +457,21 @@ html, body {
   line-height: 1.8;
 }
 .eto-wheel .row { display: flex; justify-content: center; gap: 3em; }
+/* 干支吉凶 1行表示 (年セルと同じ高さ) */
+.eto-wheel.eto-wheel-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  flex-wrap: nowrap;
+}
+.eto-wheel.eto-wheel-row span[data-branch] {
+  width: 1.3em;
+  height: 1.3em;
+  flex: 0 0 auto;
+}
 .eto-wheel span[data-branch] {
   display: inline-flex;
   align-items: center;
