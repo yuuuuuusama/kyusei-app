@@ -166,23 +166,27 @@ html, body {
 /* 命式・相談日九星: 同じ高さで揃える (1行表示優先) */
 .form-table th.th-meishiki,
 .form-table td.td-meishiki {
-  min-height: 22px;
-  height: 22px;
-  line-height: 1.4;
+  height: 24px;
+  line-height: 24px;
   vertical-align: middle;
-}
-.form-table th.th-meishiki { width: 5em; }
-.form-table td.td-meishiki {
-  padding: 2px 6px;
+  white-space: nowrap;
   overflow: hidden;
+  padding-top: 0;
+  padding-bottom: 0;
+  box-sizing: border-box;
 }
+.form-table th.th-meishiki {
+  width: 6em;
+  min-width: 6em;
+  letter-spacing: -0.02em;
+}
+.form-table td.td-meishiki { padding: 0 6px; }
 .form-table td.td-meishiki .auto {
   font-size: 13px;
   letter-spacing: 0.02em;
   white-space: nowrap;
-  display: block;
-  overflow: hidden;
-  text-overflow: clip;
+  display: inline;
+  line-height: 24px;
 }
 /* 生年月日行: dt-picker + 性別 + 年齢 を横並び */
 .form-table td.td-dt-extra {
@@ -639,25 +643,30 @@ html, body {
     resize: vertical;
     display: block;
   }
-  /* モバイル: 命式 / 相談日九星 高さ統一、1行表示 */
+  /* モバイル: 命式 / 相談日九星 高さ完全統一 */
   .form-table th.th-meishiki,
   .form-table td.td-meishiki {
-    height: 20px;
-    min-height: 20px;
-    line-height: 1.2;
-    vertical-align: middle;
+    height: 22px !important;
+    line-height: 22px !important;
+    vertical-align: middle !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    box-sizing: border-box;
   }
   .form-table th.th-meishiki {
-    padding: 2px;
+    padding: 0 2px !important;
     font-size: 10px;
+    letter-spacing: -0.06em;
   }
-  .form-table td.td-meishiki { padding: 2px 4px; overflow: hidden; }
+  .form-table td.td-meishiki { padding: 0 4px !important; }
   .form-table td.td-meishiki .auto {
     font-size: 10.5px;
     letter-spacing: -0.04em;
     white-space: nowrap;
-    display: block;
-    overflow: hidden;
+    display: inline;
+    line-height: 22px;
   }
   /* 性別/年齢 (生年月日行に inline) */
   .form-table .ga-inline {
