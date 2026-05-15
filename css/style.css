@@ -163,10 +163,22 @@ html, body {
 }
 /* デスクトップでは モバイル用 相談内容 行を非表示 */
 .topic-mobile-row { display: none; }
-/* 命式・相談日九星: ラベル幅は他と揃え、表示は出力テキストのまま */
-.form-table th.th-meishiki { width: 5em; white-space: nowrap; }
+/* 命式・相談日九星: 同じ高さで揃える */
+.form-table th.th-meishiki,
+.form-table td.td-meishiki {
+  height: 22px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.form-table th.th-meishiki { width: 5em; }
 .form-table td.td-meishiki { padding: 2px 6px; }
-.form-table td.td-meishiki .auto { font-size: 13px; letter-spacing: 0.02em; }
+.form-table td.td-meishiki .auto {
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  display: inline-block;
+  white-space: nowrap;
+}
 /* 生年月日行: dt-picker + 性別 + 年齢 を横並び */
 .form-table td.td-dt-extra {
   display: table-cell;
@@ -607,17 +619,25 @@ html, body {
     resize: vertical;
     display: block;
   }
-  /* 命式 / 相談日九星 ラベル幅縮小 */
+  /* 命式 / 相談日九星 ラベル幅縮小、高さ統一 */
+  .form-table th.th-meishiki,
+  .form-table td.td-meishiki {
+    height: 20px;
+    line-height: 1.2;
+    overflow: hidden;
+    white-space: nowrap;
+  }
   .form-table th.th-meishiki {
     width: 3.5em;
-    padding: 4px 2px;
+    padding: 2px;
     font-size: 10px;
-    line-height: 1.1;
   }
+  .form-table td.td-meishiki { padding: 2px 4px; }
   .form-table td.td-meishiki .auto {
     font-size: 11px;
-    word-break: break-all;
-    line-height: 1.2;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    display: inline-block;
   }
   /* 性別/年齢 (生年月日行に inline) */
   .form-table .ga-inline {
