@@ -497,10 +497,10 @@
   }
 
   // 流年法60年表: 12行 × 5歳刻み (0-5, 5-10, ... 55-60)
-  // 生年盤の中宮支から開始地点と巡回パターンを決定し、時計回りで巡る
+  // 生年盤の中宮支の自身の方位から時計回りで巡る
   //   主方位 (N/E/S/W): 1スロット (5年)
   //   隅方位 (NW/NE/SW/SE): 2スロット (10年)
-  //   - 主方位の支 (子/卯/午/酉): 対冲の主方位から開始
+  //   - 主方位の支 (子/卯/午/酉): 自身の方位から開始
   //   - 隅方位 "earlier" (丑/辰/未/戌): 自身の隅から開始、2スロット消化
   //   - 隅方位 "later" (寅/巳/申/亥): 自身の隅から開始、1スロットのみ消化
   //     残り11スロットを時計回り、終端で同じ隅にもう1スロット
@@ -526,8 +526,8 @@
     const naturalPos = BRANCH_NATURAL_POS[bYearBranchIdx];
     const isCardinalBranch = CARDINAL_BRANCH.has(bYearBranchIdx);
     const isLater = LATER_CORNER.has(bYearBranchIdx);
-    // 主方位: 対冲, 隅方位: 自身
-    const startPos = isCardinalBranch ? (8 - naturalPos) : naturalPos;
+    // 開始位置は常に「中宮支の自身の方位」
+    const startPos = naturalPos;
     let startIdx = CW_ORDER.indexOf(startPos);
     if (startIdx < 0) startIdx = 0;
 
