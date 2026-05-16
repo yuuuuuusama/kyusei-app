@@ -265,28 +265,24 @@
     const jiHongu = describeOnBoard(transHourCenter, cHourEto.branchIdx, jiHonguPos, cIsIntonForCells);
 
     // ----- 同会・被同会 -----
-    // 年同会: 相談年盤において、本命星が定位置にある星 (=本命宮を担当する本来の星)
-    // 被同会: 相談年盤の本命星定位置に来ている星 (=本命星の定位置にある星)
-    //
-    // 後天定位における星の定位置:
-    //   1(一白): N, 2(二黒): SW, 3(三碧): E, 4(四緑): SE,
-    //   5(五黄): C, 6(六白): NW, 7(七赤): W, 8(八白): NE, 9(九紫): S
-    function getDoukai(centerStar, targetStar) {
-      const posOfTarget = Kyusei.findPositionOfStar(centerStar, targetStar);
-      // posOfTarget の本来の星 (定位星)
-      return Kyusei.DEFAULT_POSITION_STARS[posOfTarget];
-    }
-    function getHidoukai(centerStar, targetStar) {
-      // targetStar の定位置にある星
-      const defPos = Kyusei.DEFAULT_POSITION_STARS.indexOf(targetStar);
-      const stars = Kyusei.getPositionStars(centerStar);
-      return stars[defPos];
-    }
+    // 年同会: 年盤での本命位置を「定位盤」で見たときの九星
+    //         = 本命位置(in 年盤) を担当する本来の星 = DEFAULT[posOf(本命, 年盤)]
+    // 年被同会: 「定位盤」での本命位置を「年盤」で見たときの九星
+    //         = 年盤[本命の定位置]
+    // 月同会: 月盤での本命位置を「年盤」で見たときの九星
+    //         = 年盤[posOf(本命, 月盤)]
+    // 月被同会: 年盤での本命位置を「月盤」で見たときの九星
+    //         = 月盤[posOf(本命, 年盤)]
+    const yearStars  = Kyusei.getPositionStars(cYearCenter);
+    const monthStars = Kyusei.getPositionStars(cMonthCenter);
+    const honmeiPosInYear  = Kyusei.findPositionOfStar(cYearCenter,  honmeisei);
+    const honmeiPosInMonth = Kyusei.findPositionOfStar(cMonthCenter, honmeisei);
+    const honmeiDefPos     = Kyusei.DEFAULT_POSITION_STARS.indexOf(honmeisei);
 
-    const toshiDoukai = getDoukai(cYearCenter, honmeisei);
-    const toshiHidoukai = getHidoukai(cYearCenter, honmeisei);
-    const tsukiDoukai = getDoukai(cMonthCenter, honmeisei);
-    const tsukiHidoukai = getHidoukai(cMonthCenter, honmeisei);
+    const toshiDoukai    = Kyusei.DEFAULT_POSITION_STARS[honmeiPosInYear];
+    const toshiHidoukai  = yearStars[honmeiDefPos];
+    const tsukiDoukai    = yearStars[honmeiPosInMonth];
+    const tsukiHidoukai  = monthStars[honmeiPosInYear];
 
     // ----- 蔵気 (内蔵法) -----
     // 蔵気 = 2つの盤を見て、両盤で「対向位置 (positionが8-旧の関係)」にある九星
