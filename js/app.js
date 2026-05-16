@@ -262,13 +262,13 @@
     // 午=S(7), 未=SW(6), 申=SW(6), 酉=W(3), 戌=NW(0), 亥=NW(0)
 
     let ankenPos = null, haPos = null;
+    // 暗剣殺: 五黄が居るマスの真反対 (中宮=五黄の盤ではなし)
     if (centerStar !== 5) {
       const gokoPos = Kyusei.findPositionOfStar(centerStar, 5);
       ankenPos = 8 - gokoPos;
-      const centerDefPos = DEFAULT_POS_STAR.indexOf(centerStar);
-      haPos = 8 - centerDefPos;
-    } else if (typeof periodBranchIdx === 'number') {
-      // 五黄中宮: 破のみ表示 (暗剣殺なし)
+    }
+    // 破: 中宮支の本来の方位の真反対 (中宮支がない場合はなし)
+    if (typeof periodBranchIdx === 'number') {
       const naturalPos = BRANCH_NATURAL_POS[periodBranchIdx];
       haPos = 8 - naturalPos;
     }

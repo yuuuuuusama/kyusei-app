@@ -163,14 +163,15 @@
     const BRANCH_NATURAL_POS = [1, 2, 2, 5, 8, 8, 7, 6, 6, 3, 0, 0];
 
     // 盤の暗剣殺(ア)/破(ハ) の位置を返す
+    //   暗剣殺: 五黄が居るマスの真反対 (中宮=五黄なら無し)
+    //   破:    中宮支の本来の方位の真反対 (中宮支が判らなければ無し)
     function getAnkenHaPos(boardCenter, periodBranchIdx) {
       let ankenPos = null, haPos = null;
       if (boardCenter !== 5) {
         const gokoPos = Kyusei.findPositionOfStar(boardCenter, 5);
         ankenPos = 8 - gokoPos;
-        const centerDefPos = Kyusei.DEFAULT_POSITION_STARS.indexOf(boardCenter);
-        haPos = 8 - centerDefPos;
-      } else if (typeof periodBranchIdx === 'number') {
+      }
+      if (typeof periodBranchIdx === 'number') {
         const naturalPos = BRANCH_NATURAL_POS[periodBranchIdx];
         haPos = 8 - naturalPos;
       }
@@ -495,9 +496,77 @@
     return { year: targetYear, months };
   }
 
+  // 流年法60年表: 12行 × 5歳刻み (0-5, 5-10, ... 55-60)
+  // 生年盤の中宮支の自然位置の対冲からスタートし、時計回りで巡る
+  //   主方位 (N/E/S/W = posIdx 1/5/7/3): 1スロット (5年)
+  //   隅方位 (NW/NE/SW/SE = posIdx 0/2/6/8): 2スロット (10年)
+  function compute60YearFlowTable(birthDate) {
+    const SolarTerms = global.SolarTerms;
+    const Kyusei = global.Kyusei;
+    const Eto = global.Eto;
+    const bSM = SolarTerms.getSetsuMonth(birthDate);
+    const bYearEto = Eto.getYearEto(bSM.setsuYear);
+    const bYearCenter = Kyusei.getYearStar(bSM.setsuYear);
+    const bYearBranchIdx = bYearEto.branchIdx;
+
+    const BRANCH_NATURAL_POS = [1, 2, 2, 5, 8, 8, 7, 6, 6, 3, 0, 0];
+    // 時計回り CW 順 (N→NE→E→SE→S→SW→W→NW→N の循環で並び換え)
+    //   方位: S=7, SW=6, W=3, NW=0, N=1, NE=2, E=5, SE=8
+    const CW_ORDER = [7, 6, 3, 0, 1, 2, 5, 8];
+    const IS_CARDINAL = { 1: true, 3: true, 5: true, 7: true };
+
+    const startPos = 8 - BRANCH_NATURAL_POS[bYearBranchIdx];
+    let startIdx = CW_ORDER.indexOf(startPos);
+    if (startIdx < 0) startIdx = 0;
+
+    // 12 スロット生成
+    const positions = [];
+    for (let i = 0; i < 8; i++) {
+      const pos = CW_ORDER[(startIdx + i) % 8];
+      positions.push(pos);
+      if (!IS_CARDINAL[pos]) positions.push(pos);
+    }
+    // positions.length === 12
+
+    // 生年盤を描画材料に
+    const stars = Kyusei.getPositionStars(bYearCenter);
+    const POSITION_TO_KYU_NAME = ['乾宮','坎宮','艮宮','兌宮','中宮','震宮','坤宮','離宮','巽宮'];
+    const DEFAULT_POSITION_STARS = [6, 1, 8, 7, 5, 3, 2, 9, 4];
+    // 暗剣殺/破
+    let ankenPos = null, haPos = null;
+    if (bYearCenter !== 5) {
+      ankenPos = 8 - Kyusei.findPositionOfStar(bYearCenter, 5);
+    }
+    haPos = 8 - BRANCH_NATURAL_POS[bYearBranchIdx];
+    // 動的支配置 (年盤は陽遁)
+    function dynBranch(posIdx) {
+      const defStar = DEFAULT_POSITION_STARS[posIdx];
+      const offset = ((defStar - 5 + 9) % 9);
+      const idx = ((bYearBranchIdx + offset) % 12 + 12) % 12;
+      return Eto.BRANCHES[idx];
+    }
+
+    return positions.map((pos, i) => {
+      const ageStart = i * 5;
+      const ageEnd   = ageStart + 5;
+      const star = stars[pos];
+      return {
+        ageStart, ageEnd,
+        positionIdx: pos,
+        kyu: POSITION_TO_KYU_NAME[pos],
+        star,
+        starName: Kyusei.STAR_NAMES[star],
+        branch: dynBranch(pos),
+        anken: pos === ankenPos,
+        ha:    pos === haPos
+      };
+    });
+  }
+
   global.Kantei = {
     computeKantei,
     compute60YearFlow,
+    compute60YearFlowTable,
     computeYearFlowDetail
   };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -72,26 +72,18 @@
     $('o-kuraki-md').innerHTML  = r.bottom.naizou.kuraki_getsubi;
     $('o-shukumei-md').innerHTML = r.bottom.naizou.shukumei_getsubi;
 
-    // 流年法 60年 (5年区切り)
+    // 流年法 60年 (5年区切り、生年盤を時計回りに巡る)
     const flow60Body = $('flow-60');
     flow60Body.innerHTML = '';
-    for (let age = 0; age <= 55; age += 5) {
-      const f = Kantei.compute60YearFlow(birth, age);
-      const fNext = Kantei.compute60YearFlow(birth, Math.min(age + 5, 60));
+    const flowRows = Kantei.compute60YearFlowTable(birth);
+    flowRows.forEach(row => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${age}〜${age + 5}</td><td>${f.year}〜${fNext.year}</td><td>${f.kyu}</td>`;
+      const ankenMark = row.anken ? '<span style="color:#d00;font-weight:bold;">ア</span>' : '';
+      const haMark    = row.ha    ? '<span style="color:#06c;font-weight:bold;">ハ</span>' : '';
+      tr.innerHTML = `<td>${row.ageStart}〜${row.ageEnd}</td>` +
+                     `<td>${row.kyu}${row.starName}${row.branch}${ankenMark}${haMark}</td>`;
       flow60Body.appendChild(tr);
-    }
-
-    // 月日: 0,5,10,...,60 各時点
-    const flowDetail = $('flow-detail');
-    flowDetail.innerHTML = '';
-    for (let age = 0; age <= 60; age += 5) {
-      const f = Kantei.compute60YearFlow(birth, age);
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${age}</td><td>${f.year}年</td><td>${K.STAR_NAMES[f.center]} / ${f.kyu}</td>`;
-      flowDetail.appendChild(tr);
-    }
+    });
   }
 
   function save() {

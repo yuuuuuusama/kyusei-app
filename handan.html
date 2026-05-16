@@ -45,15 +45,11 @@
     <!-- 左: 流年法 -->
     <div>
       <div class="handan-section">
-        <h3>流年法 (年月) / 月日</h3>
-        <div class="body" style="display:flex;gap:6px;">
-          <table class="flow-table" style="flex:1;">
-            <thead><tr><th>年齢</th><th>年</th><th>月</th></tr></thead>
+        <h3>流年法</h3>
+        <div class="body">
+          <table class="flow-table" style="width:100%;">
+            <thead><tr><th style="width:5em;">年齢</th><th>結果</th></tr></thead>
             <tbody id="flow-60"></tbody>
-          </table>
-          <table class="flow-table" style="flex:1.2;">
-            <thead><tr><th>歳</th><th>年月</th><th>本命星位</th></tr></thead>
-            <tbody id="flow-detail"></tbody>
           </table>
         </div>
       </div>
@@ -121,12 +117,12 @@
 
 </main>
 
-<script src="js/solar-terms.js?v=71"></script>
-<script src="js/eto.js?v=71"></script>
-<script src="js/kyusei.js?v=71"></script>
-<script src="js/kantei.js?v=71"></script>
-<script src="js/storage.js?v=71"></script>
-<script src="js/handan.js?v=71"></script>
+<script src="js/solar-terms.js?v=72"></script>
+<script src="js/eto.js?v=72"></script>
+<script src="js/kyusei.js?v=72"></script>
+<script src="js/kantei.js?v=72"></script>
+<script src="js/storage.js?v=72"></script>
+<script src="js/handan.js?v=72"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
