@@ -145,26 +145,31 @@
       r.consult.hourEto.name + K.STAR_NAMES[r.consult.hourCenter]
     ].join('、');
 
-    // 下部宮位: 宮名 + 干支 + 九星 を1行で
+    // 下部宮位: 宮名 + 干支 + 九星 + (暗剣殺ア / 破ハ マーカー) を1行で
     function fmt(cell) {
       if (!cell) return '—';
       const parts = [cell.kyu];
       if (cell.branches) parts.push(cell.branches);
       if (cell.starName) parts.push(cell.starName);
-      return parts.join(' ');
+      let html = parts.join(' ');
+      const marks = [];
+      if (cell.anken) marks.push('<span style="color:#d00;font-weight:bold;">ア</span>');
+      if (cell.ha)    marks.push('<span style="color:#06c;font-weight:bold;">ハ</span>');
+      if (marks.length) html += ' ' + marks.join('');
+      return html;
     }
-    $('o-honmei').textContent = fmt(r.bottom.honmei);
-    $('o-taichu').textContent = fmt(r.bottom.taichu);
-    $('o-migi').textContent = fmt(r.bottom.migi);
-    $('o-hidari').textContent = fmt(r.bottom.hidari);
-    $('o-hongu').textContent = fmt(r.bottom.hongu);
-    $('o-chukyu').textContent = fmt(r.bottom.chukyu);
-    $('o-toki').textContent = fmt(r.bottom.toki);
-    $('o-tsuki').textContent = fmt(r.bottom.tsuki);
-    $('o-toshi').textContent = fmt(r.bottom.toshi);
-    $('o-kaiketsu').textContent = fmt(r.bottom.kaiketsu);
-    $('o-jihonmei').textContent = fmt(r.bottom.jiHonmei);
-    $('o-jihongu').textContent = fmt(r.bottom.jiHongu);
+    $('o-honmei').innerHTML = fmt(r.bottom.honmei);
+    $('o-taichu').innerHTML = fmt(r.bottom.taichu);
+    $('o-migi').innerHTML = fmt(r.bottom.migi);
+    $('o-hidari').innerHTML = fmt(r.bottom.hidari);
+    $('o-hongu').innerHTML = fmt(r.bottom.hongu);
+    $('o-chukyu').innerHTML = fmt(r.bottom.chukyu);
+    $('o-toki').innerHTML = fmt(r.bottom.toki);
+    $('o-tsuki').innerHTML = fmt(r.bottom.tsuki);
+    $('o-toshi').innerHTML = fmt(r.bottom.toshi);
+    $('o-kaiketsu').innerHTML = fmt(r.bottom.kaiketsu);
+    $('o-jihonmei').innerHTML = fmt(r.bottom.jiHonmei);
+    $('o-jihongu').innerHTML = fmt(r.bottom.jiHongu);
 
     // 十二支吉凶象意 (生年・生月・生日 干支)
     const EtoTable = window.EtoTable;

@@ -159,19 +159,40 @@
       return Eto.BRANCHES[((periodBranchIdx + offset) % 12 + 12) % 12];
     }
 
+    // 各支の本来の方位 (position index)
+    const BRANCH_NATURAL_POS = [1, 2, 2, 5, 8, 8, 7, 6, 6, 3, 0, 0];
+
+    // 盤の暗剣殺(ア)/破(ハ) の位置を返す
+    function getAnkenHaPos(boardCenter, periodBranchIdx) {
+      let ankenPos = null, haPos = null;
+      if (boardCenter !== 5) {
+        const gokoPos = Kyusei.findPositionOfStar(boardCenter, 5);
+        ankenPos = 8 - gokoPos;
+        const centerDefPos = Kyusei.DEFAULT_POSITION_STARS.indexOf(boardCenter);
+        haPos = 8 - centerDefPos;
+      } else if (typeof periodBranchIdx === 'number') {
+        const naturalPos = BRANCH_NATURAL_POS[periodBranchIdx];
+        haPos = 8 - naturalPos;
+      }
+      return { ankenPos, haPos };
+    }
+
     // boardCenter の盤上で、posIdx の宮の情報を返す
     // isInton: その盤が陰遁逆運行を適用するか (日盤・時盤のみ)
     function describeOnBoard(boardCenter, periodBranchIdx, posIdx, isInton) {
       const stars = Kyusei.getPositionStars(boardCenter);
       const star = stars[posIdx];
       const isCenter = posIdx === 4;
+      const { ankenPos, haPos } = getAnkenHaPos(boardCenter, periodBranchIdx);
       return {
         kyu: isCenter ? '中宮' : Kyusei.POSITION_TO_KYU_NAME[posIdx],
         direction: isCenter ? '中央' : Kyusei.POSITION_TO_DIRECTION[posIdx],
         branches: dynamicBranch(periodBranchIdx, posIdx, !!isInton),
         star,
         starName: Kyusei.STAR_NAMES[star],
-        positionIdx: posIdx
+        positionIdx: posIdx,
+        anken: posIdx === ankenPos,
+        ha: posIdx === haPos
       };
     }
 
