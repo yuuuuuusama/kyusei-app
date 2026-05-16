@@ -38,29 +38,32 @@
     isInton = !!isInton;
     // 月 transformation
     if (m === d && d === h) {
-      // 月日時 三つ同じ
-      M = (m === 5) ? goouAlt(isInton, y) : 5;
+      // 月日時 三つ同じ → 月: 年と被らないように 定盤(5) か 対冲(10-m)
+      if (m === 5 && y === 5) M = goouAlt(isInton, y);
+      else if (y === 5) M = 10 - m;
+      else M = 5;
       modified = true;
     } else if (y === m && m === d) {
-      // 年月日 三つ同じ
-      M = (m === 5) ? goouAlt(isInton, h) : 5;
+      // 年月日 三つ同じ → 月→定盤(5)、全て5なら五黄回避 (逆の隣=時)
+      if (m === 5) M = goouAlt(isInton, h);
+      else M = 5;
       modified = true;
     } else if (y === m) {
-      // 年月同じ: 月→定盤(5)、日盤と被るなら 対冲 (10-m)、全て5なら五黄回避
+      // 年月同じ: 月→定盤(5)、日盤と被るなら 対冲 (10-m)、全て5なら五黄回避 (逆の隣=日)
       if (m === 5 && y === 5) M = goouAlt(isInton, d);
       else if (d === 5 && m !== 5) M = 10 - m;
       else M = 5;
       modified = true;
     } else if (m === d) {
-      // 月日同じ: 月→定盤(5)、年盤と被るなら 対冲 (10-m)、全て5なら五黄回避
+      // 月日同じ: 月→定盤(5)、年盤と被るなら 対冲 (10-m)、全て5なら五黄回避 (逆の隣=年)
       if (m === 5 && d === 5) M = goouAlt(isInton, y);
       else if (y === 5 && m !== 5) M = 10 - m;
       else M = 5;
       modified = true;
     }
-    // 時 transformation: 日時同じ (月日時 三つ同じ含む)
+    // 時 transformation: 日時同じ (月日時 三つ同じ含む) — 逆の隣なし
     if (d === h) {
-      if (d === 5 && h === 5) H = goouAlt(isInton, m);
+      if (d === 5 && h === 5) H = isInton ? 2 : 8;  // 五黄回避 (逆の隣なし=固定)
       else if (h === 5) H = 5;
       else H = 10 - h;
       modified = true;
@@ -88,9 +91,9 @@
       else M = 5;
       modified = true;
     }
-    // 生月 == 生日
+    // 生月 == 生日 (逆の隣 = 生時)
     if (matchPair(m, d, mB, dB)) {
-      if (m === 5 && d === 5) D = goouAlt(isInton, y);
+      if (m === 5 && d === 5) D = goouAlt(isInton, h);
       else if (y === 5 && d !== 5) D = 10 - d;
       else D = 5;
       modified = true;
