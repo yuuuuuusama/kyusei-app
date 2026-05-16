@@ -63,8 +63,8 @@
     $('o-doukai-tsuki').textContent = K.STAR_NAMES[r.bottom.doukai.tsuki];
     $('o-hidoukai-tsuki').textContent = K.STAR_NAMES[r.bottom.hidoukai.tsuki];
 
-    // 宮傾斜
-    $('o-keisha').textContent = `宮傾斜: ${r.bottom.keisha}`;
+    // 本人運気 (宮傾斜)
+    $('o-keisha').textContent = r.bottom.keisha;
 
     // 内蔵法
     $('o-kuraki-nm').textContent = r.bottom.naizou.kuraki_nengetsu;

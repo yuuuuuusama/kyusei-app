@@ -326,11 +326,14 @@
       false, cIsIntonForCells
     );
 
-    // ----- 宮傾斜 -----
-    // 簡易解釈: 生日盤において本命星 (or 月命星) のある位置から、その「定位」と異なれば傾斜
-    // ここでは「生月盤の中宮 → 月命星 が後天定位とどの宮に傾いているか」を返す
-    const keishaPos = Kyusei.findPositionOfStar(cMonthCenter, honmeisei);
-    const keishaKyu = honmeisei === 5 ? '中央' : Kyusei.positionToKyu(keishaPos).kyu;
+    // ----- 本人運気 (宮傾斜) -----
+    // 本命星が「生月盤」のどの宮にいるか。生月盤の中宮 = 月命星。
+    // 例: 本命=四緑、月命=七赤 → 生月盤(中宮=7)で 4 は posIdx=6 (坤宮) → 坤傾斜
+    const keishaPos = Kyusei.findPositionOfStar(getsumeisei, honmeisei);
+    const keishaKyuName = honmeisei === getsumeisei
+      ? '中央'
+      : Kyusei.positionToKyu(keishaPos).kyu;
+    const keishaKyu = keishaKyuName === '中央' ? '中央' : keishaKyuName.replace('宮', '') + '傾斜';
 
     // ----- 宿命 -----
     // 宿命 = 日盤暗剣殺の位置を時盤で見た値 ー 時盤暗剣殺の位置を日盤で見た値
