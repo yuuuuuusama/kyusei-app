@@ -265,14 +265,10 @@
     const jiHongu = describeOnBoard(transHourCenter, cHourEto.branchIdx, jiHonguPos, cIsIntonForCells);
 
     // ----- 同会・被同会 -----
-    // 年同会: 年盤での本命位置を「定位盤」で見たときの九星
-    //         = 本命位置(in 年盤) を担当する本来の星 = DEFAULT[posOf(本命, 年盤)]
-    // 年被同会: 「定位盤」での本命位置を「年盤」で見たときの九星
-    //         = 年盤[本命の定位置]
-    // 月同会: 月盤での本命位置を「年盤」で見たときの九星
-    //         = 年盤[posOf(本命, 月盤)]
-    // 月被同会: 年盤での本命位置を「月盤」で見たときの九星
-    //         = 月盤[posOf(本命, 年盤)]
+    // 年同会:   定位盤[posOf(本命, 年盤)]    本命の年盤上の位置に来る定位星
+    // 年被同会: 年盤[本命の定位]              本命の定位置に来る年盤の星
+    // 月同会:   月盤[posOf(本命, 年盤)]      本命の年盤上の位置に来る月盤の星
+    // 月被同会: 年盤[posOf(本命, 月盤)]      本命の月盤上の位置に来る年盤の星
     const yearStars  = Kyusei.getPositionStars(cYearCenter);
     const monthStars = Kyusei.getPositionStars(cMonthCenter);
     const honmeiPosInYear  = Kyusei.findPositionOfStar(cYearCenter,  honmeisei);
@@ -281,8 +277,8 @@
 
     const toshiDoukai    = Kyusei.DEFAULT_POSITION_STARS[honmeiPosInYear];
     const toshiHidoukai  = yearStars[honmeiDefPos];
-    const tsukiDoukai    = yearStars[honmeiPosInMonth];
-    const tsukiHidoukai  = monthStars[honmeiPosInYear];
+    const tsukiDoukai    = monthStars[honmeiPosInYear];
+    const tsukiHidoukai  = yearStars[honmeiPosInMonth];
 
     // ----- 蔵気 (内蔵法) -----
     // 蔵気 = 2つの盤を見て、両盤で「対向位置 (positionが8-旧の関係)」にある九星
