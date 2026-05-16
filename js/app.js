@@ -232,7 +232,7 @@
 
     // 内蔵 = 蔵気 (常に最新計算で上書き) — HTML マーカー入り
     $('m-naizou').innerHTML = r.bottom.naizou.kuraki_nengetsu;
-    $('m-shukumei').value = r.bottom.naizou.shukumei_nengetsu;
+    $('m-shukumei').innerHTML = r.bottom.naizou.shukumei_nengetsu;
   }
 
   // 3x3 盤の描画
@@ -347,7 +347,7 @@
       consult: $('f-consult').value,
       birth: birthVal,
       naizou: $('m-naizou').textContent,
-      shukumei: $('m-shukumei').value
+      shukumei: $('m-shukumei').textContent
     };
     const saved = Storage.upsert(record);
     currentRecordId = saved.id;
@@ -372,8 +372,9 @@
     if (currentRecordId && !confirm('現在のデータは保存されていません。新規作成しますか?')) return;
     currentRecordId = null;
     history.replaceState(null, '', location.pathname);
-    ['f-name','f-gender','f-age','f-topic','m-shukumei'].forEach(id => $(id).value = '');
+    ['f-name','f-gender','f-age','f-topic'].forEach(id => $(id).value = '');
     $('m-naizou').textContent = '';
+    $('m-shukumei').textContent = '';
     setDateInput('f-birth', '');
     setDateInput('f-consult', new Date());
     document.querySelectorAll('.ban').forEach(b => b.innerHTML = '');
