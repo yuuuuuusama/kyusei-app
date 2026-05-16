@@ -205,8 +205,8 @@
     markBranch(r.birth.monthEto.branch, 'eto-month');
     markBranch(r.birth.dayEto.branch,   'eto-day');
 
-    // 内蔵 = 蔵気 (常に最新計算で上書き)
-    $('m-naizou').value = r.bottom.naizou.kuraki_nengetsu;
+    // 内蔵 = 蔵気 (常に最新計算で上書き) — HTML マーカー入り
+    $('m-naizou').innerHTML = r.bottom.naizou.kuraki_nengetsu;
     $('m-shukumei').value = r.bottom.naizou.shukumei_nengetsu;
   }
 
@@ -321,7 +321,7 @@
       topic: $('f-topic').value,
       consult: $('f-consult').value,
       birth: birthVal,
-      naizou: $('m-naizou').value,
+      naizou: $('m-naizou').textContent,
       shukumei: $('m-shukumei').value
     };
     const saved = Storage.upsert(record);
@@ -347,7 +347,8 @@
     if (currentRecordId && !confirm('現在のデータは保存されていません。新規作成しますか?')) return;
     currentRecordId = null;
     history.replaceState(null, '', location.pathname);
-    ['f-name','f-gender','f-age','f-topic','m-naizou','m-shukumei'].forEach(id => $(id).value = '');
+    ['f-name','f-gender','f-age','f-topic','m-shukumei'].forEach(id => $(id).value = '');
+    $('m-naizou').textContent = '';
     setDateInput('f-birth', '');
     setDateInput('f-consult', new Date());
     document.querySelectorAll('.ban').forEach(b => b.innerHTML = '');

@@ -305,6 +305,12 @@
       if (x === c1 || x === c2) return null;
       return x;
     }
+    function fmtCellWithMarks(cell) {
+      let s = `${cell.kyu}${cell.starName}${cell.branches}`;
+      if (cell.anken) s += '<span style="color:#d00;font-weight:bold;">ア</span>';
+      if (cell.ha)    s += '<span style="color:#06c;font-weight:bold;">ハ</span>';
+      return s;
+    }
     function kurakiPair(c1, b1, c2, b2, isInton1, isInton2) {
       const star = findFacingStar(c1, c2);
       if (!star) return '—';
@@ -312,7 +318,7 @@
       const pos2 = Kyusei.findPositionOfStar(c2, star);
       const cell1 = describeOnBoard(c1, b1, pos1, !!isInton1);
       const cell2 = describeOnBoard(c2, b2, pos2, !!isInton2);
-      return `${cell1.kyu}${cell1.starName}${cell1.branches}ー${cell2.kyu}${cell2.starName}${cell2.branches}`;
+      return `${fmtCellWithMarks(cell1)}ー${fmtCellWithMarks(cell2)}`;
     }
     // 鑑定書「内蔵」 = 蔵気 = 日盤(絶対) + 変換後時盤 の facing pair
     // kurakiPair(c1, b1, c2, b2, isInton1, isInton2)
