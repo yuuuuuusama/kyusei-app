@@ -312,14 +312,35 @@
       const cell2 = describeOnBoard(c2, b2, pos2, !!isInton2);
       return `${fmtCellWithMarks(cell1)}ー${fmtCellWithMarks(cell2)}`;
     }
+    // 宿命ペア: 盤A暗剣殺位置を盤Bで見る ー 盤B暗剣殺位置を盤Aで見る
+    function shukumeiPair(c1, b1, c2, b2, isInton1, isInton2) {
+      const parts = [];
+      if (c1 !== 5) {
+        const ankenPos = 8 - Kyusei.findPositionOfStar(c1, 5);
+        const cell = describeOnBoard(c2, b2, ankenPos, !!isInton2);
+        parts.push(fmtCellWithMarks(cell));
+      }
+      if (c2 !== 5) {
+        const ankenPos = 8 - Kyusei.findPositionOfStar(c2, 5);
+        const cell = describeOnBoard(c1, b1, ankenPos, !!isInton1);
+        parts.push(fmtCellWithMarks(cell));
+      }
+      return parts.length ? parts.join('ー') : '—';
+    }
+
     // 鑑定書「内蔵」 = 蔵気 = 日盤(絶対) + 変換後時盤 の facing pair
-    // kurakiPair(c1, b1, c2, b2, isInton1, isInton2)
-    const kuraki_nengetsu = kurakiPair(
+    const kuraki_nichiji = kurakiPair(
       cDayCenter,       cDayEto.branchIdx,
       transHourCenter,  cHourEto.branchIdx,
       cIsIntonForCells, cIsIntonForCells
     );
-    // 蔵気月日 (判断書用) = 月盤 + 日盤
+    // 判断書「蔵気年月」 = 相談年盤 + 相談月盤
+    const kuraki_toshigetsu = kurakiPair(
+      cYearCenter,  cYearEto.branchIdx,
+      cMonthCenter, cMonthEto.branchIdx,
+      false, false
+    );
+    // 判断書「蔵気月日」 = 相談月盤 + 相談日盤
     const kuraki_getsubi = kurakiPair(
       cMonthCenter, cMonthEto.branchIdx,
       cDayCenter,   cDayEto.branchIdx,
@@ -335,41 +356,35 @@
       : Kyusei.positionToKyu(keishaPos).kyu;
     const keishaKyu = keishaKyuName === '中央' ? '中央' : keishaKyuName.replace('宮', '') + '傾斜';
 
-    // ----- 宿命 -----
-    // 宿命 = 日盤暗剣殺の位置を時盤で見た値 ー 時盤暗剣殺の位置を日盤で見た値
-    // 暗剣殺 = 五黄が居るマスの真反対 (中宮=五黄の盤では存在しない)
-    function shukumeiText() {
-      // 日盤暗剣殺
-      let dayAnkenPos = null;
-      if (cDayCenter !== 5) {
-        const gokoPosD = Kyusei.findPositionOfStar(cDayCenter, 5);
-        dayAnkenPos = 8 - gokoPosD;
-      }
-      // 時盤(変換後)暗剣殺
-      let hourAnkenPos = null;
-      if (transHourCenter !== 5) {
-        const gokoPosH = Kyusei.findPositionOfStar(transHourCenter, 5);
-        hourAnkenPos = 8 - gokoPosH;
-      }
-      const parts = [];
-      if (dayAnkenPos !== null) {
-        const cell = describeOnBoard(transHourCenter, cHourEto.branchIdx, dayAnkenPos, cIsIntonForCells);
-        parts.push(`${cell.kyu}${cell.starName}${cell.branches}`);
-      }
-      if (hourAnkenPos !== null) {
-        const cell = describeOnBoard(cDayCenter, cDayEto.branchIdx, hourAnkenPos, cIsIntonForCells);
-        parts.push(`${cell.kyu}${cell.starName}${cell.branches}`);
-      }
-      return parts.length ? parts.join('ー') : '—';
-    }
-    const shukumei_nengetsu = shukumeiText();
+    // ----- 宿命 (鑑定書: 日盤+変換後時盤) -----
+    const shukumei_nichiji = shukumeiPair(
+      cDayCenter,       cDayEto.branchIdx,
+      transHourCenter,  cHourEto.branchIdx,
+      cIsIntonForCells, cIsIntonForCells
+    );
+    // 判断書「宿命年月」 = 相談年盤 + 相談月盤
+    const shukumei_toshigetsu = shukumeiPair(
+      cYearCenter,  cYearEto.branchIdx,
+      cMonthCenter, cMonthEto.branchIdx,
+      false, false
+    );
+    // 判断書「宿命月日」 = 相談月盤 + 相談日盤
+    const shukumei_getsubi = shukumeiPair(
+      cMonthCenter, cMonthEto.branchIdx,
+      cDayCenter,   cDayEto.branchIdx,
+      false, cIsIntonForCells
+    );
 
     // ----- 内蔵法 -----
     const naizou = {
-      kuraki_nengetsu: kuraki_nengetsu,
-      shukumei_nengetsu: shukumei_nengetsu,
-      kuraki_getsubi: kuraki_getsubi,
-      shukumei_getsubi: cMonthEto.name + cDayEto.name
+      // 鑑定書 右カラム (内蔵/宿命) — 日盤+時盤
+      kuraki_nengetsu:   kuraki_nichiji,
+      shukumei_nengetsu: shukumei_nichiji,
+      // 判断書 内蔵法
+      kuraki_toshigetsu:   kuraki_toshigetsu,
+      shukumei_toshigetsu: shukumei_toshigetsu,
+      kuraki_getsubi:      kuraki_getsubi,
+      shukumei_getsubi:    shukumei_getsubi
     };
 
     // ----- 解神 (12支に対する解神) -----

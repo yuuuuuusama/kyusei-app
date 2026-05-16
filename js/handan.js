@@ -66,11 +66,11 @@
     // 本人運気 (宮傾斜)
     $('o-keisha').textContent = r.bottom.keisha;
 
-    // 内蔵法
-    $('o-kuraki-nm').textContent = r.bottom.naizou.kuraki_nengetsu;
-    $('o-shukumei-nm').textContent = r.bottom.naizou.shukumei_nengetsu;
-    $('o-kuraki-md').textContent = r.bottom.naizou.kuraki_getsubi;
-    $('o-shukumei-md').textContent = r.bottom.naizou.shukumei_getsubi;
+    // 内蔵法 — 蔵気/宿命 はそれぞれ年月(相談年盤+相談月盤) と 月日(相談月盤+相談日盤)
+    $('o-kuraki-nm').innerHTML  = r.bottom.naizou.kuraki_toshigetsu;
+    $('o-shukumei-nm').innerHTML = r.bottom.naizou.shukumei_toshigetsu;
+    $('o-kuraki-md').innerHTML  = r.bottom.naizou.kuraki_getsubi;
+    $('o-shukumei-md').innerHTML = r.bottom.naizou.shukumei_getsubi;
 
     // 流年法 60年 (5年区切り)
     const flow60Body = $('flow-60');
