@@ -1,7 +1,7 @@
 // service-worker.js
 // オフライン対応用
 
-const CACHE_NAME = 'kyusei-app-v61';
+const CACHE_NAME = 'kyusei-app-v62';
 const ASSETS = [
   './',
   './index.html',
@@ -38,16 +38,34 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
+// network-first 戦略: オンライン時は最新を取得、オフライン時のみキャッシュ
 self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then(resp =>
-      resp || fetch(e.request).then(netResp => {
-        if (e.request.method === 'GET' && netResp.ok && new URL(e.request.url).origin === location.origin) {
+  if (e.request.method !== 'GET') return;
+  const url = new URL(e.request.url);
+  if (url.origin !== location.origin) return;
+
+  const isStaticAsset = /\.(png|jpg|jpeg|webp|svg|ico|woff2?|ttf)$/i.test(url.pathname);
+  if (isStaticAsset) {
+    // 画像・フォントは cache-first
+    e.respondWith(
+      caches.match(e.request).then(resp => resp || fetch(e.request).then(netResp => {
+        if (netResp.ok) {
           const clone = netResp.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
         }
         return netResp;
-      }).catch(() => caches.match('./index.html'))
-    )
-  );
+      }))
+    );
+  } else {
+    // HTML/JS/CSS は network-first
+    e.respondWith(
+      fetch(e.request).then(netResp => {
+        if (netResp.ok) {
+          const clone = netResp.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
+        }
+        return netResp;
+      }).catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
+    );
+  }
 });
