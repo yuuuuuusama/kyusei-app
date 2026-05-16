@@ -193,6 +193,31 @@
     fillEtoRow('em', r.birth.monthEto.branch, $('eto-bm-label'), '生月');
     fillEtoRow('ed', r.birth.dayEto.branch,   $('eto-bd-label'), '生日');
 
+    // 解神 結果: 「刑/冲/害/破」が一つもなく、「三合/合」が一つ以上ある支を抽出
+    (function fillKekka() {
+      const kekkaEl = $('eto-kekka');
+      if (!kekkaEl) return;
+      const refs = [
+        EtoTable[r.birth.yearEto.branch],
+        EtoTable[r.birth.monthEto.branch],
+        EtoTable[r.birth.dayEto.branch]
+      ];
+      const BAD = /[刑冲害破]/;
+      const result = [];
+      for (const b of Eto.BRANCHES) {
+        let hasBad = false, hasGood = false;
+        for (const row of refs) {
+          if (!row) continue;
+          const info = row[b];
+          if (!info) continue;
+          if (BAD.test(info.label)) hasBad = true;
+          if (info.label === '三合' || info.label === '合') hasGood = true;
+        }
+        if (!hasBad && hasGood) result.push(b);
+      }
+      kekkaEl.textContent = result.join('、');
+    })();
+
     // 干支吉凶の輪に生年/生月/生日の支を色付き丸で囲む
     document.querySelectorAll('.eto-wheel span[data-branch]').forEach(s => {
       s.classList.remove('eto-year', 'eto-month', 'eto-day');
