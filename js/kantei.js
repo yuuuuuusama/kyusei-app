@@ -185,8 +185,19 @@
 
     // 本命が中宮にあるときは「本命の本宮 (後天定位)」を基準に対冲/右宮/左宮/月/年/時 を反映
     // 例: 中宮に三碧 → 三碧の本宮=震宮(posIdx=5) を基準 → 対冲=兌宮(五黄), 右宮=艮宮(六白), 左宮=巽宮(二黒)
+    // 本命=五黄 の場合: 陽遁→八白(艮宮)、陰遁→二黒(坤宮) を基準にする
     const honguDefPos = Kyusei.DEFAULT_POSITION_STARS.indexOf(honmeisei);
-    const refPos = (honmeiPos === 4 && honguDefPos !== 4) ? honguDefPos : honmeiPos;
+    let refPos;
+    if (honmeiPos === 4) {
+      if (honmeisei === 5) {
+        const altStar = cIsIntonForCells ? 2 : 8;
+        refPos = Kyusei.DEFAULT_POSITION_STARS.indexOf(altStar);
+      } else {
+        refPos = honguDefPos;
+      }
+    } else {
+      refPos = honmeiPos;
+    }
 
     // 対冲宮: 真反対 (8 - posIdx)
     let taichu;
