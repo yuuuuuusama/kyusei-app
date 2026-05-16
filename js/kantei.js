@@ -497,9 +497,13 @@
   }
 
   // 流年法60年表: 12行 × 5歳刻み (0-5, 5-10, ... 55-60)
-  // 生年盤の中宮支の自然位置の対冲からスタートし、時計回りで巡る
-  //   主方位 (N/E/S/W = posIdx 1/5/7/3): 1スロット (5年)
-  //   隅方位 (NW/NE/SW/SE = posIdx 0/2/6/8): 2スロット (10年)
+  // 生年盤の中宮支から開始地点と巡回パターンを決定し、時計回りで巡る
+  //   主方位 (N/E/S/W): 1スロット (5年)
+  //   隅方位 (NW/NE/SW/SE): 2スロット (10年)
+  //   - 主方位の支 (子/卯/午/酉): 対冲の主方位から開始
+  //   - 隅方位 "earlier" (丑/辰/未/戌): 自身の隅から開始、2スロット消化
+  //   - 隅方位 "later" (寅/巳/申/亥): 自身の隅から開始、1スロットのみ消化
+  //     残り11スロットを時計回り、終端で同じ隅にもう1スロット
   function compute60YearFlowTable(birthDate) {
     const SolarTerms = global.SolarTerms;
     const Kyusei = global.Kyusei;
@@ -510,21 +514,41 @@
     const bYearBranchIdx = bYearEto.branchIdx;
 
     const BRANCH_NATURAL_POS = [1, 2, 2, 5, 8, 8, 7, 6, 6, 3, 0, 0];
-    // 時計回り CW 順 (N→NE→E→SE→S→SW→W→NW→N の循環で並び換え)
-    //   方位: S=7, SW=6, W=3, NW=0, N=1, NE=2, E=5, SE=8
+    // CW順 (S→SW→W→NW→N→NE→E→SE)
     const CW_ORDER = [7, 6, 3, 0, 1, 2, 5, 8];
     const IS_CARDINAL = { 1: true, 3: true, 5: true, 7: true };
+    // 隅方位の支のうち、"later" (時計回り順で対応する隅の後にくる) を判定
+    //   寅=2, 巳=5, 申=8, 亥=11
+    const LATER_CORNER = new Set([2, 5, 8, 11]);
+    // 主方位の支 (cardinal): 子=0, 卯=3, 午=6, 酉=9
+    const CARDINAL_BRANCH = new Set([0, 3, 6, 9]);
 
-    const startPos = 8 - BRANCH_NATURAL_POS[bYearBranchIdx];
+    const naturalPos = BRANCH_NATURAL_POS[bYearBranchIdx];
+    const isCardinalBranch = CARDINAL_BRANCH.has(bYearBranchIdx);
+    const isLater = LATER_CORNER.has(bYearBranchIdx);
+    // 主方位: 対冲, 隅方位: 自身
+    const startPos = isCardinalBranch ? (8 - naturalPos) : naturalPos;
     let startIdx = CW_ORDER.indexOf(startPos);
     if (startIdx < 0) startIdx = 0;
 
     // 12 スロット生成
     const positions = [];
-    for (let i = 0; i < 8; i++) {
-      const pos = CW_ORDER[(startIdx + i) % 8];
-      positions.push(pos);
-      if (!IS_CARDINAL[pos]) positions.push(pos);
+    if (!isCardinalBranch && isLater) {
+      // 隅"later": 1スロット → 残り7位置 → 同じ隅に1スロット
+      positions.push(startPos);
+      for (let i = 1; i < 8; i++) {
+        const pos = CW_ORDER[(startIdx + i) % 8];
+        positions.push(pos);
+        if (!IS_CARDINAL[pos]) positions.push(pos);
+      }
+      positions.push(startPos);
+    } else {
+      // 主方位 または 隅"earlier": フル巡回
+      for (let i = 0; i < 8; i++) {
+        const pos = CW_ORDER[(startIdx + i) % 8];
+        positions.push(pos);
+        if (!IS_CARDINAL[pos]) positions.push(pos);
+      }
     }
     // positions.length === 12
 
