@@ -313,18 +313,23 @@
       cell.appendChild(starSpan);
       cell.appendChild(branchSpan);
 
-      // 暗剣殺・破 マーク (右上)
-      if (pos === ankenPos) {
-        const m = document.createElement('span');
-        m.className = 'mark anken';
-        m.textContent = 'ア';
-        cell.appendChild(m);
-      }
-      if (pos === haPos) {
-        const m = document.createElement('span');
-        m.className = 'mark ha';
-        m.textContent = 'ハ';
-        cell.appendChild(m);
+      // 暗剣殺・破 マーク (右上、同じ宮に重なる場合は横並び)
+      if (pos === ankenPos || pos === haPos) {
+        const marks = document.createElement('span');
+        marks.className = 'marks';
+        if (pos === ankenPos) {
+          const m = document.createElement('span');
+          m.className = 'mark anken';
+          m.textContent = 'ア';
+          marks.appendChild(m);
+        }
+        if (pos === haPos) {
+          const m = document.createElement('span');
+          m.className = 'mark ha';
+          m.textContent = 'ハ';
+          marks.appendChild(m);
+        }
+        cell.appendChild(marks);
       }
 
       el.appendChild(cell);

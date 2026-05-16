@@ -385,24 +385,29 @@ html, body {
 .ban-cell-inner.honmei { background: #ffe6b3; }
 .ban-cell-inner.taichu { background: #cfe7ff; }
 
-/* 暗剣殺 (ア赤) / 破 (ハ青) マーク */
-.ban-cell-inner .mark {
+/* 暗剣殺 (ア赤) / 破 (ハ青) マーク — 同じ宮の時は横並び */
+.ban-cell-inner .marks {
   position: absolute;
   top: 1px;
   right: 2px;
+  display: inline-flex;
+  gap: 0;
+  line-height: 1;
+  z-index: 2;
+}
+.ban-cell-inner .marks .mark {
   font-size: 10px;
   font-weight: bold;
   font-family: var(--font-jp);
   line-height: 1;
-  z-index: 2;
 }
-.ban-cell-inner .mark.anken { color: #d00; }
-.ban-cell-inner .mark.ha    { color: #06c; }
+.ban-cell-inner .marks .mark.anken { color: #d00; }
+.ban-cell-inner .marks .mark.ha    { color: #06c; }
 @media (min-width: 641px) {
-  .ban-cell-inner .mark { font-size: 11px; }
+  .ban-cell-inner .marks .mark { font-size: 11px; }
 }
 @media print {
-  .ban-cell-inner .mark { font-size: 8pt; }
+  .ban-cell-inner .marks .mark { font-size: 8pt; }
 }
 
 @media (min-width: 641px) {
@@ -775,7 +780,8 @@ html, body {
   .ban-cell-inner .star { font-size: 8.5pt !important; }
   .ban-cell-inner .kakka { font-size: 5pt !important; top: 0 !important; left: 1px !important; }
   .ban-cell-inner .branch { font-size: 5.5pt !important; bottom: 0 !important; right: 1px !important; }
-  .ban-cell-inner .mark { font-size: 6pt !important; top: 0 !important; right: 1px !important; }
+  .ban-cell-inner .marks { top: 0 !important; right: 1px !important; }
+  .ban-cell-inner .marks .mark { font-size: 6pt !important; }
 
   .bottom-grid {
     display: grid !important;
