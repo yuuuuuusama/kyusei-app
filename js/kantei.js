@@ -183,36 +183,41 @@
     const dayBranchIdx = cDayEto.branchIdx;
     const honmei = describeOnBoard(cDayCenter, dayBranchIdx, honmeiPos, cIsIntonForCells);
 
-    // 対冲宮: 日盤本命の真反対 (8 - posIdx)
+    // 本命が中宮にあるときは「本命の本宮 (後天定位)」を基準に対冲/右宮/左宮/月/年/時 を反映
+    // 例: 中宮に三碧 → 三碧の本宮=震宮(posIdx=5) を基準 → 対冲=兌宮(五黄), 右宮=艮宮(六白), 左宮=巽宮(二黒)
+    const honguDefPos = Kyusei.DEFAULT_POSITION_STARS.indexOf(honmeisei);
+    const refPos = (honmeiPos === 4 && honguDefPos !== 4) ? honguDefPos : honmeiPos;
+
+    // 対冲宮: 真反対 (8 - posIdx)
     let taichu;
-    if (honmeiPos === 4) {
+    if (refPos === 4) {
       taichu = describeOnBoard(cDayCenter, dayBranchIdx, 4, cIsIntonForCells);
       taichu.kyu = '(中央)';
     } else {
-      taichu = describeOnBoard(cDayCenter, dayBranchIdx, 8 - honmeiPos, cIsIntonForCells);
+      taichu = describeOnBoard(cDayCenter, dayBranchIdx, 8 - refPos, cIsIntonForCells);
     }
 
     // 右宮 = 反時計回り (CCW) 隣 / 左宮 = 時計回り (CW) 隣
     let migi = null, hidari = null;
-    if (honmeiPos !== 4) {
-      const cwIdx = CLOCKWISE.indexOf(honmeiPos);
+    if (refPos !== 4) {
+      const cwIdx = CLOCKWISE.indexOf(refPos);
       migi   = describeOnBoard(cDayCenter, dayBranchIdx, CLOCKWISE[(cwIdx - 1 + 8) % 8], cIsIntonForCells);
       hidari = describeOnBoard(cDayCenter, dayBranchIdx, CLOCKWISE[(cwIdx + 1) % 8], cIsIntonForCells);
     }
 
     // 本宮: 本命星 X の後天定位 (固定position)
-    const honguPos = Kyusei.DEFAULT_POSITION_STARS.indexOf(honmeisei);
+    const honguPos = honguDefPos;
     const hongu = describeOnBoard(cDayCenter, dayBranchIdx, honguPos, cIsIntonForCells);
 
     // 中宮: 日盤の中央
     const chukyu = describeOnBoard(cDayCenter, dayBranchIdx, 4, cIsIntonForCells);
 
-    // 時 = 日盤本命位置 を 時盤 で見た時 (時盤は陰遁時、干支逆行)
+    // 時 = 基準位置を 時盤 で見た時 (時盤は陰遁時、干支逆行)
     // 月 = 月盤 (常に陽遁)
     // 年 = 年盤 (常に陽遁)
-    const toki  = describeOnBoard(cHourCenter,  cHourEto.branchIdx,  honmeiPos, cIsIntonForCells);
-    const tsuki = describeOnBoard(cMonthCenter, cMonthEto.branchIdx, honmeiPos, false);
-    const toshi = describeOnBoard(cYearCenter,  cYearEto.branchIdx,  honmeiPos, false);
+    const toki  = describeOnBoard(cHourCenter,  cHourEto.branchIdx,  refPos, cIsIntonForCells);
+    const tsuki = describeOnBoard(cMonthCenter, cMonthEto.branchIdx, refPos, false);
+    const toshi = describeOnBoard(cYearCenter,  cYearEto.branchIdx,  refPos, false);
 
     // ----- 右側カラム (変換後の時盤を読み取る、陰遁時干支逆行) -----
     // 解決: 変換後時盤の中宮 を 日盤(絶対) で探し、その位置を変換後時盤で見た値
