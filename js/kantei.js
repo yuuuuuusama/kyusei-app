@@ -277,8 +277,8 @@
 
     const toshiDoukai    = Kyusei.DEFAULT_POSITION_STARS[honmeiPosInYear];
     const toshiHidoukai  = yearStars[honmeiDefPos];
-    const tsukiDoukai    = monthStars[honmeiPosInYear];
-    const tsukiHidoukai  = yearStars[honmeiPosInMonth];
+    const tsukiDoukai    = yearStars[honmeiPosInMonth];
+    const tsukiHidoukai  = monthStars[honmeiPosInYear];
 
     // ----- 蔵気 (内蔵法) -----
     // 蔵気 = 2つの盤を見て、両盤で「対向位置 (positionが8-旧の関係)」にある九星
