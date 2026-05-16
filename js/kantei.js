@@ -14,41 +14,94 @@
   //  consultDate: Date (相談日時)
   // を受け取り、各種計算結果を返す
 
-  // 鑑定法.docx の盤変化ルール (最新仕様)
-  // 日盤(d)は絶対変えない
+  // 五黄重複回避: 変化後の中宮が 5 で逆の隣も 5 のとき
+  //   陽遁期間 → 八白(8) 優先、逆の隣が 8 なら 二黒(2)
+  //   陰遁期間 → 二黒(2) 優先、逆の隣が 2 なら 八白(8)
+  function goouAlt(isInton, oppositeNeighbor) {
+    if (isInton) {
+      return oppositeNeighbor === 2 ? 8 : 2;
+    }
+    return oppositeNeighbor === 8 ? 2 : 8;
+  }
+
+  // 鑑定法.docx の盤変化ルール
+  // 相談日側 (top row): 日盤(d) は絶対変えない
   //   - 年月日 三つ同じ → 月→定盤(5)
   //   - 月日時 三つ同じ → 月→定盤(5), 時→定盤対冲(10-X)
   //   - 年月 同じ → 月→定盤(5), 日盤と被るなら 10-X
   //   - 月日 同じ → 月→定盤(5), 年盤と被るなら 10-X
   //   - 日時 同じ → 時→定盤対冲(10-X)
-  function transformCenters(y, m, d, h) {
+  //   - 上記で中宮 5 が更に 5 と重なれば 五黄回避 (陽遁→8, 陰遁→2)
+  function transformCenters(y, m, d, h, isInton) {
     let M = m, H = h;
     let modified = false;
+    isInton = !!isInton;
     // 月 transformation
     if (m === d && d === h) {
       // 月日時 三つ同じ
-      M = 5;
+      M = (m === 5) ? goouAlt(isInton, y) : 5;
       modified = true;
     } else if (y === m && m === d) {
       // 年月日 三つ同じ
-      M = 5;
+      M = (m === 5) ? goouAlt(isInton, h) : 5;
       modified = true;
     } else if (y === m) {
-      // 年月同じ: 月→定盤(5)、日盤と被るなら 対冲 (10-m)
-      M = (d === 5 && m !== 5) ? (10 - m) : 5;
+      // 年月同じ: 月→定盤(5)、日盤と被るなら 対冲 (10-m)、全て5なら五黄回避
+      if (m === 5 && y === 5) M = goouAlt(isInton, d);
+      else if (d === 5 && m !== 5) M = 10 - m;
+      else M = 5;
       modified = true;
     } else if (m === d) {
-      // 月日同じ: 月→定盤(5)、年盤と被るなら 対冲 (10-m)
-      M = (y === 5 && m !== 5) ? (10 - m) : 5;
+      // 月日同じ: 月→定盤(5)、年盤と被るなら 対冲 (10-m)、全て5なら五黄回避
+      if (m === 5 && d === 5) M = goouAlt(isInton, y);
+      else if (y === 5 && m !== 5) M = 10 - m;
+      else M = 5;
       modified = true;
     }
     // 時 transformation: 日時同じ (月日時 三つ同じ含む)
     if (d === h) {
-      H = (h === 5) ? h : (10 - h);
+      if (d === 5 && h === 5) H = goouAlt(isInton, m);
+      else if (h === 5) H = 5;
+      else H = 10 - h;
       modified = true;
     }
     // 日 never changes (日盤絶対)
     return { year: y, month: M, day: d, hour: H, modified };
+  }
+
+  // 生年月日側 (bottom row) の盤変化ルール
+  //   - 生年生月 (九星 or 支) 同じ → 生月→定盤(5)、生日==5 と被るなら 10-m
+  //   - 生月生日 (九星 or 支) 同じ → 生日→定盤(5)、生年==5 と被るなら 10-d
+  //   - 生日生時 (九星 or 支) 同じ → 生時→定盤(5)
+  //   - 上記で中宮 5 が更に 5 と重なれば 五黄回避 (陽遁→8, 陰遁→2)
+  function transformCentersBirth(y, m, d, h, yB, mB, dB, hB, isInton) {
+    let M = m, D = d, H = h;
+    let modified = false;
+    isInton = !!isInton;
+    const matchPair = (a, b, aB, bB) =>
+      a === b || (typeof aB === 'number' && typeof bB === 'number' && aB === bB);
+
+    // 生年 == 生月
+    if (matchPair(y, m, yB, mB)) {
+      if (y === 5 && m === 5) M = goouAlt(isInton, d);
+      else if (d === 5 && m !== 5) M = 10 - m;
+      else M = 5;
+      modified = true;
+    }
+    // 生月 == 生日
+    if (matchPair(m, d, mB, dB)) {
+      if (m === 5 && d === 5) D = goouAlt(isInton, y);
+      else if (y === 5 && d !== 5) D = 10 - d;
+      else D = 5;
+      modified = true;
+    }
+    // 生日 == 生時
+    if (matchPair(d, h, dB, hB)) {
+      if (d === 5 && h === 5) H = goouAlt(isInton, m);
+      else H = 5;
+      modified = true;
+    }
+    return { year: y, month: M, day: D, hour: H, modified };
   }
 
   function computeKantei(birthDate, consultDate) {
@@ -77,7 +130,10 @@
     const cHourCenter = Kyusei.getHourStar(consultDate);
 
     // ----- 盤変化の事前計算 (解決・時本命・時本宮・内蔵 で使用) -----
-    const cTransformPre = transformCenters(cYearCenter, cMonthCenter, cDayCenter, cHourCenter);
+    const cIsIntonPre = Kyusei.isInton(consultDate);
+    const cTransformPre = transformCenters(
+      cYearCenter, cMonthCenter, cDayCenter, cHourCenter, cIsIntonPre
+    );
     const transHourCenter = cTransformPre.hour; // 変換後の時盤中宮
 
     // ----- 鑑定書下部の宮位 -----
@@ -290,11 +346,13 @@
     const bIsInton = Kyusei.isInton(birthDate);
     const cIsInton = Kyusei.isInton(consultDate);
 
-    // 生年月日側の盤変化
-    const bTransform = transformCenters(
-      Kyusei.getYearStar(bSM.setsuYear),
-      Kyusei.getMonthStar(bYearEto.branchIdx, bSM.setsuMonth),
-      bDayCenter, bHourCenter
+    // 生年月日側の盤変化 (新ルール: ペア毎に変化、五黄回避)
+    const bYearCenterRaw = Kyusei.getYearStar(bSM.setsuYear);
+    const bMonthCenterRaw = Kyusei.getMonthStar(bYearEto.branchIdx, bSM.setsuMonth);
+    const bTransform = transformCentersBirth(
+      bYearCenterRaw, bMonthCenterRaw, bDayCenter, bHourCenter,
+      bYearEto.branchIdx, bMonthEto.branchIdx, bDayEto.branchIdx, bHourEto.branchIdx,
+      bIsInton
     );
     // 相談日側の盤変化は前段で計算済 (cTransformPre)
     const cTransform = cTransformPre;
