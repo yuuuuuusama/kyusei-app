@@ -40,71 +40,55 @@
     <div class="body"><textarea id="m-soudan"></textarea></div>
   </div>
 
-  <!-- 2列レイアウト: 左に流年法、右に本人運気・年月運・内蔵法 -->
-  <div class="handan-grid" style="margin-top:10px;">
-    <!-- 左: 流年法 -->
-    <div>
-      <div class="handan-section">
-        <h3>流年法</h3>
-        <div class="body">
-          <table class="flow-table" style="width:100%;">
-            <thead><tr><th style="width:5em;">年齢</th><th>結果</th></tr></thead>
-            <tbody id="flow-60"></tbody>
-          </table>
-        </div>
+  <!-- 本人運気・年月運・内蔵法 -->
+  <div style="margin-top:10px;">
+    <div class="handan-section">
+      <h3>本人運気　宮傾斜</h3>
+      <div class="body">
+        <div id="o-keisha" style="margin-bottom:4px;font-family:var(--font-jp);"></div>
+        <textarea id="m-honnin"></textarea>
       </div>
     </div>
 
-    <!-- 右: 本人運気・年月運・内蔵法 -->
-    <div>
-      <div class="handan-section">
-        <h3>本人運気　宮傾斜</h3>
-        <div class="body">
-          <div id="o-keisha" style="margin-bottom:4px;font-family:var(--font-jp);"></div>
-          <textarea id="m-honnin"></textarea>
-        </div>
+    <div class="handan-section" style="margin-top:10px;">
+      <h3>年月運</h3>
+      <div class="body">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-jp);">
+          <tr>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">年同会</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-doukai-toshi"></td>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">年被同会</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-hidoukai-toshi"></td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">月同会</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-doukai-tsuki"></td>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">月被同会</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-hidoukai-tsuki"></td>
+          </tr>
+        </table>
+        <textarea id="m-nengetsu" style="margin-top:4px;"></textarea>
       </div>
+    </div>
 
-      <div class="handan-section" style="margin-top:10px;">
-        <h3>年月運</h3>
-        <div class="body">
-          <table style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-jp);">
-            <tr>
-              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">年同会</td>
-              <td style="border:1px solid #888;padding:3px 6px;" id="o-doukai-toshi"></td>
-              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">年被同会</td>
-              <td style="border:1px solid #888;padding:3px 6px;" id="o-hidoukai-toshi"></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">月同会</td>
-              <td style="border:1px solid #888;padding:3px 6px;" id="o-doukai-tsuki"></td>
-              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">月被同会</td>
-              <td style="border:1px solid #888;padding:3px 6px;" id="o-hidoukai-tsuki"></td>
-            </tr>
-          </table>
-          <textarea id="m-nengetsu" style="margin-top:4px;"></textarea>
-        </div>
-      </div>
-
-      <div class="handan-section" style="margin-top:10px;">
-        <h3>内蔵法</h3>
-        <div class="body">
-          <table style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-jp);">
-            <tr>
-              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">蔵気年月</td>
-              <td style="border:1px solid #888;padding:3px 6px;" id="o-kuraki-nm"></td>
-              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">宿命年月</td>
-              <td style="border:1px solid #888;padding:3px 6px;" id="o-shukumei-nm"></td>
-            </tr>
-            <tr>
-              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">蔵気月日</td>
-              <td style="border:1px solid #888;padding:3px 6px;" id="o-kuraki-md"></td>
-              <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">宿命月日</td>
-              <td style="border:1px solid #888;padding:3px 6px;" id="o-shukumei-md"></td>
-            </tr>
-          </table>
-          <textarea id="m-naizou" style="margin-top:4px;"></textarea>
-        </div>
+    <div class="handan-section" style="margin-top:10px;">
+      <h3>内蔵法</h3>
+      <div class="body">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-jp);">
+          <tr>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">蔵気年月</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-kuraki-nm"></td>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">宿命年月</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-shukumei-nm"></td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">蔵気月日</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-kuraki-md"></td>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">宿命月日</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-shukumei-md"></td>
+          </tr>
+        </table>
+        <textarea id="m-naizou" style="margin-top:4px;"></textarea>
       </div>
     </div>
   </div>
@@ -117,12 +101,12 @@
 
 </main>
 
-<script src="js/solar-terms.js?v=76"></script>
-<script src="js/eto.js?v=76"></script>
-<script src="js/kyusei.js?v=76"></script>
-<script src="js/kantei.js?v=76"></script>
-<script src="js/storage.js?v=76"></script>
-<script src="js/handan.js?v=76"></script>
+<script src="js/solar-terms.js?v=77"></script>
+<script src="js/eto.js?v=77"></script>
+<script src="js/kyusei.js?v=77"></script>
+<script src="js/kantei.js?v=77"></script>
+<script src="js/storage.js?v=77"></script>
+<script src="js/handan.js?v=77"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));

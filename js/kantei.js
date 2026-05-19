@@ -587,10 +587,53 @@
     });
   }
 
+  // 流年法 60年: 与えられた支(branchIdx)から、各方位(positionIdx 0-8)に
+  // 該当する開始年齢のリストを返す。中宮(4)は含まれない。
+  //   例: { 0: [0, 5], 1: [10], 2: [15, 20], ... }
+  function computeRyunenAgesByPosition(branchIdx) {
+    const BRANCH_NATURAL_POS = [1, 2, 2, 5, 8, 8, 7, 6, 6, 3, 0, 0];
+    const CW_ORDER = [7, 6, 3, 0, 1, 2, 5, 8];
+    const IS_CARDINAL = { 1: true, 3: true, 5: true, 7: true };
+    const LATER_CORNER = new Set([2, 5, 8, 11]);
+    const CARDINAL_BRANCH = new Set([0, 3, 6, 9]);
+
+    const naturalPos = BRANCH_NATURAL_POS[branchIdx];
+    const isCardinalBranch = CARDINAL_BRANCH.has(branchIdx);
+    const isLater = LATER_CORNER.has(branchIdx);
+    const startPos = naturalPos;
+    let startIdx = CW_ORDER.indexOf(startPos);
+    if (startIdx < 0) startIdx = 0;
+
+    const positions = [];
+    if (!isCardinalBranch && isLater) {
+      positions.push(startPos);
+      for (let i = 1; i < 8; i++) {
+        const pos = CW_ORDER[(startIdx + i) % 8];
+        positions.push(pos);
+        if (!IS_CARDINAL[pos]) positions.push(pos);
+      }
+      positions.push(startPos);
+    } else {
+      for (let i = 0; i < 8; i++) {
+        const pos = CW_ORDER[(startIdx + i) % 8];
+        positions.push(pos);
+        if (!IS_CARDINAL[pos]) positions.push(pos);
+      }
+    }
+
+    const map = {};
+    positions.forEach((pos, i) => {
+      if (!map[pos]) map[pos] = [];
+      map[pos].push(i * 5);
+    });
+    return map;
+  }
+
   global.Kantei = {
     computeKantei,
     compute60YearFlow,
     compute60YearFlowTable,
-    computeYearFlowDetail
+    computeYearFlowDetail,
+    computeRyunenAgesByPosition
   };
 })(typeof window !== 'undefined' ? window : globalThis);

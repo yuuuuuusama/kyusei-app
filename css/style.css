@@ -381,6 +381,18 @@ html, body {
   right: 2px;
   letter-spacing: -0.5px;
 }
+.ban-cell-inner .ryunen-age {
+  font-size: 8px;
+  color: #b35;
+  position: absolute;
+  bottom: 0px;
+  left: 2px;
+  letter-spacing: -0.5px;
+  font-weight: 500;
+}
+@media (min-width: 641px) {
+  .ban-cell-inner .ryunen-age { font-size: 9px; }
+}
 .ban-cell-inner.center { background: #f8f0d8; font-weight: bold; }
 .ban-cell-inner.honmei { background: #ffe6b3; }
 .ban-cell-inner.taichu { background: #cfe7ff; }
@@ -780,6 +792,7 @@ html, body {
   .ban-cell-inner .star { font-size: 8.5pt !important; }
   .ban-cell-inner .kakka { font-size: 5pt !important; top: 0 !important; left: 1px !important; }
   .ban-cell-inner .branch { font-size: 5.5pt !important; bottom: 0 !important; right: 1px !important; }
+  .ban-cell-inner .ryunen-age { font-size: 5pt !important; bottom: 0 !important; left: 1px !important; }
   .ban-cell-inner .marks { top: 0 !important; right: 1px !important; }
   .ban-cell-inner .marks .mark { font-size: 6pt !important; }
 

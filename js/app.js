@@ -120,8 +120,10 @@
 
     // 下段4盤 (生年月日): 変換後中宮で描画
     const bInt = r.birth.isInton;
-    drawBan('ban-by', r.birth.displayYearCenter,  r.birth.honmeisei, r.birth.yearEto.branchIdx, false);
-    drawBan('ban-bm', r.birth.displayMonthCenter, r.birth.honmeisei, r.birth.monthEto.branchIdx, false);
+    const ryunenYear  = Kantei.computeRyunenAgesByPosition(r.birth.yearEto.branchIdx);
+    const ryunenMonth = Kantei.computeRyunenAgesByPosition(r.birth.monthEto.branchIdx);
+    drawBan('ban-by', r.birth.displayYearCenter,  r.birth.honmeisei, r.birth.yearEto.branchIdx, false, ryunenYear);
+    drawBan('ban-bm', r.birth.displayMonthCenter, r.birth.honmeisei, r.birth.monthEto.branchIdx, false, ryunenMonth);
     drawBan('ban-bd', r.birth.displayDayCenter,   r.birth.honmeisei, r.birth.dayEto.branchIdx,  bInt);
     drawBan('ban-bh', r.birth.displayHourCenter,  r.birth.honmeisei, r.birth.hourEto.branchIdx, bInt);
     $('ban-by-info').textContent = `${r.birth.yearEto.name} / ${K.STAR_NAMES[r.birth.yearCenter]}`;
@@ -238,7 +240,8 @@
   // 3x3 盤の描画
   // periodBranchIdx: その盤の「期間の支」(年支/月支/日支/時支) のindex 0-11
   // isInton: 陰遁期間か (true なら12支の運行が逆になる)
-  function drawBan(elId, centerStar, honmeiStar, periodBranchIdx, isInton) {
+  // ryunenAges: 任意。{ posIdx: [age, age, ...] } の形で、各方位に流年法の開始年齢を表示
+  function drawBan(elId, centerStar, honmeiStar, periodBranchIdx, isInton, ryunenAges) {
     const el = document.getElementById(elId);
     if (!el) return;
     el.innerHTML = '';
@@ -312,6 +315,14 @@
       cell.appendChild(kakkaSpan);
       cell.appendChild(starSpan);
       cell.appendChild(branchSpan);
+
+      // 流年法 年齢 (左下) — 中宮(pos=4)以外で渡された場合のみ
+      if (ryunenAges && pos !== 4 && ryunenAges[pos]) {
+        const ageSpan = document.createElement('span');
+        ageSpan.className = 'ryunen-age';
+        ageSpan.textContent = ryunenAges[pos].join(',');
+        cell.appendChild(ageSpan);
+      }
 
       // 暗剣殺・破 マーク (右上、同じ宮に重なる場合は横並び)
       if (pos === ankenPos || pos === haPos) {

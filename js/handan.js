@@ -71,19 +71,6 @@
     $('o-shukumei-nm').innerHTML = r.bottom.naizou.shukumei_toshigetsu;
     $('o-kuraki-md').innerHTML  = r.bottom.naizou.kuraki_getsubi;
     $('o-shukumei-md').innerHTML = r.bottom.naizou.shukumei_getsubi;
-
-    // 流年法 60年 (5年区切り、生年盤を時計回りに巡る)
-    const flow60Body = $('flow-60');
-    flow60Body.innerHTML = '';
-    const flowRows = Kantei.compute60YearFlowTable(birth);
-    flowRows.forEach(row => {
-      const tr = document.createElement('tr');
-      const ankenMark = row.anken ? '<span style="color:#d00;font-weight:bold;">ア</span>' : '';
-      const haMark    = row.ha    ? '<span style="color:#06c;font-weight:bold;">ハ</span>' : '';
-      tr.innerHTML = `<td>${row.ageStart}〜${row.ageEnd}</td>` +
-                     `<td>${row.kyu}${row.starName}${row.branch}${ankenMark}${haMark}</td>`;
-      flow60Body.appendChild(tr);
-    });
   }
 
   function save() {
