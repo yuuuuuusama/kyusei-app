@@ -57,15 +57,22 @@
     $('o-meta').textContent = `${currentRecord.name || '(無名)'} | 生年: ${formatDate(birth)} | 相談: ${formatDate(consult)} | 本命: ${K.STAR_NAMES[r.birth.honmeisei]} 月命: ${K.STAR_NAMES[r.birth.getsumeisei]}`;
 
     // 同会・被同会 (九星 + 宮)
+    // 年同会・月同会: 本命星が該当盤で座する宮 + 同会星
+    // 年被同会・月被同会: 本命星の定位/年盤位置に座する星 + 宮
     const fmtStarKyu = (starIdx, posIdx) => {
       const star = K.STAR_NAMES[starIdx] || '';
       const kyu = (typeof posIdx === 'number') ? K.POSITION_TO_KYU_NAME[posIdx] : '';
       return kyu ? `${star} ${kyu}` : star;
     };
-    $('o-doukai-toshi').textContent   = fmtStarKyu(r.bottom.doukai.toshi,    r.bottom.doukai.toshiPos);
-    $('o-hidoukai-toshi').textContent = fmtStarKyu(r.bottom.hidoukai.toshi,  r.bottom.hidoukai.toshiPos);
-    $('o-doukai-tsuki').textContent   = fmtStarKyu(r.bottom.doukai.tsuki,    r.bottom.doukai.tsukiPos);
-    $('o-hidoukai-tsuki').textContent = fmtStarKyu(r.bottom.hidoukai.tsuki,  r.bottom.hidoukai.tsukiPos);
+    const fmtDoukai = (starIdx, posIdx) => {
+      const star = K.STAR_NAMES[starIdx] || '';
+      const kyu = (typeof posIdx === 'number') ? K.POSITION_TO_KYU_NAME[posIdx] : '';
+      return kyu ? `本命星 ${kyu}に座する時 — ${star}` : star;
+    };
+    $('o-doukai-toshi').textContent   = fmtDoukai(r.bottom.doukai.toshi,    r.bottom.doukai.toshiPos);
+    $('o-hidoukai-toshi').textContent = fmtStarKyu(r.bottom.hidoukai.toshi, r.bottom.hidoukai.toshiPos);
+    $('o-doukai-tsuki').textContent   = fmtDoukai(r.bottom.doukai.tsuki,    r.bottom.doukai.tsukiPos);
+    $('o-hidoukai-tsuki').textContent = fmtStarKyu(r.bottom.hidoukai.tsuki, r.bottom.hidoukai.tsukiPos);
 
     // 本人運気 (宮傾斜)
     const keisha = r.bottom.keisha;
