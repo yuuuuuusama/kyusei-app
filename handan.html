@@ -94,6 +94,108 @@
     </div>
   </div>
 
+  <!-- 早見表より自動抽出: 生月・生日 運勢 -->
+  <div class="handan-section" style="margin-top:10px;">
+    <h3>生月　性格と運勢</h3>
+    <div class="body">
+      <div id="o-seigetsu-label" class="hayami-label"></div>
+      <div id="o-seigetsu-text" class="hayami-text"></div>
+    </div>
+  </div>
+
+  <div class="handan-section" style="margin-top:10px;">
+    <h3>生日　性格と運勢</h3>
+    <div class="body">
+      <div id="o-seinichi-label" class="hayami-label"></div>
+      <div id="o-seinichi-text" class="hayami-text"></div>
+    </div>
+  </div>
+
+  <!-- 九星 (本命・月命) 象意 -->
+  <div class="handan-section" style="margin-top:10px;">
+    <h3>本命星・月命星　象意</h3>
+    <div class="body">
+      <div id="o-honmei-meaning" class="kyusei-meaning-block"></div>
+      <div id="o-getsumei-meaning" class="kyusei-meaning-block" style="margin-top:6px;"></div>
+    </div>
+  </div>
+
+  <!-- 十干 -->
+  <div class="handan-section" style="margin-top:10px;">
+    <h3>十干　性格・体・動の吉凶</h3>
+    <div class="body">
+      <div id="o-kan-block"></div>
+    </div>
+  </div>
+
+  <!-- 星まつり (運気) -->
+  <div class="handan-section" style="margin-top:10px;">
+    <h3>星まつり　運気</h3>
+    <div class="body">
+      <div id="o-seimatsuri" class="seimatsuri-block"></div>
+    </div>
+  </div>
+
+  <!-- 二十八宿 -->
+  <div class="handan-section" style="margin-top:10px;">
+    <h3>二十八宿（相談日）</h3>
+    <div class="body">
+      <div id="o-shuku" class="hayami-text"></div>
+    </div>
+  </div>
+
+  <!-- 本命殺気 -->
+  <div class="handan-section" style="margin-top:10px;">
+    <h3>本命殺気</h3>
+    <div class="body">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-jp);">
+        <tr>
+          <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">病気</td>
+          <td style="border:1px solid #888;padding:3px 6px;" id="o-sakki-byouki"></td>
+          <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">失敗</td>
+          <td style="border:1px solid #888;padding:3px 6px;" id="o-sakki-shippai"></td>
+          <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">自殺</td>
+          <td style="border:1px solid #888;padding:3px 6px;" id="o-sakki-jisatsu"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 方位・家相 (折りたたみ) -->
+  <details class="handan-section handan-details" style="margin-top:10px;">
+    <summary><h3 style="display:inline;">方位・家相　吉凶象意（9方位）</h3></summary>
+    <div class="body">
+      <table class="houi-table" style="width:100%;border-collapse:collapse;font-size:11px;font-family:var(--font-jp);">
+        <thead>
+          <tr style="background:#f8f0d8;">
+            <th>方位</th><th>暗剣殺・五黄殺</th><th>吉方方徳</th><th>家相欠陥</th>
+          </tr>
+        </thead>
+        <tbody id="o-houi-tbody"></tbody>
+      </table>
+      <p style="font-size:10px;color:#666;margin:4px 0 0;">神棚: 乾・巽・南・東向き / 仏壇: 乾・巽・南・東向き / 便所: 乾・巽吉 / 風呂: 北・西・艮</p>
+    </div>
+  </details>
+
+  <!-- 五行表 (折りたたみ) -->
+  <details class="handan-section handan-details" style="margin-top:10px;">
+    <summary><h3 style="display:inline;">五行表</h3></summary>
+    <div class="body" style="overflow-x:auto;">
+      <table class="gogyou-table" style="border-collapse:collapse;font-size:10px;font-family:var(--font-jp);">
+        <thead><tr id="o-gogyou-head"></tr></thead>
+        <tbody id="o-gogyou-tbody"></tbody>
+      </table>
+    </div>
+  </details>
+
+  <!-- 占断用秘図 (折りたたみ) -->
+  <details class="handan-section handan-details" style="margin-top:10px;">
+    <summary><h3 style="display:inline;">占断用秘図</h3></summary>
+    <div class="body">
+      <div id="o-hizu-block"></div>
+    </div>
+  </details>
+
   <!-- 総合判断 -->
   <div class="handan-section handan-sougou" style="margin-top:14px;">
     <h3>総合判断</h3>
@@ -102,13 +204,22 @@
 
 </main>
 
-<script src="js/solar-terms.js?v=78"></script>
-<script src="js/eto.js?v=78"></script>
-<script src="js/kyusei.js?v=78"></script>
-<script src="js/kantei.js?v=78"></script>
-<script src="js/storage.js?v=78"></script>
-<script src="js/keisha-data.js?v=78"></script>
-<script src="js/handan.js?v=78"></script>
+<script src="js/solar-terms.js?v=79"></script>
+<script src="js/eto.js?v=79"></script>
+<script src="js/kyusei.js?v=79"></script>
+<script src="js/kantei.js?v=79"></script>
+<script src="js/storage.js?v=79"></script>
+<script src="js/keisha-data.js?v=79"></script>
+<script src="js/seigetsu-data.js?v=79"></script>
+<script src="js/seinichi-data.js?v=79"></script>
+<script src="js/seimatsuri-data.js?v=79"></script>
+<script src="js/kyusei-meaning-data.js?v=79"></script>
+<script src="js/kan-data.js?v=79"></script>
+<script src="js/houi-data.js?v=79"></script>
+<script src="js/gogyou-data.js?v=79"></script>
+<script src="js/nijuhasshuku-data.js?v=79"></script>
+<script src="js/hizu-data.js?v=79"></script>
+<script src="js/handan.js?v=79"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
