@@ -120,8 +120,8 @@
 
     // 下段4盤 (生年月日): 変換後中宮で描画
     const bInt = r.birth.isInton;
-    const ryunenYear  = Kantei.computeRyunenAgesByPosition(r.birth.yearEto.branchIdx);
-    const ryunenMonth = Kantei.computeRyunenAgesByPosition(r.birth.monthEto.branchIdx);
+    const ryunenYear  = Kantei.computeRyunenAgesOnPerimeter(r.birth.yearEto.branchIdx);
+    const ryunenMonth = Kantei.computeRyunenAgesOnPerimeter(r.birth.monthEto.branchIdx);
     drawBan('ban-by', r.birth.displayYearCenter,  r.birth.honmeisei, r.birth.yearEto,  false, ryunenYear);
     drawBan('ban-bm', r.birth.displayMonthCenter, r.birth.honmeisei, r.birth.monthEto, false, ryunenMonth);
     drawBan('ban-bd', r.birth.displayDayCenter,   r.birth.honmeisei, r.birth.dayEto,   bInt);
@@ -250,18 +250,13 @@
     const DEFAULT_POS_STAR = Kyusei.DEFAULT_POSITION_STARS;
     const STEMS = window.Eto.STEMS;
     const BRANCHES = window.Eto.BRANCHES;
-    // 角コーナーは外周2辺、四正は外周1辺。流年法の歳は ages[0] → 1辺目、ages[1] → 2辺目。
-    // 時計回りの「入る辺」→「出る辺」の順。
-    const POS_TO_EDGES = {
-      0: ['left', 'top'],
-      1: ['top'],
-      2: ['top', 'right'],
-      3: ['left'],
-      5: ['right'],
-      6: ['bottom', 'left'],
-      7: ['bottom'],
-      8: ['right', 'bottom']
-    };
+    // 流年法の外周12箇所のCSSクラス (時計回り NW隅 起点)
+    const PERIMETER_CLASSES = [
+      'nw-corner', 'top-1', 'top-2', 'ne-corner',
+      'right-1', 'right-2', 'se-corner',
+      'bottom-1', 'bottom-2', 'sw-corner',
+      'left-1', 'left-2'
+    ];
 
     const stars = Kyusei.getPositionStars(centerStar);
     const honmeiPos = Kyusei.findPositionOfStar(centerStar, honmeiStar);
@@ -337,20 +332,19 @@
         cell.appendChild(marks);
       }
 
-      // 流年法 年齢 (セル外側、対応する外周辺に配置)
-      if (ryunenAges && pos !== 4 && ryunenAges[pos]) {
-        const edges = POS_TO_EDGES[pos] || [];
-        ryunenAges[pos].forEach((age, i) => {
-          if (i >= edges.length) return;
-          const ageEl = document.createElement('span');
-          ageEl.className = 'ryunen-age-out edge-' + edges[i];
-          ageEl.textContent = age;
-          cell.appendChild(ageEl);
-        });
-      }
-
       el.appendChild(cell);
     });
+
+    // 流年法 歳数 — 外周12箇所 (4隅 + 8接点) に配置
+    if (ryunenAges) {
+      for (let i = 0; i < 12; i++) {
+        if (ryunenAges[i] === undefined) continue;
+        const ageEl = document.createElement('span');
+        ageEl.className = 'perimeter-age perim-' + PERIMETER_CLASSES[i];
+        ageEl.textContent = ryunenAges[i];
+        el.appendChild(ageEl);
+      }
+    }
   }
 
   // ===== 保存 / 読み込み =====

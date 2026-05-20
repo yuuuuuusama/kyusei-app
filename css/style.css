@@ -347,9 +347,10 @@ html, body {
   grid-template-rows: repeat(3, 1fr);
   width: calc(100% - 28px);
   aspect-ratio: 1 / 1;
-  margin: 12px 14px;
+  margin: 14px;
   border: 1.4px solid var(--c-border);
   background: #fff;
+  position: relative;
   overflow: visible;
 }
 .ban-cell-inner {
@@ -409,8 +410,8 @@ html, body {
 .ban-cell-inner.honmei { background: #ffe6b3; }
 .ban-cell-inner.taichu { background: #cfe7ff; }
 
-/* 流年法 年齢 — セルの外周辺に配置 */
-.ban-cell-inner .ryunen-age-out {
+/* 流年法 歳数 — 外周12箇所 (4隅 + 8接点) */
+.ban .perimeter-age {
   position: absolute;
   font-size: 9px;
   color: #b35;
@@ -420,18 +421,29 @@ html, body {
   background: #fff;
   padding: 0 2px;
   z-index: 3;
+  white-space: nowrap;
 }
-.ban-cell-inner .ryunen-age-out.edge-top    { top: -7px; left: 50%; transform: translateX(-50%); }
-.ban-cell-inner .ryunen-age-out.edge-bottom { bottom: -7px; left: 50%; transform: translateX(-50%); }
-.ban-cell-inner .ryunen-age-out.edge-left   { left: -12px; top: 50%; transform: translateY(-50%); }
-.ban-cell-inner .ryunen-age-out.edge-right  { right: -12px; top: 50%; transform: translateY(-50%); }
+/* 4隅 */
+.ban .perim-nw-corner { top: -7px;    left: -7px; transform: translate(-50%, -50%); }
+.ban .perim-ne-corner { top: -7px;    right: -7px; transform: translate(50%, -50%); }
+.ban .perim-se-corner { bottom: -7px; right: -7px; transform: translate(50%, 50%); }
+.ban .perim-sw-corner { bottom: -7px; left: -7px; transform: translate(-50%, 50%); }
+/* 8接点 (各辺2点、内側格子線と外周の交点) */
+.ban .perim-top-1    { top: -7px;    left: 33.333%; transform: translate(-50%, -50%); }
+.ban .perim-top-2    { top: -7px;    left: 66.667%; transform: translate(-50%, -50%); }
+.ban .perim-right-1  { right: -7px;  top: 33.333%; transform: translate(50%, -50%); }
+.ban .perim-right-2  { right: -7px;  top: 66.667%; transform: translate(50%, -50%); }
+.ban .perim-bottom-1 { bottom: -7px; left: 66.667%; transform: translate(-50%, 50%); }
+.ban .perim-bottom-2 { bottom: -7px; left: 33.333%; transform: translate(-50%, 50%); }
+.ban .perim-left-1   { left: -7px;   top: 66.667%; transform: translate(-50%, -50%); }
+.ban .perim-left-2   { left: -7px;   top: 33.333%; transform: translate(-50%, -50%); }
 
 @media (min-width: 641px) {
   .ban-cell-inner .cell-main .star { font-size: 14px; }
   .ban-cell-inner .cell-main .eto { font-size: 11px; }
   .ban-cell-inner .kakka { font-size: 9px; }
   .ban-cell-inner .cell-marks .mark { font-size: 11px; }
-  .ban-cell-inner .ryunen-age-out { font-size: 10px; }
+  .ban .perimeter-age { font-size: 10px; }
 }
 @media print {
   .ban-cell-inner .cell-marks .mark { font-size: 8pt; }
@@ -924,8 +936,8 @@ details.handan-details[open] > .body { display: block; padding: 6px 8px; font-si
     border-width: 0.7px !important;
     aspect-ratio: 1 / 1 !important;
     max-height: 28mm !important;
-    margin: 8pt 10pt !important;
-    width: calc(100% - 20pt) !important;
+    margin: 8pt !important;
+    width: calc(100% - 16pt) !important;
   }
   .ban-cell-inner {
     font-size: 6pt !important;
@@ -936,11 +948,7 @@ details.handan-details[open] > .body { display: block; padding: 6px 8px; font-si
   .ban-cell-inner .cell-main .eto { font-size: 6pt !important; }
   .ban-cell-inner .kakka { font-size: 5pt !important; top: 0 !important; left: 1px !important; }
   .ban-cell-inner .cell-marks .mark { font-size: 6pt !important; }
-  .ban-cell-inner .ryunen-age-out { font-size: 5pt !important; padding: 0 1pt !important; }
-  .ban-cell-inner .ryunen-age-out.edge-top    { top: -5pt !important; }
-  .ban-cell-inner .ryunen-age-out.edge-bottom { bottom: -5pt !important; }
-  .ban-cell-inner .ryunen-age-out.edge-left   { left: -8pt !important; }
-  .ban-cell-inner .ryunen-age-out.edge-right  { right: -8pt !important; }
+  .ban .perimeter-age { font-size: 5pt !important; padding: 0 1pt !important; }
 
   .bottom-grid {
     display: grid !important;

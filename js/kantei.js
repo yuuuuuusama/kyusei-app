@@ -635,11 +635,44 @@
     return map;
   }
 
+  // 流年法 60年: 外周12箇所（4隅 + 8 接点）に 5刻みの歳を返す。
+  // 周回順序 (perimeter index, 時計回り NW隅 起点):
+  //   0: NW隅, 1: 北辺-左接点, 2: 北辺-右接点, 3: NE隅,
+  //   4: 東辺-上接点, 5: 東辺-下接点, 6: SE隅,
+  //   7: 南辺-右接点, 8: 南辺-左接点, 9: SW隅,
+  //   10: 西辺-下接点, 11: 西辺-上接点
+  // 起点: 四正支は四正セルの「時計回り側」接点、四隅支は対応する隅
+  function computeRyunenAgesOnPerimeter(branchIdx) {
+    const BRANCH_TO_PERIMETER_START = {
+      0:  2,  // 子 (N) → 北辺-右接点
+      1:  3,  // 丑 (NE) → NE隅
+      2:  3,  // 寅 (NE) → NE隅
+      3:  5,  // 卯 (E) → 東辺-下接点
+      4:  6,  // 辰 (SE) → SE隅
+      5:  6,  // 巳 (SE) → SE隅
+      6:  8,  // 午 (S) → 南辺-左接点
+      7:  9,  // 未 (SW) → SW隅
+      8:  9,  // 申 (SW) → SW隅
+      9: 11,  // 酉 (W) → 西辺-上接点
+      10: 0,  // 戌 (NW) → NW隅
+      11: 0   // 亥 (NW) → NW隅
+    };
+    const startIdx = BRANCH_TO_PERIMETER_START[branchIdx];
+    if (startIdx === undefined) return null;
+    const ages = {};
+    for (let j = 0; j < 12; j++) {
+      const perimIdx = (startIdx + j) % 12;
+      ages[perimIdx] = (j + 1) * 5;
+    }
+    return ages;
+  }
+
   global.Kantei = {
     computeKantei,
     compute60YearFlow,
     compute60YearFlowTable,
     computeYearFlowDetail,
-    computeRyunenAgesByPosition
+    computeRyunenAgesByPosition,
+    computeRyunenAgesOnPerimeter
   };
 })(typeof window !== 'undefined' ? window : globalThis);
