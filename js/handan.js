@@ -97,22 +97,10 @@
     renderSeigetsu(birth);
     // 生日 性格と運勢
     renderSeinichi(r.birth.dayEto.branch);
-    // 本命星・月命星 象意
-    renderKyuseiMeaning(r.birth.honmeisei, r.birth.getsumeisei);
-    // 十干
-    renderKan(r.birth);
     // 星まつり
     renderSeimatsuri(r.birth.honmeisei, r.consult.yearCenter);
     // 二十八宿
     renderShuku(consult);
-    // 本命殺気
-    renderSakki(r.birth.honmeisei);
-    // 方位象意
-    renderHoui();
-    // 五行表
-    renderGogyou();
-    // 秘図
-    renderHizu();
   }
 
   function renderKyuZasuru(toshiPos, tsukiPos) {
@@ -149,49 +137,6 @@
     $('o-seinichi-text').textContent = text || '(該当データなし)';
   }
 
-  function renderKyuseiMeaning(honmeisei, getsumeisei) {
-    const KMD = window.KyuseiMeaningData;
-    if (!KMD) return;
-    function fmt(starIdx, label) {
-      const m = KMD.get(starIdx);
-      if (!m) return '';
-      const kw = m.keywords.map(k => `<li>${escapeHtml(k)}</li>`).join('');
-      return `<div class="kyusei-meaning"><h4>${label}：${escapeHtml(m.name)} (${escapeHtml(m.kyu)})</h4>` +
-             `<div class="kyusei-meta">${escapeHtml(m.season)}・${escapeHtml(m.element)}・${escapeHtml(m.person)}・${escapeHtml(m.direction)}　／　神仏: ${escapeHtml(m.kami || '')}</div>` +
-             `<ul>${kw}</ul></div>`;
-    }
-    $('o-honmei-meaning').innerHTML = fmt(honmeisei, '本命星');
-    $('o-getsumei-meaning').innerHTML = fmt(getsumeisei, '月命星');
-  }
-
-  function renderKan(birthData) {
-    const KD = window.KanData;
-    if (!KD) return;
-    // 生年/生月/生日/生時 の天干 (eto.name の1文字目)
-    const rows = [
-      { label: '生年', name: birthData.yearEto.name },
-      { label: '生月', name: birthData.monthEto.name },
-      { label: '生日', name: birthData.dayEto.name },
-      { label: '生時', name: birthData.hourEto.name }
-    ];
-    let html = '<table class="kan-table" style="width:100%;border-collapse:collapse;font-size:11px;font-family:var(--font-jp);">';
-    html += '<thead><tr style="background:#f8f0d8;"><th>区分</th><th>干支</th><th>天</th><th>地</th><th>人</th><th>性情</th><th>体</th><th>物</th><th>動の吉凶</th></tr></thead><tbody>';
-    rows.forEach(row => {
-      const kan = row.name && row.name.length > 0 ? row.name.charAt(0) : '';
-      const d = KD.get(kan);
-      if (d) {
-        html += `<tr><td>${escapeHtml(row.label)}</td><td>${escapeHtml(row.name)}</td>` +
-                `<td>${escapeHtml(d.ten)}</td><td>${escapeHtml(d.chi)}</td><td>${escapeHtml(d.jin)}</td>` +
-                `<td>${escapeHtml(d.seijou)}</td><td>${escapeHtml(d.body)}</td><td>${escapeHtml(d.mono)}</td>` +
-                `<td>${escapeHtml(d.kichikyo)}</td></tr>`;
-      } else {
-        html += `<tr><td>${escapeHtml(row.label)}</td><td>${escapeHtml(row.name)}</td><td colspan="7">—</td></tr>`;
-      }
-    });
-    html += '</tbody></table>';
-    $('o-kan-block').innerHTML = html;
-  }
-
   function renderSeimatsuri(honmeisei, consultYearCenter) {
     const SMD = window.SeimatsuriData;
     if (!SMD) return;
@@ -218,76 +163,6 @@
     if (!ND) return;
     const s = ND.getShuku(consult);
     $('o-shuku').innerHTML = `<b>${escapeHtml(s.name)}宿</b>：${escapeHtml(s.text)}`;
-  }
-
-  function renderSakki(honmeisei) {
-    const HD = window.HouiData;
-    if (!HD) return;
-    const s = HD.getSakki(honmeisei);
-    if (s) {
-      $('o-sakki-byouki').textContent = s.byouki;
-      $('o-sakki-shippai').textContent = s.shippai;
-      $('o-sakki-jisatsu').textContent = s.jisatsu;
-    }
-  }
-
-  function renderHoui() {
-    const HD = window.HouiData;
-    if (!HD) return;
-    const tbody = $('o-houi-tbody');
-    tbody.innerHTML = '';
-    const POS_NAME = { 1:'北/坎', 2:'南西/坤', 3:'東/震', 4:'南東/巽', 5:'中央', 6:'北西/乾', 7:'西/兌', 8:'北東/艮', 9:'南/離' };
-    for (let i = 1; i <= 9; i++) {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td style="background:#f8f0d8;font-weight:bold;text-align:center;">${i}<br>${POS_NAME[i]}</td>` +
-                     `<td>${escapeHtml(HD.getAnken(i))}</td>` +
-                     `<td>${escapeHtml(HD.getKichi(i))}</td>` +
-                     `<td>${escapeHtml(HD.getKasou(i))}</td>`;
-      tbody.appendChild(tr);
-    }
-  }
-
-  function renderGogyou() {
-    const GD = window.GogyouData;
-    if (!GD) return;
-    const head = $('o-gogyou-head');
-    const tbody = $('o-gogyou-tbody');
-    head.innerHTML = '<th style="background:#f8f0d8;padding:2px 4px;border:1px solid #888;">行</th>' +
-      GD.cols.map(c => `<th style="background:#f8f0d8;padding:2px 4px;border:1px solid #888;">${escapeHtml(c)}</th>`).join('');
-    tbody.innerHTML = '';
-    Object.keys(GD.rows).forEach(elt => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td style="background:#f8f0d8;padding:2px 4px;border:1px solid #888;font-weight:bold;">${escapeHtml(elt)}</td>` +
-        GD.rows[elt].map(v => `<td style="padding:2px 4px;border:1px solid #888;">${escapeHtml(v)}</td>`).join('');
-      tbody.appendChild(tr);
-    });
-  }
-
-  function renderHizu() {
-    const HD = window.HizuData;
-    if (!HD) return;
-    const block = $('o-hizu-block');
-    let html = '';
-    HD.keys.forEach(key => {
-      const h = HD.get(key);
-      if (!h) return;
-      html += `<details class="hizu-item" style="margin:4px 0;border:1px solid #ccc;">`;
-      html += `<summary style="background:#f8f0d8;padding:4px 8px;font-family:var(--font-jp);cursor:pointer;">${escapeHtml(h.title)}${h.note ? ' <span style="color:#666;font-size:10px;">('+escapeHtml(h.note)+')</span>' : ''}</summary>`;
-      html += '<div style="padding:6px;">';
-      html += '<table class="hizu-table" style="width:100%;border-collapse:collapse;font-size:10px;font-family:var(--font-jp);">';
-      // 3x3 layout: 4-9-2 / 3-5-7 / 8-1-6
-      const layout = [[4,9,2],[3,5,7],[8,1,6]];
-      for (const row of layout) {
-        html += '<tr>';
-        for (const p of row) {
-          const v = h.cells[p] || '';
-          html += `<td style="border:1px solid #888;padding:4px;vertical-align:top;width:33.3%;"><b>${p}</b><br>${escapeHtml(v)}</td>`;
-        }
-        html += '</tr>';
-      }
-      html += '</table></div></details>';
-    });
-    block.innerHTML = html;
   }
 
   function escapeHtml(s) {
