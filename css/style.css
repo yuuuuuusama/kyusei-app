@@ -590,6 +590,24 @@ html, body {
   .keisha-detail li { margin-bottom: 0; }
 }
 
+/* 本命星が宮に座する説明 */
+.kyu-zasuru {
+  font-family: var(--font-jp);
+  font-size: 11px;
+  line-height: 1.55;
+  color: #333;
+}
+.kyu-zasuru .zasuru-item b {
+  display: block;
+  color: #2b1a0e;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+@media print {
+  .kyu-zasuru { font-size: 7.5pt; line-height: 1.35; }
+  .kyu-zasuru .zasuru-item b { font-size: 8pt; }
+}
+
 /* 早見表データ表示 */
 .hayami-label {
   font-family: var(--font-jp);

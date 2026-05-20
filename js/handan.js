@@ -57,22 +57,18 @@
     $('o-meta').textContent = `${currentRecord.name || '(無名)'} | 生年: ${formatDate(birth)} | 相談: ${formatDate(consult)} | 本命: ${K.STAR_NAMES[r.birth.honmeisei]} 月命: ${K.STAR_NAMES[r.birth.getsumeisei]}`;
 
     // 同会・被同会 (九星 + 宮)
-    // 年同会・月同会: 本命星が該当盤で座する宮 + 同会星
-    // 年被同会・月被同会: 本命星の定位/年盤位置に座する星 + 宮
     const fmtStarKyu = (starIdx, posIdx) => {
       const star = K.STAR_NAMES[starIdx] || '';
       const kyu = (typeof posIdx === 'number') ? K.POSITION_TO_KYU_NAME[posIdx] : '';
       return kyu ? `${star} ${kyu}` : star;
     };
-    const fmtDoukai = (starIdx, posIdx) => {
-      const star = K.STAR_NAMES[starIdx] || '';
-      const kyu = (typeof posIdx === 'number') ? K.POSITION_TO_KYU_NAME[posIdx] : '';
-      return kyu ? `本命星 ${kyu}に座する時 — ${star}` : star;
-    };
-    $('o-doukai-toshi').textContent   = fmtDoukai(r.bottom.doukai.toshi,    r.bottom.doukai.toshiPos);
-    $('o-hidoukai-toshi').textContent = fmtStarKyu(r.bottom.hidoukai.toshi, r.bottom.hidoukai.toshiPos);
-    $('o-doukai-tsuki').textContent   = fmtDoukai(r.bottom.doukai.tsuki,    r.bottom.doukai.tsukiPos);
-    $('o-hidoukai-tsuki').textContent = fmtStarKyu(r.bottom.hidoukai.tsuki, r.bottom.hidoukai.tsukiPos);
+    $('o-doukai-toshi').textContent   = fmtStarKyu(r.bottom.doukai.toshi,    r.bottom.doukai.toshiPos);
+    $('o-hidoukai-toshi').textContent = fmtStarKyu(r.bottom.hidoukai.toshi,  r.bottom.hidoukai.toshiPos);
+    $('o-doukai-tsuki').textContent   = fmtStarKyu(r.bottom.doukai.tsuki,    r.bottom.doukai.tsukiPos);
+    $('o-hidoukai-tsuki').textContent = fmtStarKyu(r.bottom.hidoukai.tsuki,  r.bottom.hidoukai.tsukiPos);
+
+    // 本命星が座する宮の運気判断
+    renderKyuZasuru(r.bottom.doukai.toshiPos, r.bottom.doukai.tsukiPos);
 
     // 本人運気 (宮傾斜)
     const keisha = r.bottom.keisha;
@@ -117,6 +113,25 @@
     renderGogyou();
     // 秘図
     renderHizu();
+  }
+
+  function renderKyuZasuru(toshiPos, tsukiPos) {
+    const el = $('o-kyu-zasuru');
+    if (!el) return;
+    const KZ = window.KyuZasuruData;
+    if (!KZ) { el.innerHTML = ''; return; }
+    const toshiKyu = (typeof toshiPos === 'number') ? K.POSITION_TO_KYU_NAME[toshiPos] : null;
+    const tsukiKyu = (typeof tsukiPos === 'number') ? K.POSITION_TO_KYU_NAME[tsukiPos] : null;
+    let html = '';
+    if (toshiKyu) {
+      const text = KZ.get(toshiKyu);
+      if (text) html += `<div class="zasuru-item"><b>年: 本命星 ${escapeHtml(toshiKyu)}に座するとき</b><div>${escapeHtml(text)}</div></div>`;
+    }
+    if (tsukiKyu && tsukiKyu !== toshiKyu) {
+      const text = KZ.get(tsukiKyu);
+      if (text) html += `<div class="zasuru-item" style="margin-top:4px;"><b>月: 本命星 ${escapeHtml(tsukiKyu)}に座するとき</b><div>${escapeHtml(text)}</div></div>`;
+    }
+    el.innerHTML = html;
   }
 
   function renderSeigetsu(birth) {
