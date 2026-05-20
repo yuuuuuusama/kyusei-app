@@ -20,11 +20,9 @@
         currentRecordId = id;
         currentRecord = rec;
         if (rec.handan) {
-          $('m-soudan').value = rec.handan.soudan || '';
           $('m-honnin').value = rec.handan.honnin || '';
           $('m-nengetsu').value = rec.handan.nengetsu || '';
           $('m-naizou').value = rec.handan.naizou || '';
-          $('m-sougou').value = rec.handan.sougou || '';
         }
         recalc();
       } else {
@@ -178,11 +176,9 @@
       return;
     }
     currentRecord.handan = {
-      soudan: $('m-soudan').value,
       honnin: $('m-honnin').value,
       nengetsu: $('m-nengetsu').value,
-      naizou: $('m-naizou').value,
-      sougou: $('m-sougou').value
+      naizou: $('m-naizou').value
     };
     Storage.upsert(currentRecord);
     flash('保存しました');

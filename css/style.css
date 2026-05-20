@@ -345,10 +345,12 @@ html, body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  width: 100%;
+  width: calc(100% - 28px);
   aspect-ratio: 1 / 1;
+  margin: 12px 14px;
   border: 1.4px solid var(--c-border);
   background: #fff;
+  overflow: visible;
 }
 .ban-cell-inner {
   border: 0.7px solid #888;
@@ -362,10 +364,6 @@ html, body {
   position: relative;
   padding: 1px;
 }
-.ban-cell-inner .star {
-  font-size: 12px;
-  font-weight: 500;
-}
 .ban-cell-inner .kakka {
   font-size: 8px;
   color: #888;
@@ -373,59 +371,70 @@ html, body {
   top: 1px;
   left: 2px;
 }
-.ban-cell-inner .branch {
-  font-size: 9px;
-  color: #444;
-  position: absolute;
-  bottom: 0px;
-  right: 2px;
-  letter-spacing: -0.5px;
+.ban-cell-inner .cell-main {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: center;
+  gap: 2px;
 }
-.ban-cell-inner .ryunen-age {
-  font-size: 8px;
-  color: #b35;
-  position: absolute;
-  bottom: 0px;
-  left: 2px;
-  letter-spacing: -0.5px;
+.ban-cell-inner .cell-main .star {
+  font-size: 12px;
   font-weight: 500;
 }
-@media (min-width: 641px) {
-  .ban-cell-inner .ryunen-age { font-size: 9px; }
+.ban-cell-inner .cell-main .eto {
+  font-size: 10px;
+  color: #333;
+  letter-spacing: -0.5px;
 }
-.ban-cell-inner.center { background: #f8f0d8; font-weight: bold; }
-.ban-cell-inner.honmei { background: #ffe6b3; }
-.ban-cell-inner.taichu { background: #cfe7ff; }
-
-/* 暗剣殺 (ア赤) / 破 (ハ青) マーク — 同じ宮の時は横並び */
-.ban-cell-inner .marks {
-  position: absolute;
-  top: 1px;
-  right: 2px;
-  display: inline-flex;
-  gap: 0;
+.ban-cell-inner .cell-marks {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  margin-top: 1px;
   line-height: 1;
-  z-index: 2;
 }
-.ban-cell-inner .marks .mark {
+.ban-cell-inner .cell-marks .mark {
   font-size: 10px;
   font-weight: bold;
   font-family: var(--font-jp);
   line-height: 1;
 }
-.ban-cell-inner .marks .mark.anken { color: #d00; }
-.ban-cell-inner .marks .mark.ha    { color: #06c; }
-@media (min-width: 641px) {
-  .ban-cell-inner .marks .mark { font-size: 11px; }
+.ban-cell-inner .cell-marks .mark.anken { color: #d00; }
+.ban-cell-inner .cell-marks .mark.ha    { color: #06c; }
+
+.ban-cell-inner.center { background: #f8f0d8; font-weight: bold; }
+.ban-cell-inner.honmei { background: #ffe6b3; }
+.ban-cell-inner.taichu { background: #cfe7ff; }
+
+/* 流年法 年齢 — セルの外周辺に配置 */
+.ban-cell-inner .ryunen-age-out {
+  position: absolute;
+  font-size: 9px;
+  color: #b35;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  background: #fff;
+  padding: 0 2px;
+  z-index: 3;
 }
-@media print {
-  .ban-cell-inner .marks .mark { font-size: 8pt; }
-}
+.ban-cell-inner .ryunen-age-out.edge-top    { top: -7px; left: 50%; transform: translateX(-50%); }
+.ban-cell-inner .ryunen-age-out.edge-bottom { bottom: -7px; left: 50%; transform: translateX(-50%); }
+.ban-cell-inner .ryunen-age-out.edge-left   { left: -12px; top: 50%; transform: translateY(-50%); }
+.ban-cell-inner .ryunen-age-out.edge-right  { right: -12px; top: 50%; transform: translateY(-50%); }
 
 @media (min-width: 641px) {
-  .ban-cell-inner .star { font-size: 14px; }
+  .ban-cell-inner .cell-main .star { font-size: 14px; }
+  .ban-cell-inner .cell-main .eto { font-size: 11px; }
   .ban-cell-inner .kakka { font-size: 9px; }
-  .ban-cell-inner .branch { font-size: 10px; }
+  .ban-cell-inner .cell-marks .mark { font-size: 11px; }
+  .ban-cell-inner .ryunen-age-out { font-size: 10px; }
+}
+@media print {
+  .ban-cell-inner .cell-marks .mark { font-size: 8pt; }
 }
 
 /* ================== 下部宮位エリア ================== */
@@ -915,18 +924,23 @@ details.handan-details[open] > .body { display: block; padding: 6px 8px; font-si
     border-width: 0.7px !important;
     aspect-ratio: 1 / 1 !important;
     max-height: 28mm !important;
+    margin: 8pt 10pt !important;
+    width: calc(100% - 20pt) !important;
   }
   .ban-cell-inner {
     font-size: 6pt !important;
     padding: 0 !important;
     border-width: 0.4px !important;
   }
-  .ban-cell-inner .star { font-size: 8.5pt !important; }
+  .ban-cell-inner .cell-main .star { font-size: 8.5pt !important; }
+  .ban-cell-inner .cell-main .eto { font-size: 6pt !important; }
   .ban-cell-inner .kakka { font-size: 5pt !important; top: 0 !important; left: 1px !important; }
-  .ban-cell-inner .branch { font-size: 5.5pt !important; bottom: 0 !important; right: 1px !important; }
-  .ban-cell-inner .ryunen-age { font-size: 5pt !important; bottom: 0 !important; left: 1px !important; }
-  .ban-cell-inner .marks { top: 0 !important; right: 1px !important; }
-  .ban-cell-inner .marks .mark { font-size: 6pt !important; }
+  .ban-cell-inner .cell-marks .mark { font-size: 6pt !important; }
+  .ban-cell-inner .ryunen-age-out { font-size: 5pt !important; padding: 0 1pt !important; }
+  .ban-cell-inner .ryunen-age-out.edge-top    { top: -5pt !important; }
+  .ban-cell-inner .ryunen-age-out.edge-bottom { bottom: -5pt !important; }
+  .ban-cell-inner .ryunen-age-out.edge-left   { left: -8pt !important; }
+  .ban-cell-inner .ryunen-age-out.edge-right  { right: -8pt !important; }
 
   .bottom-grid {
     display: grid !important;

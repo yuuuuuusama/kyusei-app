@@ -1,7 +1,7 @@
 // service-worker.js
 // オフライン対応用
 
-const CACHE_NAME = 'kyusei-app-v82';
+const CACHE_NAME = 'kyusei-app-v83';
 const ASSETS = [
   './',
   './index.html',

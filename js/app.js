@@ -108,10 +108,10 @@
 
     // 上段4盤 (相談日): 変換後中宮で描画
     const cInt = r.consult.isInton;
-    drawBan('ban-y', r.consult.displayYearCenter,  r.birth.honmeisei, r.consult.yearEto.branchIdx, false);
-    drawBan('ban-m', r.consult.displayMonthCenter, r.birth.honmeisei, r.consult.monthEto.branchIdx, false);
-    drawBan('ban-d', r.consult.displayDayCenter,   r.birth.honmeisei, r.consult.dayEto.branchIdx,  cInt);
-    drawBan('ban-h', r.consult.displayHourCenter,  r.birth.honmeisei, r.consult.hourEto.branchIdx, cInt);
+    drawBan('ban-y', r.consult.displayYearCenter,  r.birth.honmeisei, r.consult.yearEto,  false);
+    drawBan('ban-m', r.consult.displayMonthCenter, r.birth.honmeisei, r.consult.monthEto, false);
+    drawBan('ban-d', r.consult.displayDayCenter,   r.birth.honmeisei, r.consult.dayEto,   cInt);
+    drawBan('ban-h', r.consult.displayHourCenter,  r.birth.honmeisei, r.consult.hourEto,  cInt);
     // ボード下情報: 命式と同じく元の中宮を表示 (ボード自体の3x3グリッドが変換結果)
     $('ban-y-info').textContent = `${r.consult.yearEto.name} / ${K.STAR_NAMES[r.consult.yearCenter]}`;
     $('ban-m-info').textContent = `${r.consult.monthEto.name} / ${K.STAR_NAMES[r.consult.monthCenter]}`;
@@ -122,10 +122,10 @@
     const bInt = r.birth.isInton;
     const ryunenYear  = Kantei.computeRyunenAgesByPosition(r.birth.yearEto.branchIdx);
     const ryunenMonth = Kantei.computeRyunenAgesByPosition(r.birth.monthEto.branchIdx);
-    drawBan('ban-by', r.birth.displayYearCenter,  r.birth.honmeisei, r.birth.yearEto.branchIdx, false, ryunenYear);
-    drawBan('ban-bm', r.birth.displayMonthCenter, r.birth.honmeisei, r.birth.monthEto.branchIdx, false, ryunenMonth);
-    drawBan('ban-bd', r.birth.displayDayCenter,   r.birth.honmeisei, r.birth.dayEto.branchIdx,  bInt);
-    drawBan('ban-bh', r.birth.displayHourCenter,  r.birth.honmeisei, r.birth.hourEto.branchIdx, bInt);
+    drawBan('ban-by', r.birth.displayYearCenter,  r.birth.honmeisei, r.birth.yearEto,  false, ryunenYear);
+    drawBan('ban-bm', r.birth.displayMonthCenter, r.birth.honmeisei, r.birth.monthEto, false, ryunenMonth);
+    drawBan('ban-bd', r.birth.displayDayCenter,   r.birth.honmeisei, r.birth.dayEto,   bInt);
+    drawBan('ban-bh', r.birth.displayHourCenter,  r.birth.honmeisei, r.birth.hourEto,  bInt);
     $('ban-by-info').textContent = `${r.birth.yearEto.name} / ${K.STAR_NAMES[r.birth.yearCenter]}`;
     $('ban-bm-info').textContent = `${r.birth.monthEto.name} / ${K.STAR_NAMES[r.birth.monthCenter]}`;
     $('ban-bd-info').textContent = `${r.birth.dayEto.name} / ${K.STAR_NAMES[r.birth.dayCenter]}`;
@@ -238,39 +238,44 @@
   }
 
   // 3x3 盤の描画
-  // periodBranchIdx: その盤の「期間の支」(年支/月支/日支/時支) のindex 0-11
+  // periodEto: その盤の「期間の干支」(年/月/日/時 の eto 全体, または null)
   // isInton: 陰遁期間か (true なら12支の運行が逆になる)
   // ryunenAges: 任意。{ posIdx: [age, age, ...] } の形で、各方位に流年法の開始年齢を表示
-  function drawBan(elId, centerStar, honmeiStar, periodBranchIdx, isInton, ryunenAges) {
+  function drawBan(elId, centerStar, honmeiStar, periodEto, isInton, ryunenAges) {
     const el = document.getElementById(elId);
     if (!el) return;
     el.innerHTML = '';
-    // ポジション index: 0:NW 1:N 2:NE 3:W 4:中宮 5:E 6:SW 7:S 8:SE
     const DRAW_ORDER = [8, 7, 6, 5, 4, 3, 2, 1, 0];
     const DIRS_KAKKA = { 0:'乾',1:'坎',2:'艮',3:'兌',4:'',5:'震',6:'坤',7:'離',8:'巽' };
     const DEFAULT_POS_STAR = Kyusei.DEFAULT_POSITION_STARS;
+    const STEMS = window.Eto.STEMS;
     const BRANCHES = window.Eto.BRANCHES;
+    // 角コーナーは外周2辺、四正は外周1辺。流年法の歳は ages[0] → 1辺目、ages[1] → 2辺目。
+    // 時計回りの「入る辺」→「出る辺」の順。
+    const POS_TO_EDGES = {
+      0: ['left', 'top'],
+      1: ['top'],
+      2: ['top', 'right'],
+      3: ['left'],
+      5: ['right'],
+      6: ['bottom', 'left'],
+      7: ['bottom'],
+      8: ['right', 'bottom']
+    };
 
     const stars = Kyusei.getPositionStars(centerStar);
     const honmeiPos = Kyusei.findPositionOfStar(centerStar, honmeiStar);
     const taichuPos = Kyusei.getTaichuPosition(honmeiPos);
 
-    // 暗剣殺 (ア): 五黄が居るマスの真反対 (中宮=五黄の時は無し)
-    // 破 (ハ): 中宮星(または五黄中宮時は中宮支)の本来の位置の真反対
-    //   - 中宮 ≠ 五黄: 中宮星の後天定位の対冲
-    //   - 中宮 = 五黄: 中宮支の本来の方位の対冲
-    // 各干支の本来の方位 (position index 0:NW, 1:N, 2:NE, 3:W, 4:C, 5:E, 6:SW, 7:S, 8:SE)
+    const periodBranchIdx = periodEto ? periodEto.branchIdx : null;
+    const periodStemIdx = periodEto ? periodEto.stemIdx : null;
     const BRANCH_NATURAL_POS = [1, 2, 2, 5, 8, 8, 7, 6, 6, 3, 0, 0];
-    // 子=N(1), 丑=NE(2), 寅=NE(2), 卯=E(5), 辰=SE(8), 巳=SE(8),
-    // 午=S(7), 未=SW(6), 申=SW(6), 酉=W(3), 戌=NW(0), 亥=NW(0)
 
     let ankenPos = null, haPos = null;
-    // 暗剣殺: 五黄が居るマスの真反対 (中宮=五黄の盤ではなし)
     if (centerStar !== 5) {
       const gokoPos = Kyusei.findPositionOfStar(centerStar, 5);
       ankenPos = 8 - gokoPos;
     }
-    // 破: 中宮支の本来の方位の真反対 (中宮支がない場合はなし)
     if (typeof periodBranchIdx === 'number') {
       const naturalPos = BRANCH_NATURAL_POS[periodBranchIdx];
       haPos = 8 - naturalPos;
@@ -284,50 +289,39 @@
       if (pos === honmeiPos) cell.classList.add('honmei');
       if (pos === taichuPos) cell.classList.add('taichu');
 
-      // 卦 (左上)
       const kakkaSpan = document.createElement('span');
       kakkaSpan.className = 'kakka';
       kakkaSpan.textContent = DIRS_KAKKA[pos];
+      cell.appendChild(kakkaSpan);
 
-      // 星 (中央大)
+      // 中央行: 九星 + 干支 (横並び)
+      const mainRow = document.createElement('div');
+      mainRow.className = 'cell-main';
       const starSpan = document.createElement('span');
       starSpan.className = 'star';
       starSpan.textContent = Kyusei.STAR_NAMES[star];
+      mainRow.appendChild(starSpan);
 
-      // 動的 12支 (右下):
-      //   陽遁: 中宮(5)→乾(6)→兌(7)→艮(8)→離(9)→坎(1)→坤(2)→震(3)→巽(4) の順で +1
-      //         offset = (defStar - 5 + 9) % 9
-      //   陰遁: 中宮(5)→巽(4)→震(3)→坤(2)→坎(1)→離(9)→艮(8)→兌(7)→乾(6) の順で +1
-      //         offset = (5 - defStar + 9) % 9
-      let branchText = '';
       if (typeof periodBranchIdx === 'number') {
         const defStar = DEFAULT_POS_STAR[pos];
         const offset = isInton
           ? ((5 - defStar + 9) % 9)
           : ((defStar - 5 + 9) % 9);
         const branchIdx = ((periodBranchIdx + offset) % 12 + 12) % 12;
-        branchText = BRANCHES[branchIdx];
+        const stemIdx = (typeof periodStemIdx === 'number')
+          ? ((periodStemIdx + offset) % 10 + 10) % 10
+          : null;
+        const etoSpan = document.createElement('span');
+        etoSpan.className = 'eto';
+        etoSpan.textContent = (stemIdx !== null ? STEMS[stemIdx] : '') + BRANCHES[branchIdx];
+        mainRow.appendChild(etoSpan);
       }
-      const branchSpan = document.createElement('span');
-      branchSpan.className = 'branch';
-      branchSpan.textContent = branchText;
+      cell.appendChild(mainRow);
 
-      cell.appendChild(kakkaSpan);
-      cell.appendChild(starSpan);
-      cell.appendChild(branchSpan);
-
-      // 流年法 年齢 (左下) — 中宮(pos=4)以外で渡された場合のみ
-      if (ryunenAges && pos !== 4 && ryunenAges[pos]) {
-        const ageSpan = document.createElement('span');
-        ageSpan.className = 'ryunen-age';
-        ageSpan.textContent = ryunenAges[pos].join(',');
-        cell.appendChild(ageSpan);
-      }
-
-      // 暗剣殺・破 マーク (右上、同じ宮に重なる場合は横並び)
+      // ア/ハ マーク (中央行の真下)
       if (pos === ankenPos || pos === haPos) {
-        const marks = document.createElement('span');
-        marks.className = 'marks';
+        const marks = document.createElement('div');
+        marks.className = 'cell-marks';
         if (pos === ankenPos) {
           const m = document.createElement('span');
           m.className = 'mark anken';
@@ -341,6 +335,18 @@
           marks.appendChild(m);
         }
         cell.appendChild(marks);
+      }
+
+      // 流年法 年齢 (セル外側、対応する外周辺に配置)
+      if (ryunenAges && pos !== 4 && ryunenAges[pos]) {
+        const edges = POS_TO_EDGES[pos] || [];
+        ryunenAges[pos].forEach((age, i) => {
+          if (i >= edges.length) return;
+          const ageEl = document.createElement('span');
+          ageEl.className = 'ryunen-age-out edge-' + edges[i];
+          ageEl.textContent = age;
+          cell.appendChild(ageEl);
+        });
       }
 
       el.appendChild(cell);
