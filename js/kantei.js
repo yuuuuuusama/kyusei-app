@@ -450,8 +450,14 @@
         toki, tsuki, toshi,
         kaiketsu, jiHonmei, jiHongu,
         naizou, keisha: keishaKyu,
-        doukai: { toshi: toshiDoukai, tsuki: tsukiDoukai },
-        hidoukai: { toshi: toshiHidoukai, tsuki: tsukiHidoukai },
+        doukai: {
+          toshi: toshiDoukai, tsuki: tsukiDoukai,
+          toshiPos: honmeiPosInYear, tsukiPos: honmeiPosInMonth
+        },
+        hidoukai: {
+          toshi: toshiHidoukai, tsuki: tsukiHidoukai,
+          toshiPos: honmeiDefPos, tsukiPos: honmeiPosInYear
+        },
         kaijin
       }
     };
