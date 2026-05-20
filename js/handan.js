@@ -64,7 +64,21 @@
     $('o-hidoukai-tsuki').textContent = K.STAR_NAMES[r.bottom.hidoukai.tsuki];
 
     // 本人運気 (宮傾斜)
-    $('o-keisha').textContent = r.bottom.keisha;
+    const keisha = r.bottom.keisha;
+    const KD = window.KeishaData;
+    $('o-keisha').textContent = KD ? KD.label(keisha) : keisha;
+    const detailEl = $('o-keisha-detail');
+    if (detailEl) {
+      detailEl.innerHTML = '';
+      const items = KD ? KD.get(keisha) : null;
+      if (items && items.length) {
+        items.forEach(text => {
+          const li = document.createElement('li');
+          li.textContent = text;
+          detailEl.appendChild(li);
+        });
+      }
+    }
 
     // 内蔵法 — 蔵気/宿命 はそれぞれ年月(相談年盤+相談月盤) と 月日(相談月盤+相談日盤)
     $('o-kuraki-nm').innerHTML  = r.bottom.naizou.kuraki_toshigetsu;

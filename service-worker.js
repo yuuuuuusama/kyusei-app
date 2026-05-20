@@ -1,7 +1,7 @@
 // service-worker.js
 // オフライン対応用
 
-const CACHE_NAME = 'kyusei-app-v77';
+const CACHE_NAME = 'kyusei-app-v78';
 const ASSETS = [
   './',
   './index.html',
@@ -18,6 +18,7 @@ const ASSETS = [
   './js/eto-table.js',
   './js/app.js',
   './js/handan.js',
+  './js/keisha-data.js',
   './icons/icon-192.png',
   './icons/icon-512.png'
 ];

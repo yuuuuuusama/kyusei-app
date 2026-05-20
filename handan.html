@@ -45,8 +45,9 @@
     <div class="handan-section">
       <h3>本人運気　宮傾斜</h3>
       <div class="body">
-        <div id="o-keisha" style="margin-bottom:4px;font-family:var(--font-jp);"></div>
-        <textarea id="m-honnin"></textarea>
+        <div id="o-keisha" class="keisha-name"></div>
+        <ul id="o-keisha-detail" class="keisha-detail"></ul>
+        <textarea id="m-honnin" placeholder="メモ"></textarea>
       </div>
     </div>
 
@@ -101,12 +102,13 @@
 
 </main>
 
-<script src="js/solar-terms.js?v=77"></script>
-<script src="js/eto.js?v=77"></script>
-<script src="js/kyusei.js?v=77"></script>
-<script src="js/kantei.js?v=77"></script>
-<script src="js/storage.js?v=77"></script>
-<script src="js/handan.js?v=77"></script>
+<script src="js/solar-terms.js?v=78"></script>
+<script src="js/eto.js?v=78"></script>
+<script src="js/kyusei.js?v=78"></script>
+<script src="js/kantei.js?v=78"></script>
+<script src="js/storage.js?v=78"></script>
+<script src="js/keisha-data.js?v=78"></script>
+<script src="js/handan.js?v=78"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));

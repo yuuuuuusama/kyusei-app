@@ -568,6 +568,28 @@ html, body {
 .handan-soudan textarea { min-height: 120px; }
 .handan-sougou textarea { min-height: 200px; }
 
+.keisha-name {
+  font-family: var(--font-jp);
+  font-size: 14px;
+  font-weight: bold;
+  color: #2b1a0e;
+  margin-bottom: 4px;
+}
+.keisha-detail {
+  margin: 0 0 6px;
+  padding-left: 1.2em;
+  font-family: var(--font-jp);
+  font-size: 12px;
+  line-height: 1.5;
+  color: #333;
+}
+.keisha-detail li { margin-bottom: 2px; }
+@media print {
+  .keisha-name { font-size: 8pt; margin-bottom: 2pt; }
+  .keisha-detail { font-size: 7pt; line-height: 1.35; padding-left: 1em; }
+  .keisha-detail li { margin-bottom: 0; }
+}
+
 .flow-table {
   width: 100%;
   border-collapse: collapse;
