@@ -17,7 +17,6 @@
   <h1>干支九星気学</h1>
   <nav>
     <a href="index.html">鑑定書</a>
-    <a href="handan.html">判断書</a>
     <a href="history.html" class="active">履歴</a>
   </nav>
 </header>
@@ -66,10 +65,6 @@
       left.appendChild(title);
       left.appendChild(meta);
       const right = document.createElement('div');
-      const handanLink = document.createElement('a');
-      handanLink.href = 'handan.html?id=' + r.id;
-      handanLink.textContent = '判断書';
-      handanLink.style.marginRight = '12px';
       const del = document.createElement('button');
       del.className = 'btn danger';
       del.style.padding = '4px 10px';
@@ -81,7 +76,6 @@
           render();
         }
       };
-      right.appendChild(handanLink);
       right.appendChild(del);
       li.appendChild(left);
       li.appendChild(right);

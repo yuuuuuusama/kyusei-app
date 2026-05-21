@@ -35,19 +35,6 @@
     $('btn-save').addEventListener('click', save);
     $('btn-print').addEventListener('click', () => window.print());
     $('btn-new').addEventListener('click', newRecord);
-    $('btn-handan').addEventListener('click', (e) => {
-      // 保存してから判断書へ
-      if (!currentRecordId) {
-        e.preventDefault();
-        const r = save();
-        if (r) location.href = 'handan.html?id=' + r.id;
-      } else {
-        // currentId 付きで遷移
-        e.preventDefault();
-        save();
-        location.href = 'handan.html?id=' + currentRecordId;
-      }
-    });
 
     // 入力変更で自動再計算
     ['f-birth', 'f-consult'].forEach(id => {
@@ -233,8 +220,119 @@
     markBranch(r.birth.dayEto.branch,   'eto-day');
 
     // 内蔵 = 蔵気 (常に最新計算で上書き) — HTML マーカー入り
-    $('m-naizou').innerHTML = r.bottom.naizou.kuraki_nengetsu;
-    $('m-shukumei').innerHTML = r.bottom.naizou.shukumei_nengetsu;
+    $('o-naizou').innerHTML = r.bottom.naizou.kuraki_nengetsu;
+    $('o-shukumei').innerHTML = r.bottom.naizou.shukumei_nengetsu;
+
+    // ===== 判断 (旧 判断書) セクション =====
+    renderHandan(r);
+  }
+
+  function renderHandan(r) {
+    // 同会・被同会 (九星 + 宮)
+    const fmtStarKyu = (starIdx, posIdx) => {
+      const star = Kyusei.STAR_NAMES[starIdx] || '';
+      const kyu = (typeof posIdx === 'number') ? Kyusei.POSITION_TO_KYU_NAME[posIdx] : '';
+      return kyu ? `${star} ${kyu}` : star;
+    };
+    $('o-doukai-toshi').textContent   = fmtStarKyu(r.bottom.doukai.toshi,    r.bottom.doukai.toshiPos);
+    $('o-hidoukai-toshi').textContent = fmtStarKyu(r.bottom.hidoukai.toshi,  r.bottom.hidoukai.toshiPos);
+    $('o-doukai-tsuki').textContent   = fmtStarKyu(r.bottom.doukai.tsuki,    r.bottom.doukai.tsukiPos);
+    $('o-hidoukai-tsuki').textContent = fmtStarKyu(r.bottom.hidoukai.tsuki,  r.bottom.hidoukai.tsukiPos);
+
+    renderKyuZasuru(r.bottom.doukai.toshiPos, r.bottom.doukai.tsukiPos);
+
+    // 本人運気 (宮傾斜)
+    const keisha = r.bottom.keisha;
+    const KD = window.KeishaData;
+    $('o-keisha').textContent = KD ? KD.label(keisha) : keisha;
+    const detailEl = $('o-keisha-detail');
+    if (detailEl) {
+      detailEl.innerHTML = '';
+      const items = KD ? KD.get(keisha) : null;
+      if (items && items.length) {
+        items.forEach(text => {
+          const li = document.createElement('li');
+          li.textContent = text;
+          detailEl.appendChild(li);
+        });
+      }
+    }
+
+    // 内蔵法 詳細
+    $('o-kuraki-nm').innerHTML  = r.bottom.naizou.kuraki_toshigetsu;
+    $('o-shukumei-nm').innerHTML = r.bottom.naizou.shukumei_toshigetsu;
+    $('o-kuraki-md').innerHTML  = r.bottom.naizou.kuraki_getsubi;
+    $('o-shukumei-md').innerHTML = r.bottom.naizou.shukumei_getsubi;
+
+    const birth = new Date($('f-birth').value);
+    const consult = new Date($('f-consult').value || Date.now());
+    renderSeigetsu(birth);
+    renderSeinichi(r.birth.dayEto.branch);
+    renderSeimatsuri(r.birth.honmeisei, r.consult.yearCenter);
+    renderShuku(consult);
+  }
+
+  function renderKyuZasuru(toshiPos, tsukiPos) {
+    const el = $('o-kyu-zasuru');
+    if (!el) return;
+    const KZ = window.KyuZasuruData;
+    if (!KZ) { el.innerHTML = ''; return; }
+    const toshiKyu = (typeof toshiPos === 'number') ? Kyusei.POSITION_TO_KYU_NAME[toshiPos] : null;
+    const tsukiKyu = (typeof tsukiPos === 'number') ? Kyusei.POSITION_TO_KYU_NAME[tsukiPos] : null;
+    let html = '';
+    if (toshiKyu) {
+      const text = KZ.get(toshiKyu);
+      if (text) html += `<div class="zasuru-item"><b>年: 本命星 ${escapeHtml(toshiKyu)}に座するとき</b><div>${escapeHtml(text)}</div></div>`;
+    }
+    if (tsukiKyu && tsukiKyu !== toshiKyu) {
+      const text = KZ.get(tsukiKyu);
+      if (text) html += `<div class="zasuru-item" style="margin-top:4px;"><b>月: 本命星 ${escapeHtml(tsukiKyu)}に座するとき</b><div>${escapeHtml(text)}</div></div>`;
+    }
+    el.innerHTML = html;
+  }
+
+  function renderSeigetsu(birth) {
+    const m = birth.getMonth() + 1;
+    $('o-seigetsu-label').textContent = `${m}月生まれ`;
+    const SD = window.SeigetsuData;
+    const text = SD ? SD.get(m) : null;
+    $('o-seigetsu-text').textContent = text || '(該当データなし)';
+  }
+
+  function renderSeinichi(branch) {
+    $('o-seinichi-label').textContent = `生日 ${branch}の日`;
+    const SD = window.SeinichiData;
+    const text = SD ? SD.get(branch) : null;
+    $('o-seinichi-text').textContent = text || '(該当データなし)';
+  }
+
+  function renderSeimatsuri(honmeisei, consultYearCenter) {
+    const SMD = window.SeimatsuriData;
+    if (!SMD) return;
+    const idx = SMD.getYouseiIndex(honmeisei, consultYearCenter);
+    let html = '';
+    if (idx !== null) {
+      const cur = SMD.get(idx);
+      if (cur) {
+        const kichi = cur.kichi ? `【${escapeHtml(cur.kichi)}】` : '';
+        html = `<div class="seimatsuri-current"><b>本年の曜星: ${escapeHtml(cur.star)} ${kichi}（${escapeHtml(cur.period)}）</b><div>${escapeHtml(cur.text)}</div></div>`;
+      }
+    }
+    $('o-seimatsuri').innerHTML = html;
+  }
+
+  function renderShuku(consult) {
+    const ND = window.NijuhasshukuData;
+    if (!ND) return;
+    const s = ND.getShuku(consult);
+    $('o-shuku').innerHTML = `<b>${escapeHtml(s.name)}宿</b>：${escapeHtml(s.text)}`;
+  }
+
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[c]));
   }
 
   // 3x3 盤の描画
@@ -362,8 +460,11 @@
       topic: $('f-topic').value,
       consult: $('f-consult').value,
       birth: birthVal,
-      naizou: $('m-naizou').textContent,
-      shukumei: $('m-shukumei').textContent
+      handan: {
+        honnin: $('m-honnin').value,
+        nengetsu: $('m-nengetsu').value,
+        naizou: $('m-naizou').value
+      }
     };
     const saved = Storage.upsert(record);
     currentRecordId = saved.id;
@@ -380,6 +481,11 @@
     $('f-topic').value = rec.topic || '';
     setDateInput('f-consult', rec.consult || '');
     setDateInput('f-birth', rec.birth || '');
+    if (rec.handan) {
+      $('m-honnin').value = rec.handan.honnin || '';
+      $('m-nengetsu').value = rec.handan.nengetsu || '';
+      $('m-naizou').value = rec.handan.naizou || '';
+    }
     // 内蔵・宿命 は compute() 内で常に最新の計算結果に上書きされる
     compute();
   }
@@ -388,9 +494,12 @@
     if (currentRecordId && !confirm('現在のデータは保存されていません。新規作成しますか?')) return;
     currentRecordId = null;
     history.replaceState(null, '', location.pathname);
-    ['f-name','f-gender','f-age','f-topic'].forEach(id => $(id).value = '');
-    $('m-naizou').textContent = '';
-    $('m-shukumei').textContent = '';
+    ['f-name','f-gender','f-age','f-topic','m-honnin','m-nengetsu','m-naizou'].forEach(id => {
+      const el = $(id);
+      if (el) el.value = '';
+    });
+    $('o-naizou').textContent = '';
+    $('o-shukumei').textContent = '';
     setDateInput('f-birth', '');
     setDateInput('f-consult', new Date());
     document.querySelectorAll('.ban').forEach(b => b.innerHTML = '');

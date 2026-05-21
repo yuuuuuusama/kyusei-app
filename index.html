@@ -18,7 +18,6 @@
   <h1>干支九星気学</h1>
   <nav>
     <a href="index.html" class="active">鑑定書</a>
-    <a href="handan.html">判断書</a>
     <a href="history.html">履歴</a>
   </nav>
 </header>
@@ -71,7 +70,6 @@
     <button class="btn secondary" id="btn-save">保存</button>
     <button class="btn secondary" id="btn-print">印刷 / PDF保存</button>
     <button class="btn secondary" id="btn-new">新規</button>
-    <a class="btn secondary" href="handan.html" id="btn-handan">判断書へ →</a>
   </div>
 
   <!-- ===== 上段4盤: 相談日 年・月・日・時 ===== -->
@@ -139,8 +137,8 @@
       <div class="bottom-cell"><div class="lbl">解決</div><div class="val" id="o-kaiketsu"></div></div>
       <div class="bottom-cell"><div class="lbl">時本命</div><div class="val" id="o-jihonmei"></div></div>
       <div class="bottom-cell"><div class="lbl">時本宮</div><div class="val" id="o-jihongu"></div></div>
-      <div class="bottom-cell"><div class="lbl">内蔵</div><div class="val" id="m-naizou"></div></div>
-      <div class="bottom-cell"><div class="lbl">宿命</div><div class="val" id="m-shukumei"></div></div>
+      <div class="bottom-cell"><div class="lbl">内蔵</div><div class="val" id="o-naizou"></div></div>
+      <div class="bottom-cell"><div class="lbl">宿命</div><div class="val" id="o-shukumei"></div></div>
       <div class="bottom-cell" style="grid-column: 1 / -1;">
         <div class="lbl">干支吉凶</div>
         <div class="val">
@@ -185,16 +183,107 @@
     </tbody>
   </table>
 
+  <!-- ===== 判断 (旧 判断書) ===== -->
+  <div style="margin-top:14px;">
+    <div class="handan-section">
+      <h3>本人運気　宮傾斜</h3>
+      <div class="body">
+        <div id="o-keisha" class="keisha-name"></div>
+        <ul id="o-keisha-detail" class="keisha-detail"></ul>
+        <textarea id="m-honnin" placeholder="メモ"></textarea>
+      </div>
+    </div>
+
+    <div class="handan-section" style="margin-top:10px;">
+      <h3>年月運</h3>
+      <div class="body">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-jp);">
+          <tr>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">年同会</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-doukai-toshi"></td>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">年被同会</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-hidoukai-toshi"></td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">月同会</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-doukai-tsuki"></td>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">月被同会</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-hidoukai-tsuki"></td>
+          </tr>
+        </table>
+        <div id="o-kyu-zasuru" class="kyu-zasuru" style="margin-top:6px;"></div>
+        <textarea id="m-nengetsu" style="margin-top:4px;" placeholder="メモ"></textarea>
+      </div>
+    </div>
+
+    <div class="handan-section" style="margin-top:10px;">
+      <h3>内蔵法</h3>
+      <div class="body">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-jp);">
+          <tr>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">蔵気年月</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-kuraki-nm"></td>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">宿命年月</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-shukumei-nm"></td>
+          </tr>
+          <tr>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">蔵気月日</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-kuraki-md"></td>
+            <td style="border:1px solid #888;padding:3px 6px;background:#f8f0d8;">宿命月日</td>
+            <td style="border:1px solid #888;padding:3px 6px;" id="o-shukumei-md"></td>
+          </tr>
+        </table>
+        <textarea id="m-naizou" style="margin-top:4px;" placeholder="メモ"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="handan-section" style="margin-top:10px;">
+    <h3>生月　性格と運勢</h3>
+    <div class="body">
+      <div id="o-seigetsu-label" class="hayami-label"></div>
+      <div id="o-seigetsu-text" class="hayami-text"></div>
+    </div>
+  </div>
+
+  <div class="handan-section" style="margin-top:10px;">
+    <h3>生日　性格と運勢</h3>
+    <div class="body">
+      <div id="o-seinichi-label" class="hayami-label"></div>
+      <div id="o-seinichi-text" class="hayami-text"></div>
+    </div>
+  </div>
+
+  <div class="handan-section" style="margin-top:10px;">
+    <h3>星まつり　運気</h3>
+    <div class="body">
+      <div id="o-seimatsuri" class="seimatsuri-block"></div>
+    </div>
+  </div>
+
+  <div class="handan-section" style="margin-top:10px;">
+    <h3>二十八宿（相談日）</h3>
+    <div class="body">
+      <div id="o-shuku" class="hayami-text"></div>
+    </div>
+  </div>
+
 </main>
 
-<script src="js/solar-terms.js?v=89"></script>
-<script src="js/eto.js?v=89"></script>
-<script src="js/kyusei.js?v=89"></script>
-<script src="js/kantei.js?v=89"></script>
-<script src="js/storage.js?v=89"></script>
-<script src="js/dt-picker.js?v=89"></script>
-<script src="js/eto-table.js?v=89"></script>
-<script src="js/app.js?v=89"></script>
+<script src="js/solar-terms.js?v=90"></script>
+<script src="js/eto.js?v=90"></script>
+<script src="js/kyusei.js?v=90"></script>
+<script src="js/kantei.js?v=90"></script>
+<script src="js/storage.js?v=90"></script>
+<script src="js/dt-picker.js?v=90"></script>
+<script src="js/eto-table.js?v=90"></script>
+<script src="js/keisha-data.js?v=90"></script>
+<script src="js/kyu-zasuru-data.js?v=90"></script>
+<script src="js/seigetsu-data.js?v=90"></script>
+<script src="js/seinichi-data.js?v=90"></script>
+<script src="js/seimatsuri-data.js?v=90"></script>
+<script src="js/nijuhasshuku-data.js?v=90"></script>
+<script src="js/app.js?v=90"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
