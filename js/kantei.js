@@ -641,12 +641,15 @@
   //   4: 東辺-上接点, 5: 東辺-下接点, 6: SE隅,
   //   7: 南辺-右接点, 8: 南辺-左接点, 9: SW隅,
   //   10: 西辺-下接点, 11: 西辺-上接点
-  // 0歳は中宮支の「元々の位置」(自然位置) から始まり、時計回りに 5,10,...,55
-  // 12支 ↔ 外周12位置の自然対応: perim_idx = (branchIdx + 1) mod 12
-  // (亥→NW隅, 子→top-1, 丑→top-2, 寅→NE隅, ..., 戌→left-2)
+  // 0歳は中宮支の「元々の宮」(自然位置) から始まり、時計回りに 5,10,...,55
+  // 理論座標 (北上): 亥→NW隅(乾), 子→NW-N間(坎入口), 丑→N-NE間, 寅→NE隅(艮),
+  //                 卯→NE-E間, 辰→E-SE間, 巳→SE隅(巽), 午→SE-S間,
+  //                 未→S-SW間, 申→SW隅(坤), 酉→SW-W間, 戌→W-NW間(乾入口)
+  // 盤は 180°回転表示 (南上・北下) のため、CSS座標では +6 シフト
+  // CSS perim = (branchIdx + 1 + 6) mod 12 = (branchIdx + 7) mod 12
   function computeRyunenAgesOnPerimeter(branchIdx) {
     if (typeof branchIdx !== 'number') return null;
-    const startIdx = (branchIdx + 1) % 12;
+    const startIdx = (branchIdx + 7) % 12;
     const ages = {};
     for (let j = 0; j < 12; j++) {
       const perimIdx = (startIdx + j) % 12;
