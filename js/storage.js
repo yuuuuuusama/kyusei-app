@@ -50,5 +50,24 @@
     saveAll(data);
   }
 
-  global.Storage = { loadAll, get, upsert, remove, exportJSON, importJSON };
+  // 同名の相談者で記録をまとめる
+  function getGroups() {
+    const list = loadAll();
+    const map = new Map();
+    list.forEach(r => {
+      const key = ((r.name || '').trim()) || '(無名)';
+      if (!map.has(key)) map.set(key, { name: key, records: [] });
+      map.get(key).records.push(r);
+    });
+    const groups = [...map.values()];
+    groups.forEach(g => g.records.sort((a, b) => (b.consult || '').localeCompare(a.consult || '')));
+    groups.sort((a, b) => {
+      const al = a.records[0]?.updatedAt || '';
+      const bl = b.records[0]?.updatedAt || '';
+      return bl.localeCompare(al);
+    });
+    return groups;
+  }
+
+  global.Storage = { loadAll, get, upsert, remove, exportJSON, importJSON, getGroups };
 })(typeof window !== 'undefined' ? window : globalThis);
