@@ -143,7 +143,8 @@
     if (idx !== null) {
       const cur = SMD.get(idx);
       if (cur) {
-        html = `<div class="seimatsuri-current"><b>本年の曜星: ${escapeHtml(cur.star)}（${escapeHtml(cur.period)}）</b><div>${escapeHtml(cur.text)}</div></div>`;
+        const kichi = cur.kichi ? `【${escapeHtml(cur.kichi)}】` : '';
+        html = `<div class="seimatsuri-current"><b>本年の曜星: ${escapeHtml(cur.star)} ${kichi}（${escapeHtml(cur.period)}）</b><div>${escapeHtml(cur.text)}</div></div>`;
       }
     }
     $('o-seimatsuri').innerHTML = html;
