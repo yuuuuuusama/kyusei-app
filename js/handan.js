@@ -143,16 +143,9 @@
     if (idx !== null) {
       const cur = SMD.get(idx);
       if (cur) {
-        html += `<div class="seimatsuri-current"><b>本年の曜星: ${escapeHtml(cur.star)}（${escapeHtml(cur.period)}）</b><div>${escapeHtml(cur.text)}</div></div>`;
+        html = `<div class="seimatsuri-current"><b>本年の曜星: ${escapeHtml(cur.star)}（${escapeHtml(cur.period)}）</b><div>${escapeHtml(cur.text)}</div></div>`;
       }
     }
-    html += '<table class="seimatsuri-table" style="width:100%;border-collapse:collapse;font-size:11px;font-family:var(--font-jp);margin-top:6px;">';
-    html += '<thead><tr style="background:#f8f0d8;"><th>曜星</th><th>運気</th><th>説明</th></tr></thead><tbody>';
-    SMD.list.forEach((it, i) => {
-      const cur = (i === idx) ? ' style="background:#fff4d6;"' : '';
-      html += `<tr${cur}><td>${escapeHtml(it.star)}</td><td>${escapeHtml(it.period)}</td><td>${escapeHtml(it.text)}</td></tr>`;
-    });
-    html += '</tbody></table>';
     $('o-seimatsuri').innerHTML = html;
   }
 
