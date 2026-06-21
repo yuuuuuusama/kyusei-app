@@ -110,10 +110,13 @@ html, body {
 /* ================== ページ ================== */
 .page {
   background:
-    /* 和紙ノイズ風の微細テクスチャ */
+    /* 古風の小星散らし (四芒星 + 星屑) */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'><g fill='%23b8924a' opacity='0.22'><path d='M25 28L26.3 30.7L29 32L26.3 33.3L25 36L23.7 33.3L21 32L23.7 30.7Z'/><path d='M88 16L89 18L91 19L89 20L88 22L87 20L85 19L87 18Z'/><path d='M158 40L159.7 43.3L163 45L159.7 46.7L158 50L156.3 46.7L153 45L156.3 43.3Z'/><path d='M198 96L199 98L201 99L199 100L198 102L197 100L195 99L197 98Z'/><path d='M62 78L63 80L65 81L63 82L62 84L61 82L59 81L61 80Z'/><path d='M122 92L123.3 94.7L126 96L123.3 97.3L122 100L120.7 97.3L118 96L120.7 94.7Z'/><path d='M36 130L37 132L39 133L37 134L36 136L35 134L33 133L35 132Z'/><path d='M98 148L99.7 151.3L103 153L99.7 154.7L98 158L96.3 154.7L93 153L96.3 151.3Z'/><path d='M170 138L171 140L173 141L171 142L170 144L169 142L167 141L169 140Z'/><path d='M186 188L187.3 190.7L190 192L187.3 193.3L186 196L184.7 193.3L182 192L184.7 190.7Z'/><path d='M52 196L53 198L55 199L53 200L52 202L51 200L49 199L51 198Z'/><path d='M132 192L133 194L135 195L133 196L132 198L131 196L129 195L131 194Z'/></g><g fill='%238b6b2e' opacity='0.28'><circle cx='75' cy='52' r='0.9'/><circle cx='142' cy='24' r='0.9'/><circle cx='15' cy='105' r='0.9'/><circle cx='178' cy='66' r='0.9'/><circle cx='108' cy='58' r='0.9'/><circle cx='78' cy='118' r='0.9'/><circle cx='45' cy='62' r='0.9'/><circle cx='112' cy='172' r='0.9'/><circle cx='172' cy='162' r='0.9'/><circle cx='205' cy='32' r='0.9'/><circle cx='30' cy='160' r='0.9'/><circle cx='150' cy='112' r='0.9'/><circle cx='8' cy='75' r='0.7'/><circle cx='210' cy='128' r='0.7'/><circle cx='62' cy='38' r='0.7'/></g></svg>"),
     radial-gradient(circle at 20% 15%, rgba(184,146,74,.05) 0, transparent 40%),
     radial-gradient(circle at 80% 85%, rgba(168,50,50,.03) 0, transparent 40%),
     linear-gradient(180deg, #fbf7ec 0%, #f6efe0 100%);
+  background-size: 220px 220px, auto, auto, auto;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat;
   margin: 16px auto;
   max-width: 820px;
   padding: 20px 20px 64px;
