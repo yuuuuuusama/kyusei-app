@@ -953,6 +953,345 @@ input[type="search"]::placeholder {
   font-style: italic;
 }
 
+/* ================== Rich Interactions & Depth ==================
+ * 立体感(layered shadows, emboss)とリッチなアクション
+ * (浮上ホバー・金のグロー・呼吸する中宮・シマー・フェードイン)
+ */
+
+/* 共通: なめらかなトランジション */
+.btn,
+.bottom-cell,
+.handan-section,
+.ban-cell-inner,
+.kaijin-table td,
+.app-header nav a,
+.history-list li,
+.client-item,
+.form-table input,
+.form-table select,
+.form-table textarea,
+.dt-picker select,
+.handan-section textarea,
+.bottom-cell textarea,
+input[type="search"] {
+  transition:
+    transform .2s ease,
+    box-shadow .25s ease,
+    background-color .2s ease,
+    background-image .2s ease,
+    border-color .2s ease,
+    color .15s ease;
+  will-change: auto;
+}
+
+/* ===== ページ本体: 紙の浮遊感を強化 ===== */
+.page {
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.75) inset,
+    0 -1px 0 rgba(139,107,46,.10) inset,
+    0 14px 36px rgba(20,10,4,.45),
+    0 5px 12px rgba(20,10,4,.28),
+    0 1px 2px rgba(20,10,4,.20);
+}
+
+/* ===== ヘッダー: 漆の重みと金線の浮き ===== */
+.app-header {
+  box-shadow:
+    0 1px 0 rgba(212,176,106,.45) inset,
+    0 -1px 0 rgba(212,176,106,.22) inset,
+    0 8px 22px rgba(0,0,0,.45),
+    0 2px 6px rgba(0,0,0,.3);
+}
+
+/* ===== ページタイトル: 金グラデ文字+シマーする下線 ===== */
+.page-title {
+  background: linear-gradient(180deg, #3a2614 0%, #7a5a2e 55%, #5a3f1f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
+.page-title::after {
+  width: 140px;
+  background:
+    linear-gradient(90deg,
+      transparent 0%,
+      rgba(184,146,74,.55) 30%,
+      rgba(255,234,180,.95) 50%,
+      rgba(184,146,74,.55) 70%,
+      transparent 100%);
+  background-size: 280px 1px;
+  background-position: -140px 0;
+  background-repeat: no-repeat;
+  animation: kantei-shimmer 5.5s ease-in-out infinite;
+}
+@keyframes kantei-shimmer {
+  0%   { background-position: -140px 0; }
+  60%  { background-position: 140px 0; }
+  100% { background-position: 140px 0; }
+}
+
+/* ===== ナビ: ホバーで金の流線が伸びる ===== */
+.app-header nav a {
+  position: relative;
+  padding-bottom: 4px;
+  border-bottom: none;
+}
+.app-header nav a::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--c-kin-light) 50%, transparent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform .3s ease;
+}
+.app-header nav a:hover::after,
+.app-header nav a.active::after { transform: scaleX(1); }
+.app-header nav a.active { border-bottom-color: transparent; }
+
+/* ===== ボタン: 光沢・浮上・金グロー・押し込み ===== */
+.btn { position: relative; overflow: hidden; isolation: isolate; }
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,234,180,.28) 0%, rgba(255,234,180,0) 45%);
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity .25s ease;
+}
+.btn > * { position: relative; z-index: 2; }
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 1px 0 rgba(212,176,106,.55) inset,
+    0 -1px 0 rgba(0,0,0,.3) inset,
+    0 8px 18px rgba(0,0,0,.30),
+    0 0 14px rgba(212,176,106,.35);
+}
+.btn:hover::before { opacity: 1.2; }
+.btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.5) inset,
+    0 1px 0 rgba(212,176,106,.18) inset;
+}
+.btn.secondary:hover {
+  background: linear-gradient(180deg, #fff7dd 0%, #ecd998 100%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.7) inset,
+    0 -1px 0 rgba(139,107,46,.25) inset,
+    0 8px 16px rgba(40,25,10,.16),
+    0 0 12px rgba(212,176,106,.4);
+}
+.btn.danger:hover {
+  filter: brightness(1.1);
+  box-shadow:
+    0 1px 0 rgba(247,200,180,.4) inset,
+    0 -1px 0 rgba(0,0,0,.3) inset,
+    0 8px 18px rgba(110,20,20,.35),
+    0 0 14px rgba(168,50,50,.45);
+}
+
+/* ===== 入力フォーカス: 金のリングと薄い和紙の白 ===== */
+.form-table input:focus,
+.form-table select:focus,
+.form-table textarea:focus,
+.dt-picker select:focus,
+.form-table .ga-inline select:focus,
+.form-table .ga-inline input:focus,
+input[type="search"]:focus,
+.handan-section textarea:focus,
+.bottom-cell textarea:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(212,176,106,.40),
+    0 0 10px rgba(212,176,106,.30);
+  background: #fffaee;
+  border-color: var(--c-kin) !important;
+}
+
+/* フォーカス中の行は淡く浮かす */
+.form-table tr:focus-within > td,
+.form-table tr:focus-within > th {
+  background-color: rgba(212,176,106,.05);
+}
+
+/* ===== 八盤: 紙が浮き上がる感覚 ===== */
+.ban {
+  transition: box-shadow .3s ease, transform .25s ease;
+}
+.ban-cell:hover .ban {
+  box-shadow:
+    0 0 0 1px rgba(184,146,74,.5),
+    0 10px 26px rgba(40,25,10,.20),
+    0 3px 6px rgba(40,25,10,.12);
+}
+
+/* ===== 八盤の各セル: ホバーで盛り上がる ===== */
+.ban-cell-inner {
+  transition: transform .2s ease, box-shadow .25s ease, background .2s ease;
+}
+.ban-cell-inner:hover {
+  z-index: 4;
+  transform: translateY(-1px) scale(1.035);
+  box-shadow: 0 5px 12px rgba(40,25,10,.25);
+}
+
+/* ===== 中宮(本命星): 静かに呼吸する金のグロー ===== */
+@keyframes chukyu-breath {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px var(--c-kin) inset,
+      0 0 0 0 rgba(212,176,106,0);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px var(--c-kin-light) inset,
+      0 0 12px rgba(212,176,106,.55);
+  }
+}
+.ban-cell-inner.center {
+  animation: chukyu-breath 4.5s ease-in-out infinite;
+}
+.ban-cell-inner.honmei {
+  position: relative;
+}
+.ban-cell-inner.honmei::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,236,180,.45) 0%, transparent 40%);
+  mix-blend-mode: screen;
+}
+
+/* ===== 下部宮位カード: 立体浮上 ===== */
+.bottom-cell {
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.75) inset,
+    0 -1px 0 rgba(139,107,46,.06) inset,
+    0 1px 2px rgba(40,25,10,.06);
+}
+.bottom-cell:hover {
+  transform: translateY(-1px);
+  border-color: var(--c-kin);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.75) inset,
+    0 -1px 0 rgba(139,107,46,.10) inset,
+    0 7px 16px rgba(40,25,10,.14),
+    0 0 0 1px rgba(184,146,74,.4);
+}
+.bottom-cell:hover .lbl {
+  background: linear-gradient(180deg, #f6e9bc 0%, #ead296 100%);
+}
+
+/* ===== 判断書セクション: 浮上+左朱線の伸び ===== */
+.handan-section {
+  position: relative;
+}
+.handan-section:hover {
+  transform: translateY(-1px);
+  border-color: var(--c-kin);
+  box-shadow:
+    0 8px 22px rgba(40,25,10,.14),
+    0 0 0 1px rgba(184,146,74,.38);
+}
+.handan-section h3::before {
+  transition: width .25s ease, background .25s ease;
+}
+.handan-section:hover h3::before {
+  width: 5px;
+  background: linear-gradient(180deg, var(--c-kin-light) 0%, var(--c-shu) 100%);
+}
+
+/* ===== 干支吉凶 ローゼット: ホバーで光輪 ===== */
+.eto-wheel span[data-branch] {
+  transition: transform .18s ease, box-shadow .18s ease;
+  cursor: default;
+}
+.eto-wheel span[data-branch]:hover {
+  transform: scale(1.25);
+}
+.eto-wheel span.eto-year:hover  { box-shadow: 0 0 0 2px var(--c-shu) inset, 0 0 10px rgba(168,50,50,.55); }
+.eto-wheel span.eto-month:hover { box-shadow: 0 0 0 2px var(--c-ai) inset,  0 0 10px rgba(42,67,89,.55); }
+.eto-wheel span.eto-day:hover   { box-shadow: 0 0 0 2px var(--c-matcha) inset, 0 0 10px rgba(107,124,79,.55); }
+
+/* ===== 解神テーブル: 行/セルハイライト ===== */
+.kaijin-table tr:hover td { background: rgba(212,176,106,.10); }
+.kaijin-table td { transition: background-color .15s ease; }
+.kaijin-table td:hover { background: rgba(212,176,106,.20); }
+
+/* ===== 履歴リスト/相談者リスト: クリック可能感 ===== */
+.history-list li {
+  border-radius: 2px;
+}
+.history-list li:hover {
+  transform: translateX(3px);
+  background: linear-gradient(90deg, rgba(184,146,74,.10) 0%, rgba(184,146,74,.02) 100%);
+}
+.client-item:hover {
+  transform: translateY(-1px);
+  border-color: var(--c-kin);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.6) inset,
+    0 7px 16px rgba(40,25,10,.12),
+    0 0 0 1px rgba(184,146,74,.35);
+}
+
+/* ===== 自動計算セルの値出現: 静かなフェードアップ ===== */
+.auto:not(:empty),
+.bottom-cell .val .auto:not(:empty),
+.keisha-name:not(:empty),
+.hayami-label:not(:empty) {
+  animation: kantei-fadein .35s ease-out;
+}
+@keyframes kantei-fadein {
+  0%   { opacity: 0; transform: translateY(-3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 八盤のセル内容が更新されたら微かにスケールイン */
+.ban-cell-inner .cell-main {
+  animation: cell-pop .4s ease-out;
+}
+@keyframes cell-pop {
+  0%   { opacity: 0; transform: scale(.88); }
+  60%  { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ===== Seimatsuri current 強調 ===== */
+.seimatsuri-current {
+  position: relative;
+  overflow: hidden;
+}
+.seimatsuri-current::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 35%, rgba(255,236,180,.55) 50%, transparent 65%);
+  transform: translateX(-100%);
+  animation: kin-sweep 6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes kin-sweep {
+  0%   { transform: translateX(-120%); }
+  35%  { transform: translateX(120%); }
+  100% { transform: translateX(120%); }
+}
+
+/* ===== モーション削減アクセシビリティ ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001s !important;
+  }
+}
+
 /* ================== モバイル ================== */
 @media (max-width: 640px) {
   .page { margin: 8px; padding: 14px 12px 50px; }
@@ -1266,4 +1605,22 @@ input[type="search"]::placeholder {
     background: transparent !important;
     color: #000 !important;
   }
+
+  /* リッチ表現を印刷時に無効化 */
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    text-shadow: none !important;
+  }
+  .page-title {
+    background: none !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    color: #000 !important;
+  }
+  .page-title::after { background: #000 !important; width: 80px !important; }
+  .ban-cell-inner.honmei::after { display: none !important; }
+  .seimatsuri-current::after { display: none !important; }
+  .app-header nav a::after { display: none !important; }
 }
