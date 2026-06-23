@@ -1292,6 +1292,283 @@ input[type="search"]:focus,
   }
 }
 
+/* ================== 詳細鑑定 ①〜⑩ ================== */
+.detail-title {
+  font-family: var(--font-jp);
+  text-align: center;
+  font-size: 18px;
+  letter-spacing: .3em;
+  margin: 28px 0 12px;
+  color: var(--c-sumi);
+  font-weight: 500;
+  position: relative;
+  padding: 8px 0;
+}
+.detail-title::before,
+.detail-title::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 28%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--c-kin) 50%, transparent);
+}
+.detail-title::before { left: 6%; }
+.detail-title::after  { right: 6%; }
+
+.detail-card {
+  border: 1px solid var(--c-border-soft);
+  background: #fdfbf3;
+  margin: 0 0 10px;
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow .25s ease, border-color .2s ease;
+}
+.detail-card[open] {
+  border-color: var(--c-kin);
+  box-shadow: 0 6px 16px rgba(40,25,10,.12), 0 0 0 1px rgba(184,146,74,.3);
+}
+.detail-card > summary {
+  cursor: pointer;
+  padding: 9px 14px;
+  background: linear-gradient(180deg, #efe4c8 0%, #e0cf9c 100%);
+  font-family: var(--font-jp);
+  font-size: 13px;
+  letter-spacing: .1em;
+  color: var(--c-sumi);
+  border-bottom: 1px solid var(--c-kin);
+  position: relative;
+  list-style: none;
+}
+.detail-card > summary::-webkit-details-marker { display: none; }
+.detail-card > summary::after {
+  content: "▼";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  color: var(--c-kin-deep);
+  transition: transform .2s ease;
+}
+.detail-card[open] > summary::after { transform: translateY(-50%) rotate(180deg); }
+.detail-card > summary::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--c-kin-deep) 0%, var(--c-shu) 100%);
+}
+.detail-card > summary .num {
+  display: inline-block;
+  background: var(--c-sumi);
+  color: var(--c-kin-light);
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-right: 8px;
+  letter-spacing: 0;
+}
+.detail-card > summary .hint {
+  font-size: 10px;
+  color: var(--c-kin-deep);
+  margin-left: 8px;
+  letter-spacing: .04em;
+  font-weight: normal;
+}
+.detail-card > .body { padding: 10px 14px; font-size: 12px; color: var(--c-sumi); }
+
+/* ── 共通テーブル (ks-table) ── */
+.ks-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  font-family: var(--font-jp);
+  margin: 0;
+}
+.ks-table th, .ks-table td {
+  border: 1px solid var(--c-border-fine);
+  padding: 3px 4px;
+  text-align: center;
+  vertical-align: middle;
+}
+.ks-table th {
+  background: linear-gradient(180deg, #efe4c8 0%, #e0cf9c 100%);
+  color: var(--c-sumi);
+  font-weight: 500;
+  letter-spacing: .04em;
+}
+.ks-table td.bad { background: rgba(168,50,50,.10); }
+.ks-table td.kichi { background: rgba(184,146,74,.18); color: var(--c-kin-deep); font-weight: bold; }
+.ks-table tr.current td { background: rgba(184,146,74,.12); font-weight: bold; }
+.ks-mark {
+  display: inline-block;
+  margin: 1px;
+  padding: 1px 4px;
+  font-size: 9px;
+  background: rgba(168,50,50,.18);
+  color: var(--c-shu);
+  border: 1px solid rgba(168,50,50,.3);
+  border-radius: 1px;
+  font-weight: bold;
+}
+.ks-legend {
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--c-sumi-soft);
+  line-height: 1.5;
+}
+
+/* ── 方位取り適日リスト ── */
+.houi-tori-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.houi-tori-list li {
+  border: 1px solid var(--c-border-fine);
+  padding: 4px 8px;
+  font-size: 11px;
+  background: rgba(184,146,74,.06);
+  border-radius: 1px;
+}
+.houi-tori-list .ht-date {
+  font-family: var(--font-jp);
+  color: var(--c-sumi);
+  font-weight: 500;
+  margin-right: 8px;
+}
+.houi-tori-list .ht-dirs { color: var(--c-kin-deep); font-weight: bold; }
+
+/* ── 干支相関 ── */
+.er-good { color: var(--c-kin-deep); font-weight: bold; }
+.er-bad  { color: var(--c-shu); font-weight: bold; }
+
+/* ── 暦注 ── */
+.rk-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--c-border-fine);
+}
+.rk-row:last-child { border-bottom: none; }
+.rk-label {
+  font-family: var(--font-jp);
+  color: var(--c-kin-deep);
+  font-size: 11px;
+  min-width: 4em;
+  letter-spacing: .1em;
+}
+.rk-name {
+  font-family: var(--font-jp);
+  font-size: 16px;
+  color: var(--c-sumi);
+  font-weight: 500;
+  letter-spacing: .1em;
+  min-width: 3em;
+}
+.rk-mean { font-size: 11px; color: var(--c-sumi-soft); line-height: 1.5; }
+
+/* ── 旧暦・月齢 ── */
+.ky-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.ky-grid > div {
+  padding: 6px 8px;
+  background: rgba(184,146,74,.06);
+  border: 1px solid var(--c-border-fine);
+  border-radius: 1px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ky-lbl { font-size: 10px; color: var(--c-kin-deep); letter-spacing: .1em; }
+.ky-val {
+  font-family: var(--font-jp);
+  font-size: 13px;
+  color: var(--c-sumi);
+  font-weight: 500;
+}
+
+/* ── 五行バランス ── */
+.go-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.go-row {
+  display: grid;
+  grid-template-columns: 1.5em 1fr 1.5em 1.5em;
+  gap: 6px;
+  align-items: center;
+  font-family: var(--font-jp);
+  font-size: 12px;
+}
+.go-elem { font-weight: bold; text-align: center; }
+.go-bar {
+  display: block;
+  height: 12px;
+  background: rgba(184,146,74,.10);
+  border: 1px solid var(--c-border-fine);
+  border-radius: 1px;
+  position: relative;
+}
+.go-fill {
+  display: block;
+  height: 100%;
+  border-radius: 0;
+  transition: width .4s ease;
+  opacity: .8;
+}
+.go-cnt { text-align: center; color: var(--c-sumi); }
+.go-stat {
+  text-align: center;
+  font-size: 10px;
+  font-weight: bold;
+}
+.go-stat-過 { color: var(--c-shu); }
+.go-stat-欠 { color: var(--c-shu); }
+.go-stat-少 { color: var(--c-kin-deep); }
+.go-stat-均 { color: var(--c-matcha); }
+.go-comment {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--c-sumi-soft);
+  font-family: var(--font-jp);
+  padding: 4px 8px;
+  background: rgba(184,146,74,.08);
+  border-left: 3px solid var(--c-kin);
+}
+
+/* ── 相性診断 ── */
+.aishou-input {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.aishou-input input,
+.aishou-input select {
+  border: 1px solid var(--c-border-soft);
+  background: #fdfbf3;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--c-sumi);
+  border-radius: 2px;
+}
+.aishou-input input { flex: 1; min-width: 120px; }
+.aishou-input .btn { padding: 4px 12px; font-size: 12px; }
+.ai-good td { background: rgba(184,146,74,.10); }
+.ai-bad td  { background: rgba(168,50,50,.08); }
+
 /* ================== モバイル ================== */
 @media (max-width: 640px) {
   .page { margin: 8px; padding: 14px 12px 50px; }
@@ -1623,4 +1900,34 @@ input[type="search"]:focus,
   .ban-cell-inner.honmei::after { display: none !important; }
   .seimatsuri-current::after { display: none !important; }
   .app-header nav a::after { display: none !important; }
+
+  /* 詳細鑑定: 印刷時はすべて開いた状態で表示 */
+  .detail-title {
+    font-size: 11pt !important;
+    margin: 8pt 0 4pt !important;
+    padding: 0 !important;
+  }
+  .detail-title::before, .detail-title::after { display: none !important; }
+  .detail-card { border: 0.5px solid #000 !important; background: #fff !important; margin-bottom: 4pt !important; box-shadow: none !important; }
+  .detail-card > summary { background: #f0e8d0 !important; padding: 2pt 4pt !important; font-size: 8.5pt !important; border-bottom: 0.5px solid #000 !important; }
+  .detail-card > summary::after { display: none !important; }
+  .detail-card > summary .hint { display: none !important; }
+  .detail-card > summary .num { background: #000 !important; color: #fff !important; font-size: 7pt !important; padding: 0 3pt !important; }
+  .detail-card > .body { padding: 2pt 4pt !important; font-size: 7.5pt !important; }
+  .detail-card > .body { display: block !important; }
+  .ks-table { font-size: 6.5pt !important; }
+  .ks-table th, .ks-table td { padding: 1pt 1.5pt !important; border: 0.5px solid #000 !important; }
+  .ks-table th { background: #f0e0a0 !important; }
+  .ks-mark { font-size: 5pt !important; padding: 0 1pt !important; border-width: 0.3px !important; }
+  .houi-tori-list { gap: 1pt !important; }
+  .houi-tori-list li { padding: 1pt 3pt !important; font-size: 6.5pt !important; background: #f8f0d8 !important; border: 0.5px solid #888 !important; }
+  .ky-grid { gap: 2pt !important; }
+  .ky-grid > div { padding: 2pt 3pt !important; background: #f8f0d8 !important; border: 0.5px solid #888 !important; }
+  .ky-val { font-size: 8pt !important; }
+  .ky-lbl { font-size: 6pt !important; }
+  .go-row { font-size: 7pt !important; }
+  .go-bar { height: 7pt !important; }
+  .rk-name { font-size: 10pt !important; }
+  .rk-mean { font-size: 6.5pt !important; }
+  .aishou-input { display: none !important; }
 }

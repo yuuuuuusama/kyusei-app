@@ -1,7 +1,7 @@
 // service-worker.js
 // オフライン対応用
 
-const CACHE_NAME = 'kyusei-app-v94';
+const CACHE_NAME = 'kyusei-app-v95';
 const ASSETS = [
   './',
   './index.html',
@@ -23,6 +23,13 @@ const ASSETS = [
   './js/seinichi-data.js',
   './js/seimatsuri-data.js',
   './js/nijuhasshuku-data.js',
+  './js/koyomi.js',
+  './js/eto-relations.js',
+  './js/houi-analysis.js',
+  './js/un-tables.js',
+  './js/rekichu.js',
+  './js/gogyou-balance.js',
+  './js/aishou.js',
   './icons/icon-192.png',
   './icons/icon-512.png'
 ];

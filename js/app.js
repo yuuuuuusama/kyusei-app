@@ -33,7 +33,18 @@
     // イベント
     $('btn-compute').addEventListener('click', compute);
     $('btn-save').addEventListener('click', save);
-    $('btn-print').addEventListener('click', () => window.print());
+    $('btn-print').addEventListener('click', () => {
+      // 印刷前に詳細カードを全展開 (印刷後は元に戻す)
+      const cards = Array.from(document.querySelectorAll('details.detail-card'));
+      const wasOpen = cards.map(d => d.open);
+      cards.forEach(d => d.open = true);
+      const restore = () => {
+        cards.forEach((d, i) => d.open = wasOpen[i]);
+        window.removeEventListener('afterprint', restore);
+      };
+      window.addEventListener('afterprint', restore);
+      window.print();
+    });
     $('btn-new').addEventListener('click', newRecord);
 
     // 入力変更で自動再計算
@@ -85,6 +96,7 @@
       ageEl.dispatchEvent(new Event('input', { bubbles: true }));
     }
     const r = Kantei.computeKantei(birth, consult);
+    _lastResult = r;
     renderResult(r);
     return r;
   }
@@ -270,7 +282,281 @@
     renderSeinichi(r.birth.dayEto.branch);
     renderSeimatsuri(r.birth.honmeisei, r.consult.yearCenter);
     renderShuku(consult);
+    renderDetail(r, birth, consult);
   }
+
+  // ========================================================
+  // 詳細鑑定 ①〜⑩
+  // ========================================================
+  let aishouList = [];
+
+  function renderDetail(r, birth, consult) {
+    renderKyoushin(r);
+    renderKichiCal(r, consult);
+    renderHouiTori(r, consult);
+    renderMonthFlow(r, consult);
+    renderYearFlow(r, consult);
+    renderEtoRel(r);
+    renderRekichu(r, consult);
+    renderKoyomi(consult);
+    renderGogyou(r);
+    setupAishouUI(r);
+    renderAishou(r);
+  }
+
+  // ----- ① 凶神方位 -----
+  function renderKyoushin(r) {
+    const el = $('o-kyoushin');
+    if (!el || !window.HouiAnalysis) return;
+    const HA = window.HouiAnalysis;
+    const honmeisei = r.birth.honmeisei;
+    const boards = [
+      { key:'年盤', center: r.consult.yearCenter,  bIdx: r.consult.yearEto.branchIdx },
+      { key:'月盤', center: r.consult.monthCenter, bIdx: r.consult.monthEto.branchIdx },
+      { key:'日盤', center: r.consult.dayCenter,   bIdx: r.consult.dayEto.branchIdx },
+      { key:'時盤', center: r.consult.hourCenter,  bIdx: r.consult.hourEto.branchIdx }
+    ];
+    let html = '<table class="ks-table"><thead><tr><th>盤</th>';
+    HA.DIRS.forEach(d => { html += `<th>${d.label}</th>`; });
+    html += '</tr></thead><tbody>';
+    boards.forEach(b => {
+      const a = HA.analyzeBoard(b.center, b.bIdx, honmeisei);
+      const map = HA.getKyoushinByDir(a);
+      html += `<tr><th>${b.key}</th>`;
+      HA.DIRS.forEach(d => {
+        const names = map[d.pos];
+        const cls = names.length ? 'bad' : '';
+        html += `<td class="${cls}">${names.map(n=>`<span class="ks-mark">${n}</span>`).join('')}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    html += '<div class="ks-legend">※ 五黄殺・暗剣殺は移転や開業の凶方。本命殺・本命的殺は本人にとって特に凶。歳/月破は契約・開始に不利。</div>';
+    el.innerHTML = html;
+  }
+
+  // ----- ② 吉方位カレンダー (3ヶ月) -----
+  function renderKichiCal(r, consult) {
+    const el = $('o-kichi-cal');
+    if (!el || !window.HouiAnalysis || !window.SolarTerms) return;
+    const HA = window.HouiAnalysis;
+    const honmeisei = r.birth.honmeisei;
+    let html = '<table class="ks-table"><thead><tr><th>月</th>';
+    HA.DIRS.forEach(d => { html += `<th>${d.label}</th>`; });
+    html += '</tr></thead><tbody>';
+    const base = new Date(consult.getFullYear(), consult.getMonth(), 15);
+    for (let i = 0; i < 3; i++) {
+      const dt = new Date(base.getFullYear(), base.getMonth() + i, 15);
+      const sm = SolarTerms.getSetsuMonth(dt);
+      const ye = Eto.getYearEto(sm.setsuYear);
+      const me = Eto.getMonthEto(sm.setsuYear, sm.setsuMonth);
+      const yearCenter = Kyusei.getYearStar(sm.setsuYear);
+      const monthCenter = Kyusei.getMonthStar(ye.branchIdx, sm.setsuMonth);
+      const dirs = HA.getMonthKichihoui(monthCenter, me.branchIdx, yearCenter, ye.branchIdx, honmeisei);
+      html += `<tr><th>${dt.getFullYear()}/${dt.getMonth()+1}</th>`;
+      dirs.forEach(d => {
+        if (d.kichi) {
+          html += `<td class="kichi">吉<br><small>${d.starName||''}</small></td>`;
+        } else if (d.bad.length) {
+          html += `<td class="bad"><small>${d.bad[0]}</small></td>`;
+        } else {
+          html += `<td><small style="color:#888;">—</small></td>`;
+        }
+      });
+      html += '</tr>';
+    }
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  }
+
+  // ----- ③ 方位取り適日 -----
+  function renderHouiTori(r, consult) {
+    const el = $('o-houi-tori');
+    if (!el || !window.UnTables) return;
+    const list = UnTables.findKichiDays(consult, r.birth.honmeisei, 30);
+    if (!list.length) { el.innerHTML = '<div style="color:#888;">向こう30日に年・月・日3つ揃う吉方位は見当たりません。</div>'; return; }
+    let html = '<ul class="houi-tori-list">';
+    list.forEach(item => {
+      const dt = item.date;
+      const m = (dt.getMonth() + 1), d = dt.getDate();
+      const W = ['日','月','火','水','木','金','土'][dt.getDay()];
+      const dirs = item.dirs.map(x => x.label).join('・');
+      html += `<li><span class="ht-date">${m}/${d}(${W})</span> <span class="ht-dirs">${dirs}</span></li>`;
+    });
+    html += '</ul>';
+    el.innerHTML = html;
+  }
+
+  // ----- ④ 月運表 (12ヶ月) -----
+  function renderMonthFlow(r, consult) {
+    const el = $('o-month-flow');
+    if (!el || !window.UnTables) return;
+    const rows = UnTables.monthFlow(consult, r.birth.honmeisei, 12);
+    let html = '<table class="ks-table mf-table"><thead><tr><th>月</th><th>干支</th><th>月盤中宮</th><th>本命位置</th><th>同会</th></tr></thead><tbody>';
+    rows.forEach(row => {
+      html += `<tr><td>${row.year}/${row.month}</td><td>${row.monthEto}</td><td>${row.centerName}</td><td>${row.kyu}</td><td>${row.doukaiName||''}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  }
+
+  // ----- ⑤ 年運表 (9年) -----
+  function renderYearFlow(r, consult) {
+    const el = $('o-year-flow');
+    if (!el || !window.UnTables) return;
+    const rows = UnTables.yearFlow(consult, r.birth.honmeisei, 9);
+    let html = '<table class="ks-table yf-table"><thead><tr><th>年</th><th>干支</th><th>年盤中宮</th><th>本命位置</th><th>同会</th></tr></thead><tbody>';
+    rows.forEach((row, i) => {
+      const cur = i === 0 ? ' class="current"' : '';
+      html += `<tr${cur}><td>${row.year}</td><td>${row.yearEto}</td><td>${row.centerName}</td><td>${row.kyu}</td><td>${row.doukaiName||''}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  }
+
+  // ----- ⑥ 干支相関 -----
+  function renderEtoRel(r) {
+    const el = $('o-eto-rel');
+    if (!el || !window.EtoRelations) return;
+    const cBranch = r.consult.dayEto.branch;
+    const pairs = [
+      { label: '生年 × 相談日', a: r.birth.yearEto.branch,  b: cBranch },
+      { label: '生月 × 相談日', a: r.birth.monthEto.branch, b: cBranch },
+      { label: '生日 × 相談日', a: r.birth.dayEto.branch,   b: cBranch }
+    ];
+    let html = '<table class="ks-table er-table"><thead><tr><th>組</th><th>支</th><th>関係</th></tr></thead><tbody>';
+    pairs.forEach(p => {
+      const rels = EtoRelations.relate(p.a, p.b);
+      const labels = rels.length
+        ? rels.map(x => `<span class="er-${x.kind}">${x.name}</span>`).join(' ')
+        : '<span style="color:#888;">特になし</span>';
+      html += `<tr><td>${p.label}</td><td>${p.a} ・ ${p.b}</td><td>${labels}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  }
+
+  // ----- ⑦ 暦注 -----
+  function renderRekichu(r, consult) {
+    const el = $('o-rekichu');
+    if (!el || !window.Rekichu || !window.Koyomi) return;
+    const ky = Koyomi.getKyureki(consult);
+    const rokuyou = Rekichu.rokuyou(ky.month, ky.day);
+    const ju = Rekichu.junichoku(r.consult.monthEto.branchIdx, r.consult.dayEto.branchIdx);
+    const rmean = Rekichu.ROKUYOU_MEANING[rokuyou] || '';
+    const jmean = Rekichu.JUNICHOKU_MEANING[ju] || '';
+    el.innerHTML = `
+      <div class="rk-row"><span class="rk-label">六曜</span><span class="rk-name">${rokuyou}</span><span class="rk-mean">${escapeHtml(rmean)}</span></div>
+      <div class="rk-row"><span class="rk-label">十二直</span><span class="rk-name">${ju}</span><span class="rk-mean">${escapeHtml(jmean)}</span></div>`;
+  }
+
+  // ----- ⑧ 旧暦・月齢・節入りまで -----
+  function renderKoyomi(consult) {
+    const el = $('o-koyomi');
+    if (!el || !window.Koyomi) return;
+    const ky = Koyomi.getKyureki(consult);
+    const nx = Koyomi.nextSetsuiriInfo(consult);
+    let html = '<div class="ky-grid">';
+    html += `<div><span class="ky-lbl">旧暦</span><span class="ky-val">${ky.month||'?'}月${ky.day}日${ky.isLeap?'(閏)':''}</span></div>`;
+    html += `<div><span class="ky-lbl">月齢</span><span class="ky-val">${ky.moonAge} (${ky.phase})</span></div>`;
+    if (nx) {
+      const dt = nx.date;
+      html += `<div><span class="ky-lbl">次の節入り</span><span class="ky-val">${nx.name} ${dt.getMonth()+1}/${dt.getDate()} (あと${nx.days}日)</span></div>`;
+    }
+    html += '</div>';
+    el.innerHTML = html;
+  }
+
+  // ----- ⑨ 五行バランス -----
+  function renderGogyou(r) {
+    const el = $('o-gogyou');
+    if (!el || !window.GogyouBalance) return;
+    const c = GogyouBalance.count(r.birth.yearEto, r.birth.monthEto, r.birth.dayEto, r.birth.hourEto);
+    const diag = GogyouBalance.diagnose(c);
+    const comment = GogyouBalance.comment(diag);
+    const max = Math.max(...diag.map(d => d.count), 1);
+    let html = '<div class="go-bars">';
+    const elemColor = { '木':'#6b8e3a', '火':'#a83232', '土':'#8b6b2e', '金':'#b8a060', '水':'#2a4359' };
+    diag.forEach(d => {
+      const w = Math.round((d.count / max) * 100);
+      html += `<div class="go-row"><span class="go-elem" style="color:${elemColor[d.elem]};">${d.elem}</span>`
+            + `<span class="go-bar"><span class="go-fill" style="width:${w}%;background:${elemColor[d.elem]};"></span></span>`
+            + `<span class="go-cnt">${d.count}</span><span class="go-stat go-stat-${d.status}">${d.status}</span></div>`;
+    });
+    html += '</div>';
+    html += `<div class="go-comment">${escapeHtml(comment)}</div>`;
+    el.innerHTML = html;
+  }
+
+  // ----- ⑩ 相性診断 -----
+  function setupAishouUI(r) {
+    const sel = $('aishou-star');
+    if (sel && !sel.dataset.ready && window.Aishou) {
+      Aishou.ALL_STARS.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.v;
+        opt.textContent = s.name;
+        sel.appendChild(opt);
+      });
+      sel.dataset.ready = '1';
+    }
+    const btnAdd = $('btn-aishou-add');
+    const btnClear = $('btn-aishou-clear');
+    if (btnAdd && !btnAdd.dataset.bound) {
+      btnAdd.addEventListener('click', () => {
+        const name = $('aishou-name').value.trim();
+        const star = parseInt($('aishou-star').value, 10);
+        if (!star) { alert('本命星を選択してください'); return; }
+        aishouList.push({ name: name || '相手', star });
+        $('aishou-name').value = '';
+        $('aishou-star').value = '';
+        renderAishou(currentResult());
+      });
+      btnAdd.dataset.bound = '1';
+    }
+    if (btnClear && !btnClear.dataset.bound) {
+      btnClear.addEventListener('click', () => {
+        aishouList = [];
+        renderAishou(currentResult());
+      });
+      btnClear.dataset.bound = '1';
+    }
+  }
+
+  function renderAishou(r) {
+    const el = $('o-aishou');
+    if (!el || !window.Aishou || !r) return;
+    if (!aishouList.length) {
+      el.innerHTML = '<div style="color:#888;font-size:11px;">相手の本命星を追加すると、相生・相剋の関係を判定します。</div>';
+      return;
+    }
+    let html = '<table class="ks-table ai-table"><thead><tr><th>相手</th><th>本命星</th><th>関係</th><th>所見</th><th></th></tr></thead><tbody>';
+    const selfName = ($('f-name').value || '本人').trim() || '本人';
+    aishouList.forEach((p, idx) => {
+      const rel = Aishou.relate(r.birth.honmeisei, p.star);
+      const star = Kyusei.STAR_NAMES[p.star];
+      html += `<tr class="ai-${rel.kind}">`
+           + `<td>${escapeHtml(p.name)}</td>`
+           + `<td>${star}</td>`
+           + `<td>${rel.name}</td>`
+           + `<td>${escapeHtml(rel.desc)}</td>`
+           + `<td class="no-print"><button type="button" class="btn danger ai-del" data-idx="${idx}" style="padding:2px 8px;font-size:11px;">×</button></td>`
+           + `</tr>`;
+    });
+    html += `</tbody><tfoot><tr><td colspan="5" style="font-size:10px;color:#888;">基準: ${escapeHtml(selfName)} (${Kyusei.STAR_NAMES[r.birth.honmeisei]})</td></tr></tfoot></table>`;
+    el.innerHTML = html;
+    el.querySelectorAll('.ai-del').forEach(b => {
+      b.addEventListener('click', () => {
+        const i = parseInt(b.dataset.idx, 10);
+        aishouList.splice(i, 1);
+        renderAishou(currentResult());
+      });
+    });
+  }
+
+  // 直近の計算結果を保持して相性UIから再利用
+  let _lastResult = null;
+  function currentResult() { return _lastResult; }
 
   function renderKyuZasuru(toshiPos, tsukiPos) {
     const el = $('o-kyu-zasuru');

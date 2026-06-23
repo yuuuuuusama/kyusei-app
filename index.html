@@ -269,22 +269,92 @@
     </div>
   </div>
 
+  <!-- ===== 詳細鑑定 (追加項目 ①〜⑩) ===== -->
+  <h2 class="detail-title">詳細鑑定</h2>
+
+  <details class="detail-card" open>
+    <summary><span class="num">①</span> 凶神方位 <span class="hint">五黄殺・暗剣殺・歳破/月破・本命殺・本命的殺・定位対冲</span></summary>
+    <div class="body" id="o-kyoushin"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">②</span> 吉方位カレンダー <span class="hint">本命星に対する月吉方を3ヶ月分</span></summary>
+    <div class="body" id="o-kichi-cal"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">③</span> 方位取り適日 <span class="hint">向こう30日で年・月・日3つ吉が揃う候補</span></summary>
+    <div class="body" id="o-houi-tori"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">④</span> 月運表 <span class="hint">向こう12ヶ月の本命星位置・同会</span></summary>
+    <div class="body" id="o-month-flow"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">⑤</span> 年運表 <span class="hint">向こう9年の本命宮の移り</span></summary>
+    <div class="body" id="o-year-flow"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">⑥</span> 干支相関 <span class="hint">生年月日支 × 相談日支 で三合・六合・冲・刑・害・破</span></summary>
+    <div class="body" id="o-eto-rel"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">⑦</span> 暦注 <span class="hint">相談日の六曜・十二直</span></summary>
+    <div class="body" id="o-rekichu"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">⑧</span> 旧暦・月齢・次の節入り</summary>
+    <div class="body" id="o-koyomi"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">⑨</span> 五行バランス <span class="hint">生年月日時の干支から五行点数化</span></summary>
+    <div class="body" id="o-gogyou"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">⑩</span> 相性診断 <span class="hint">相手の本命星と比較</span></summary>
+    <div class="body">
+      <div class="aishou-input no-print">
+        <input type="text" id="aishou-name" placeholder="相手の名前 (任意)">
+        <select id="aishou-star">
+          <option value="">本命星を選択</option>
+        </select>
+        <button type="button" class="btn secondary" id="btn-aishou-add">追加</button>
+        <button type="button" class="btn secondary" id="btn-aishou-clear">全消去</button>
+      </div>
+      <div id="o-aishou"></div>
+    </div>
+  </details>
+
 </main>
 
-<script src="js/solar-terms.js?v=91"></script>
-<script src="js/eto.js?v=91"></script>
-<script src="js/kyusei.js?v=91"></script>
-<script src="js/kantei.js?v=91"></script>
-<script src="js/storage.js?v=91"></script>
-<script src="js/dt-picker.js?v=91"></script>
-<script src="js/eto-table.js?v=91"></script>
-<script src="js/keisha-data.js?v=91"></script>
-<script src="js/kyu-zasuru-data.js?v=91"></script>
-<script src="js/seigetsu-data.js?v=91"></script>
-<script src="js/seinichi-data.js?v=91"></script>
-<script src="js/seimatsuri-data.js?v=91"></script>
-<script src="js/nijuhasshuku-data.js?v=91"></script>
-<script src="js/app.js?v=91"></script>
+<script src="js/solar-terms.js?v=95"></script>
+<script src="js/eto.js?v=95"></script>
+<script src="js/kyusei.js?v=95"></script>
+<script src="js/kantei.js?v=95"></script>
+<script src="js/storage.js?v=95"></script>
+<script src="js/dt-picker.js?v=95"></script>
+<script src="js/eto-table.js?v=95"></script>
+<script src="js/keisha-data.js?v=95"></script>
+<script src="js/kyu-zasuru-data.js?v=95"></script>
+<script src="js/seigetsu-data.js?v=95"></script>
+<script src="js/seinichi-data.js?v=95"></script>
+<script src="js/seimatsuri-data.js?v=95"></script>
+<script src="js/nijuhasshuku-data.js?v=95"></script>
+<script src="js/koyomi.js?v=95"></script>
+<script src="js/eto-relations.js?v=95"></script>
+<script src="js/houi-analysis.js?v=95"></script>
+<script src="js/un-tables.js?v=95"></script>
+<script src="js/rekichu.js?v=95"></script>
+<script src="js/gogyou-balance.js?v=95"></script>
+<script src="js/aishou.js?v=95"></script>
+<script src="js/app.js?v=95"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
