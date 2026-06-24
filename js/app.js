@@ -51,6 +51,10 @@
     ['f-birth', 'f-consult'].forEach(id => {
       $(id).addEventListener('change', compute);
     });
+
+    // メモツール (定型・AI下書き・音声) と スニペット管理
+    setupMemoTools();
+    setupSnippetManager();
   });
 
   function toLocalDateTimeInput(date) {
@@ -797,6 +801,175 @@
         <div class="kou-yomi">${k.yomi}</div>
         <div class="kou-meta">節気開始: ${startStr}</div>
       </div>`;
+  }
+
+  // ========================================================
+  // メモツール: 定型 / AIドラフト / 音声 (機能 5/6/7)
+  // ========================================================
+  function setupMemoTools() {
+    document.querySelectorAll('.memo-tools').forEach(box => {
+      const targetId = box.dataset.target;
+      const sectionId = box.dataset.section;
+      const textarea = $(targetId);
+      if (!textarea) return;
+
+      const snipBtn  = box.querySelector('.mt-snip');
+      const draftBtn = box.querySelector('.mt-draft');
+      const voiceBtn = box.querySelector('.mt-voice');
+      const panel    = box.querySelector('.mt-snip-panel');
+
+      // ---- 定型 ----
+      if (snipBtn && panel) {
+        snipBtn.addEventListener('click', () => {
+          if (!panel.hidden) { panel.hidden = true; return; }
+          renderSnipPanel(panel, sectionId, textarea);
+          panel.hidden = false;
+        });
+      }
+
+      // ---- AI下書き ----
+      if (draftBtn) {
+        draftBtn.addEventListener('click', () => {
+          if (!_lastResult) { alert('まず計算してください'); return; }
+          if (!window.DraftGen) return;
+          let text = '';
+          if (sectionId === 'honnin')   text = DraftGen.draftHonnin(_lastResult);
+          if (sectionId === 'nengetsu') text = DraftGen.draftNengetsu(_lastResult);
+          if (sectionId === 'naizou')   text = DraftGen.draftNaizou(_lastResult);
+          if (sectionId === 'sougou')   text = DraftGen.draftSougou(_lastResult);
+          if (!text) return;
+          if (textarea.value.trim() && !confirm('既存の本文を残してドラフトを追加しますか? (キャンセル=置換)')) {
+            textarea.value = text;
+          } else {
+            textarea.value = (textarea.value ? textarea.value + '\n\n' : '') + text;
+          }
+          textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+      }
+
+      // ---- 音声 ----
+      if (voiceBtn && window.Voice && Voice.isSupported()) {
+        const ctrl = Voice.bind(textarea, (state, msg) => {
+          if (state === 'recording') {
+            voiceBtn.classList.add('rec');
+            voiceBtn.textContent = '■ 停止';
+          } else if (state === 'stopped') {
+            voiceBtn.classList.remove('rec');
+            voiceBtn.textContent = '🎤 音声';
+          } else if (state === 'error') {
+            voiceBtn.classList.remove('rec');
+            voiceBtn.textContent = '🎤 音声';
+            alert('音声入力エラー: ' + (msg || ''));
+          }
+        });
+        if (ctrl) {
+          voiceBtn.addEventListener('click', () => ctrl.toggle());
+        }
+      } else if (voiceBtn) {
+        voiceBtn.title = 'お使いのブラウザは音声入力に未対応です';
+        voiceBtn.classList.add('disabled');
+      }
+    });
+  }
+
+  function renderSnipPanel(panel, sectionId, textarea) {
+    if (!window.Snippets) { panel.innerHTML = '(辞書未読込)'; return; }
+    const list = Snippets.getBySection(sectionId);
+    if (!list.length) {
+      panel.innerHTML = '<div class="snip-empty">このセクションのスニペットがありません。「定型コメント辞書」セクションで追加できます。</div>';
+      return;
+    }
+    let html = '';
+    list.forEach(s => {
+      html += `<div class="snip-item" data-id="${s.id}">`
+            + `<div class="snip-label">${escapeHtml(s.label)}</div>`
+            + `<div class="snip-body">${escapeHtml(s.body)}</div>`
+            + `</div>`;
+    });
+    panel.innerHTML = html;
+    panel.querySelectorAll('.snip-item').forEach(it => {
+      it.addEventListener('click', () => {
+        const id = it.dataset.id;
+        const snip = Snippets.getAll().find(x => x.id === id);
+        if (!snip) return;
+        insertAtCursor(textarea, (textarea.value && !textarea.value.endsWith('\n') ? '\n' : '') + snip.body);
+        panel.hidden = true;
+      });
+    });
+  }
+
+  function insertAtCursor(textarea, text) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const v = textarea.value;
+    textarea.value = v.slice(0, start) + text + v.slice(end);
+    const pos = start + text.length;
+    textarea.selectionStart = textarea.selectionEnd = pos;
+    textarea.focus();
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  // ========================================================
+  // 定型コメント辞書 管理 (機能 5)
+  // ========================================================
+  function setupSnippetManager() {
+    const filter = $('snip-sec-filter');
+    const addBtn = $('btn-snip-add');
+    const resetBtn = $('btn-snip-reset');
+    if (filter) filter.addEventListener('change', renderSnipManager);
+    if (addBtn) addBtn.addEventListener('click', () => {
+      const sec = (filter && filter.value) || 'honnin';
+      const label = prompt('スニペットのラベル(短いタイトル)を入力:');
+      if (!label) return;
+      const body = prompt('本文を入力:');
+      if (body == null) return;
+      Snippets.add({ section: sec, label, body });
+      renderSnipManager();
+    });
+    if (resetBtn) resetBtn.addEventListener('click', () => {
+      if (!confirm('既定スニペットに戻します(編集・追加した内容は失われます)。よろしいですか?')) return;
+      Snippets.resetDefaults();
+      renderSnipManager();
+    });
+    renderSnipManager();
+  }
+
+  function renderSnipManager() {
+    const el = $('snip-list');
+    if (!el || !window.Snippets) return;
+    const filter = $('snip-sec-filter');
+    const sec = filter ? filter.value : '';
+    let list = Snippets.getAll();
+    if (sec) list = list.filter(s => s.section === sec);
+    if (!list.length) { el.innerHTML = '<div class="snip-empty">該当するスニペットがありません。</div>'; return; }
+    let html = '<table class="ks-table snip-table"><thead><tr><th>セクション</th><th>ラベル</th><th>本文</th><th class="no-print"></th></tr></thead><tbody>';
+    list.forEach(s => {
+      const secLabel = (Snippets.SECTION_LABELS[s.section] || s.section);
+      html += `<tr data-id="${s.id}">`
+            + `<td>${escapeHtml(secLabel)}</td>`
+            + `<td><input class="snip-edit-label" value="${escapeHtml(s.label)}"></td>`
+            + `<td><textarea class="snip-edit-body" rows="2">${escapeHtml(s.body)}</textarea></td>`
+            + `<td class="no-print snip-actions">`
+            + `<button type="button" class="btn secondary snip-save" style="padding:2px 6px;font-size:10px;">保存</button>`
+            + `<button type="button" class="btn danger snip-del"  style="padding:2px 6px;font-size:10px;">×</button>`
+            + `</td></tr>`;
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+    el.querySelectorAll('tr[data-id]').forEach(tr => {
+      const id = tr.dataset.id;
+      tr.querySelector('.snip-save').addEventListener('click', () => {
+        const label = tr.querySelector('.snip-edit-label').value;
+        const body  = tr.querySelector('.snip-edit-body').value;
+        Snippets.update(id, { label, body });
+        flash('スニペット更新');
+      });
+      tr.querySelector('.snip-del').addEventListener('click', () => {
+        if (!confirm('削除しますか?')) return;
+        Snippets.remove(id);
+        renderSnipManager();
+      });
+    });
   }
 
   // ----- ⑳ 節気タイムライン -----

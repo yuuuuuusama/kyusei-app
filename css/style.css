@@ -1685,6 +1685,135 @@ tr.transition td { border-top: 2px dashed var(--c-kin); }
 .kou-yomi { font-family: var(--font-jp); font-size: 12px; color: var(--c-sumi-soft); letter-spacing: .12em; }
 .kou-meta { font-size: 10px; color: #888; margin-top: 6px; }
 
+/* ===== メモツール (定型 / AI下書き / 音声) ===== */
+.memo-tools {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  align-items: center;
+  position: relative;
+}
+.memo-tools .mt-btn {
+  padding: 3px 10px;
+  font-size: 11px;
+  font-family: var(--font-jp);
+  letter-spacing: .04em;
+  background: linear-gradient(180deg, #fbf6e6 0%, #ecdfb8 100%);
+  border: 1px solid var(--c-kin-deep);
+  color: var(--c-sumi);
+  border-radius: 2px;
+  cursor: pointer;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.7) inset,
+    0 -1px 0 rgba(139,107,46,.2) inset,
+    0 1px 2px rgba(40,25,10,.08);
+  transition: filter .15s, transform .05s;
+}
+.memo-tools .mt-btn:hover { filter: brightness(1.06); }
+.memo-tools .mt-btn:active { transform: translateY(1px); }
+.memo-tools .mt-btn.disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  filter: grayscale(.4);
+}
+.memo-tools .mt-voice.rec {
+  background: linear-gradient(180deg, #c44 0%, #8c2a2a 100%);
+  color: #fff;
+  border-color: #6a1414;
+  animation: rec-pulse 1.2s ease-in-out infinite;
+}
+@keyframes rec-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(199,68,68,.6); }
+  50%      { box-shadow: 0 0 0 6px rgba(199,68,68,0); }
+}
+
+/* スニペット ピッカーパネル */
+.mt-snip-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fdfbf3;
+  border: 1px solid var(--c-kin);
+  box-shadow: 0 8px 22px rgba(40,25,10,.18);
+  z-index: 20;
+  max-height: 280px;
+  overflow-y: auto;
+  border-radius: 2px;
+}
+.snip-item {
+  padding: 6px 10px;
+  border-bottom: 1px dashed var(--c-border-fine);
+  cursor: pointer;
+  transition: background-color .15s;
+}
+.snip-item:last-child { border-bottom: none; }
+.snip-item:hover { background: rgba(184,146,74,.12); }
+.snip-label {
+  font-family: var(--font-jp);
+  font-size: 12px;
+  color: var(--c-sumi);
+  font-weight: 500;
+  letter-spacing: .06em;
+  margin-bottom: 2px;
+}
+.snip-body {
+  font-size: 11px;
+  color: var(--c-sumi-soft);
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+.snip-empty {
+  padding: 8px;
+  color: #888;
+  font-size: 11px;
+  text-align: center;
+}
+
+/* スニペット辞書管理 */
+.snip-mgr-tools {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.snip-mgr-tools select {
+  border: 1px solid var(--c-border-soft);
+  background: #fdfbf3;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--c-sumi);
+  border-radius: 2px;
+}
+.snip-mgr-tools .btn { padding: 4px 12px; font-size: 12px; }
+.snip-table th, .snip-table td { text-align: left; vertical-align: top; padding: 4px 6px; }
+.snip-table input.snip-edit-label,
+.snip-table textarea.snip-edit-body {
+  width: 100%;
+  border: 1px solid var(--c-border-fine);
+  background: #fdfbf3;
+  font-family: inherit;
+  font-size: 11px;
+  padding: 3px 5px;
+  color: var(--c-sumi);
+  border-radius: 1px;
+  box-sizing: border-box;
+}
+.snip-table textarea.snip-edit-body {
+  font-family: var(--font-jp);
+  line-height: 1.4;
+  resize: vertical;
+}
+.snip-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 50px;
+}
+
 /* ===== ⑳ 節気タイムライン ===== */
 .sk-timeline {
   display: grid;

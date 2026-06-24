@@ -192,6 +192,12 @@
         <div id="o-keisha" class="keisha-name"></div>
         <ul id="o-keisha-detail" class="keisha-detail"></ul>
         <textarea id="m-honnin" placeholder="メモ"></textarea>
+        <div class="memo-tools no-print" data-target="m-honnin" data-section="honnin">
+          <button type="button" class="mt-btn mt-snip">💡 定型</button>
+          <button type="button" class="mt-btn mt-draft">✦ AI下書き</button>
+          <button type="button" class="mt-btn mt-voice">🎤 音声</button>
+          <div class="mt-snip-panel" hidden></div>
+        </div>
       </div>
     </div>
 
@@ -214,6 +220,12 @@
         </table>
         <div id="o-kyu-zasuru" class="kyu-zasuru" style="margin-top:6px;"></div>
         <textarea id="m-nengetsu" style="margin-top:4px;" placeholder="メモ"></textarea>
+        <div class="memo-tools no-print" data-target="m-nengetsu" data-section="nengetsu">
+          <button type="button" class="mt-btn mt-snip">💡 定型</button>
+          <button type="button" class="mt-btn mt-draft">✦ AI下書き</button>
+          <button type="button" class="mt-btn mt-voice">🎤 音声</button>
+          <div class="mt-snip-panel" hidden></div>
+        </div>
       </div>
     </div>
 
@@ -235,6 +247,12 @@
           </tr>
         </table>
         <textarea id="m-naizou" style="margin-top:4px;" placeholder="メモ"></textarea>
+        <div class="memo-tools no-print" data-target="m-naizou" data-section="naizou">
+          <button type="button" class="mt-btn mt-snip">💡 定型</button>
+          <button type="button" class="mt-btn mt-draft">✦ AI下書き</button>
+          <button type="button" class="mt-btn mt-voice">🎤 音声</button>
+          <div class="mt-snip-panel" hidden></div>
+        </div>
       </div>
     </div>
   </div>
@@ -383,37 +401,58 @@
     <div class="body" id="o-sekki"></div>
   </details>
 
+  <details class="detail-card">
+    <summary><span class="num">㉑</span> 定型コメント辞書 <span class="hint">本人運気/年月運/内蔵/総合のテンプレを管理</span></summary>
+    <div class="body">
+      <div class="snip-mgr-tools no-print">
+        <select id="snip-sec-filter">
+          <option value="">全セクション</option>
+          <option value="honnin">本人運気</option>
+          <option value="nengetsu">年月運</option>
+          <option value="naizou">内蔵法</option>
+          <option value="sougou">総合</option>
+        </select>
+        <button type="button" class="btn secondary" id="btn-snip-add">+ 新規</button>
+        <button type="button" class="btn secondary" id="btn-snip-reset">既定に戻す</button>
+      </div>
+      <div id="snip-list"></div>
+    </div>
+  </details>
+
 </main>
 
-<script src="js/solar-terms.js?v=97"></script>
-<script src="js/eto.js?v=97"></script>
-<script src="js/kyusei.js?v=97"></script>
-<script src="js/kantei.js?v=97"></script>
-<script src="js/storage.js?v=97"></script>
-<script src="js/dt-picker.js?v=97"></script>
-<script src="js/eto-table.js?v=97"></script>
-<script src="js/keisha-data.js?v=97"></script>
-<script src="js/kyu-zasuru-data.js?v=97"></script>
-<script src="js/seigetsu-data.js?v=97"></script>
-<script src="js/seinichi-data.js?v=97"></script>
-<script src="js/seimatsuri-data.js?v=97"></script>
-<script src="js/nijuhasshuku-data.js?v=97"></script>
-<script src="js/koyomi.js?v=97"></script>
-<script src="js/eto-relations.js?v=97"></script>
-<script src="js/houi-analysis.js?v=97"></script>
-<script src="js/un-tables.js?v=97"></script>
-<script src="js/rekichu.js?v=97"></script>
-<script src="js/gogyou-balance.js?v=97"></script>
-<script src="js/aishou.js?v=97"></script>
-<script src="js/senjitsu.js?v=97"></script>
-<script src="js/dai-un.js?v=97"></script>
-<script src="js/gemmei-data.js?v=97"></script>
-<script src="js/kimon.js?v=97"></script>
-<script src="js/yakudoshi.js?v=97"></script>
-<script src="js/zoukan.js?v=97"></script>
-<script src="js/shichijuni-kou.js?v=97"></script>
-<script src="js/sekki-timeline.js?v=97"></script>
-<script src="js/app.js?v=97"></script>
+<script src="js/solar-terms.js?v=98"></script>
+<script src="js/eto.js?v=98"></script>
+<script src="js/kyusei.js?v=98"></script>
+<script src="js/kantei.js?v=98"></script>
+<script src="js/storage.js?v=98"></script>
+<script src="js/dt-picker.js?v=98"></script>
+<script src="js/eto-table.js?v=98"></script>
+<script src="js/keisha-data.js?v=98"></script>
+<script src="js/kyu-zasuru-data.js?v=98"></script>
+<script src="js/seigetsu-data.js?v=98"></script>
+<script src="js/seinichi-data.js?v=98"></script>
+<script src="js/seimatsuri-data.js?v=98"></script>
+<script src="js/nijuhasshuku-data.js?v=98"></script>
+<script src="js/koyomi.js?v=98"></script>
+<script src="js/eto-relations.js?v=98"></script>
+<script src="js/houi-analysis.js?v=98"></script>
+<script src="js/un-tables.js?v=98"></script>
+<script src="js/rekichu.js?v=98"></script>
+<script src="js/gogyou-balance.js?v=98"></script>
+<script src="js/aishou.js?v=98"></script>
+<script src="js/senjitsu.js?v=98"></script>
+<script src="js/dai-un.js?v=98"></script>
+<script src="js/gemmei-data.js?v=98"></script>
+<script src="js/kimon.js?v=98"></script>
+<script src="js/yakudoshi.js?v=98"></script>
+<script src="js/zoukan.js?v=98"></script>
+<script src="js/shichijuni-kou.js?v=98"></script>
+<script src="js/sekki-timeline.js?v=98"></script>
+<script src="js/snippets.js?v=98"></script>
+<script src="js/draft-gen.js?v=98"></script>
+<script src="js/voice.js?v=98"></script>
+<script src="js/app.js?v=98"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
