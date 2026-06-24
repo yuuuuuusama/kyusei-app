@@ -1,44 +1,58 @@
-// yakudoshi.js — 厄年表 (数え年・男女別)
+// yakudoshi.js — 気学の厄年 (男女共通)
+//   本厄: 本命星が年盤の坎宮 (北、posIdx=1) に座する年 (9年周期)
+//   前厄: 本厄の前年
+//   後厄: 本厄の翌年
 (function (global) {
   'use strict';
+  const Kyusei = global.Kyusei;
 
-  // 本厄 (数え年)
-  const YAKUDOSHI_MAN   = [25, 42, 61];
-  const YAKUDOSHI_WOMAN = [19, 33, 37, 61];
-
-  // 大厄 (特に重い)
-  const TAIYAKU_MAN   = new Set([42]);
-  const TAIYAKU_WOMAN = new Set([33]);
-
-  // 数え年 = 西暦年 - 生年 + 1 (元旦切替の簡易計算)
-  function kazoeAge(birthDate, refDate) {
-    return refDate.getFullYear() - birthDate.getFullYear() + 1;
+  // 与えられた西暦年が、本命星 honmeisei にとって本厄か
+  function isHonyakuYear(honmeisei, year) {
+    const center = Kyusei.getYearStar(year);
+    const pos = Kyusei.findPositionOfStar(center, honmeisei);
+    return pos === 1; // 坎宮
   }
 
-  // 現在年から見て向こう数年で本人が前厄/本厄/後厄に該当する年齢のリスト
-  function upcoming(birthDate, refDate, gender, lookAheadYears) {
-    lookAheadYears = lookAheadYears || 8;
-    const cur = kazoeAge(birthDate, refDate);
-    const list = gender === '女' ? YAKUDOSHI_WOMAN : YAKUDOSHI_MAN;
-    const tai = gender === '女' ? TAIYAKU_WOMAN : TAIYAKU_MAN;
+  // 与えられた year 以降で、本命星が坎宮に座する年を count 個返す
+  function nextHonyakuYears(honmeisei, startYear, count) {
     const out = [];
-    list.forEach(age => {
-      [-1, 0, +1].forEach(off => {
-        const a = age + off;
-        const yearsAway = a - cur;
-        if (yearsAway >= -1 && yearsAway <= lookAheadYears) {
-          const year = birthDate.getFullYear() + a - 1;
-          out.push({
-            age: a,
-            kind: off === 0 ? '本厄' : (off === -1 ? '前厄' : '後厄'),
-            taiyaku: off === 0 && tai.has(age),
-            yearsAway, year
-          });
-        }
-      });
-    });
-    return { kazoeAge: cur, upcoming: out.sort((a,b) => a.yearsAway - b.yearsAway) };
+    let y = startYear;
+    while (out.length < count && y < startYear + 100) {
+      if (isHonyakuYear(honmeisei, y)) out.push(y);
+      y++;
+    }
+    return out;
   }
 
-  global.Yakudoshi = { kazoeAge, upcoming, YAKUDOSHI_MAN, YAKUDOSHI_WOMAN };
+  // currentYear を起点に、前後の厄年候補 (前厄/本厄/後厄) を抽出
+  // lookAheadYears: 何年先まで含めるか (デフォルト 18 = 厄年2サイクル)
+  function upcoming(honmeisei, currentYear, lookAheadYears) {
+    lookAheadYears = lookAheadYears || 18;
+    const items = [];
+    for (let y = currentYear - 1; y <= currentYear + lookAheadYears + 1; y++) {
+      if (isHonyakuYear(honmeisei, y)) {
+        if (y - 1 >= currentYear - 1) {
+          items.push({ year: y - 1, kind: '前厄', yearsAway: y - 1 - currentYear, honyakuYear: y });
+        }
+        items.push({ year: y, kind: '本厄', yearsAway: y - currentYear, honyakuYear: y });
+        if (y + 1 <= currentYear + lookAheadYears) {
+          items.push({ year: y + 1, kind: '後厄', yearsAway: y + 1 - currentYear, honyakuYear: y });
+        }
+      }
+    }
+    const seen = new Set();
+    const uniq = items.filter(i => {
+      const k = i.year + ':' + i.kind;
+      if (seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+    return {
+      honmeisei,
+      currentYear,
+      upcoming: uniq.sort((a, b) => a.yearsAway - b.yearsAway)
+    };
+  }
+
+  global.Yakudoshi = { isHonyakuYear, nextHonyakuYears, upcoming };
 })(typeof window !== 'undefined' ? window : globalThis);

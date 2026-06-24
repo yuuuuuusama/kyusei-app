@@ -1622,7 +1622,8 @@ tr.transition td { border-top: 2px dashed var(--c-kin); }
 .dk-block .dk-body { font-size: 11px; line-height: 1.6; color: var(--c-sumi-soft); padding: 6px 10px; background: rgba(184,146,74,.06); border-left: 3px solid var(--c-kin); }
 
 /* ===== ⑰ 厄年 ===== */
-.yk-head { font-family: var(--font-jp); font-size: 13px; margin-bottom: 6px; color: var(--c-sumi); }
+.yk-head { font-family: var(--font-jp); font-size: 13px; margin-bottom: 4px; color: var(--c-sumi); }
+.yk-note { font-size: 10px; color: var(--c-sumi-soft); margin-bottom: 8px; line-height: 1.5; padding: 4px 8px; background: rgba(184,146,74,.06); border-left: 3px solid var(--c-kin); }
 
 /* ===== ⑱ 四柱命式 ===== */
 .shichu-table td {

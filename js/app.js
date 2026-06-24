@@ -309,7 +309,7 @@
     renderGemmei(r);
     renderDoukaiMean(r);
     renderKimon(r);
-    renderYakudoshi(birth, consult);
+    renderYakudoshi(r, birth, consult);
     renderShichu(r);
     renderKou(consult);
     renderSekki(consult);
@@ -717,23 +717,27 @@
     el.innerHTML = html;
   }
 
-  // ----- ⑰ 厄年表 -----
-  function renderYakudoshi(birth, consult) {
+  // ----- ⑰ 厄年表 (気学: 本命星が坎宮に座する年=本厄、男女共通) -----
+  function renderYakudoshi(r, birth, consult) {
     const el = $('o-yakudoshi');
     if (!el || !window.Yakudoshi) return;
-    const gender = $('f-gender').value || '男';
-    const info = Yakudoshi.upcoming(birth, consult, gender, 10);
-    let html = `<div class="yk-head">数え年: <b>${info.kazoeAge}</b>歳 (${escapeHtml(gender)})</div>`;
+    const honmeisei = r.birth.honmeisei;
+    const cSM = SolarTerms.getSetsuMonth(consult);
+    const curYear = cSM.setsuYear;
+    const kazoe = consult.getFullYear() - birth.getFullYear() + 1;
+    const info = Yakudoshi.upcoming(honmeisei, curYear, 18);
+    let html = `<div class="yk-head">本命星: <b>${Kyusei.STAR_NAMES[honmeisei]}</b>　／　数え年: <b>${kazoe}</b>歳</div>`
+            + `<div class="yk-note">気学では、本命星が <b>坎宮(北)</b> に座する年を <b>本厄</b>、その前年を前厄、翌年を後厄とする(9年周期・男女共通)。</div>`;
     if (!info.upcoming.length) {
-      html += '<div style="color:#888;">向こう10年に該当する厄年はありません。</div>';
+      html += '<div style="color:#888;">向こう18年に厄年はありません。</div>';
     } else {
-      html += '<table class="ks-table"><thead><tr><th>厄</th><th>数え年</th><th>西暦</th><th>あと</th></tr></thead><tbody>';
+      html += '<table class="ks-table"><thead><tr><th>区分</th><th>西暦</th><th>あと</th><th>本厄年</th></tr></thead><tbody>';
       info.upcoming.forEach(y => {
-        const kind = y.taiyaku ? `${y.kind}(大厄)` : y.kind;
-        const cls = y.yearsAway === 0 ? 'current' : (y.yearsAway < 0 ? '' : '');
-        const trCls = y.yearsAway === 0 ? ' class="current"' : '';
+        const trCls = y.yearsAway === 0
+          ? ' class="current"'
+          : (y.kind === '本厄' ? ' class="transition"' : '');
         const ya = y.yearsAway === 0 ? '今年' : (y.yearsAway < 0 ? `${-y.yearsAway}年前` : `${y.yearsAway}年後`);
-        html += `<tr${trCls}><td>${kind}</td><td>${y.age}</td><td>${y.year}</td><td>${ya}</td></tr>`;
+        html += `<tr${trCls}><td>${y.kind}</td><td>${y.year}</td><td>${ya}</td><td>${y.honyakuYear}</td></tr>`;
       });
       html += '</tbody></table>';
     }
