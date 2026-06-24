@@ -302,6 +302,17 @@
     renderGogyou(r);
     setupAishouUI(r);
     renderAishou(r);
+    // ⑪〜⑳
+    renderSenjitsu(consult);
+    renderKasane(r, consult);
+    renderDaiUn(r, consult);
+    renderGemmei(r);
+    renderDoukaiMean(r);
+    renderKimon(r);
+    renderYakudoshi(birth, consult);
+    renderShichu(r);
+    renderKou(consult);
+    renderSekki(consult);
   }
 
   // ----- ① 凶神方位 -----
@@ -557,6 +568,247 @@
   // 直近の計算結果を保持して相性UIから再利用
   let _lastResult = null;
   function currentResult() { return _lastResult; }
+
+  // ========================================================
+  // 追加詳細 ⑪〜⑳
+  // ========================================================
+  function dateLabel(dt) {
+    const W = ['日','月','火','水','木','金','土'][dt.getDay()];
+    return `${dt.getMonth()+1}/${dt.getDate()}(${W})`;
+  }
+
+  // ----- ⑪ 選日カレンダー -----
+  function renderSenjitsu(consult) {
+    const el = $('o-senjitsu');
+    if (!el || !window.Senjitsu) return;
+    const range = Senjitsu.analyzeRange(consult, 31);
+    const ITEMS = [
+      { key: 'tensha',       label: '天赦日',     kind: 'good' },
+      { key: 'ichiryu',      label: '一粒万倍日', kind: 'good' },
+      { key: 'kasshi',       label: '甲子日',     kind: 'good' },
+      { key: 'tora',         label: '寅の日',     kind: 'good' },
+      { key: 'tsuchinotomi', label: '己巳日',     kind: 'good' },
+      { key: 'mi',           label: '巳の日',     kind: 'good' },
+      { key: 'fujouju',      label: '不成就日',   kind: 'bad' },
+      { key: 'sanrinbou',    label: '三隣亡',     kind: 'bad' },
+      { key: 'hassen',       label: '八専',       kind: 'bad' }
+    ];
+    let html = '<table class="ks-table senjitsu-table"><thead><tr><th>選日</th><th>意味</th><th>該当日(向こう31日)</th></tr></thead><tbody>';
+    ITEMS.forEach(it => {
+      const days = range[it.key] || [];
+      const cls = it.kind === 'good' ? 'good' : 'bad';
+      const dates = days.length
+        ? days.map(d => `<span class="sj-day sj-${cls}">${dateLabel(d)}</span>`).join(' ')
+        : '<span style="color:#888;">—</span>';
+      const mean = (Senjitsu.MEANING && Senjitsu.MEANING[it.label]) || '';
+      html += `<tr class="sj-row sj-row-${cls}"><th>${it.label}</th><td class="sj-mean">${escapeHtml(mean)}</td><td class="sj-dates">${dates}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  }
+
+  // ----- ⑫ 開運重ね日 (本命吉方 ∩ 吉選日) -----
+  function renderKasane(r, consult) {
+    const el = $('o-kasane');
+    if (!el || !window.UnTables || !window.Senjitsu) return;
+    const kichiDays = UnTables.findKichiDays(consult, r.birth.honmeisei, 60);
+    const out = [];
+    kichiDays.forEach(item => {
+      const ana = Senjitsu.analyzeDay(item.date);
+      const m = Senjitsu.markers(ana);
+      if (m.good.length === 0 || m.bad.length > 0) return;
+      out.push({ date: item.date, dirs: item.dirs, good: m.good });
+    });
+    if (!out.length) {
+      el.innerHTML = '<div style="color:#888;">向こう60日に「方位取り適日 × 吉選日」が重なる候補はありません。条件緩和を検討してください。</div>';
+      return;
+    }
+    let html = '<ul class="houi-tori-list">';
+    out.slice(0, 16).forEach(item => {
+      const dirs = item.dirs.map(x => x.label).join('・');
+      const goods = item.good.map(g => `<span class="sj-day sj-good">${g}</span>`).join(' ');
+      html += `<li><span class="ht-date">${dateLabel(item.date)}</span> <span class="ht-dirs">${dirs}</span><div style="margin-top:2px;">${goods}</div></li>`;
+    });
+    html += '</ul>';
+    if (out.length > 16) html += `<div style="font-size:10px;color:#888;margin-top:4px;">他 ${out.length - 16} 件…</div>`;
+    el.innerHTML = html;
+  }
+
+  // ----- ⑬ 大運(9年位相) -----
+  function renderDaiUn(r, consult) {
+    const el = $('o-daiun');
+    if (!el || !window.DaiUn) return;
+    const series = DaiUn.phaseSeries(consult, r.birth.honmeisei, 9);
+    const cur = series[0];
+    let html = '';
+    if (cur && cur.phase) {
+      html += `<div class="daiun-current daiun-${cur.phase.kind}">`
+            + `<div class="dn-head"><span class="dn-name">${cur.phase.name}</span> <span class="dn-year">${cur.year}年</span></div>`
+            + `<div class="dn-desc">${escapeHtml(cur.phase.desc)}</div></div>`;
+    }
+    html += '<table class="ks-table"><thead><tr><th>年</th><th>年盤中宮</th><th>位相</th><th>所見</th></tr></thead><tbody>';
+    series.forEach((s, i) => {
+      const cls = i === 0 ? ' class="current"' : (s.transition ? ' class="transition"' : '');
+      const ph = s.phase ? `<span class="daiun-tag daiun-${s.phase.kind}">${s.phase.name}</span>` : '—';
+      html += `<tr${cls}><td>${s.year}</td><td>${s.centerName}</td><td>${ph}</td><td style="text-align:left;font-size:10px;">${s.phase ? escapeHtml(s.phase.desc) : ''}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    el.innerHTML = html;
+  }
+
+  // ----- ⑭ 月命傾斜・月命星 -----
+  function renderGemmei(r) {
+    const el = $('o-gemmei');
+    if (!el) return;
+    const gem = r.birth.getsumeisei;
+    const pos = Kyusei.findPositionOfStar(r.birth.yearCenter, gem);
+    const kyu = gem === r.birth.yearCenter ? '中央' : Kyusei.POSITION_TO_KYU_NAME[pos];
+    const text = window.GemmeiData ? GemmeiData.get(gem) : '';
+    let html = `<div class="gemmei-head"><b>月命星: ${Kyusei.STAR_NAMES[gem]}</b>　月命傾斜: <b>${kyu}</b></div>`;
+    if (text) html += `<div class="gemmei-text">${escapeHtml(text)}</div>`;
+    if (window.KyuZasuruData && kyu !== '中央') {
+      const z = KyuZasuruData.get(kyu);
+      if (z) html += `<div class="gemmei-zasuru"><b>月命星が${escapeHtml(kyu)}に座する解釈:</b><br>${escapeHtml(z)}</div>`;
+    }
+    el.innerHTML = html;
+  }
+
+  // ----- ⑮ 同会の宮意味 (年同会・月同会先の宮) -----
+  function renderDoukaiMean(r) {
+    const el = $('o-doukai-mean');
+    if (!el || !window.KyuZasuruData) return;
+    const toshiPos  = r.bottom.doukai.toshiPos;
+    const tsukiPos  = r.bottom.doukai.tsukiPos;
+    const toshiKyu  = (typeof toshiPos === 'number') ? Kyusei.POSITION_TO_KYU_NAME[toshiPos] : null;
+    const tsukiKyu  = (typeof tsukiPos === 'number') ? Kyusei.POSITION_TO_KYU_NAME[tsukiPos] : null;
+    let html = '';
+    if (toshiKyu) {
+      const z = KyuZasuruData.get(toshiKyu);
+      const doukaiStar = Kyusei.STAR_NAMES[r.bottom.doukai.toshi] || '';
+      html += `<div class="dk-block"><div class="dk-head"><b>年同会: 本命が ${escapeHtml(toshiKyu)} に同会 (${escapeHtml(doukaiStar)})</b></div><div class="dk-body">${z ? escapeHtml(z) : '(該当データなし)'}</div></div>`;
+    }
+    if (tsukiKyu) {
+      const z = KyuZasuruData.get(tsukiKyu);
+      const doukaiStar = Kyusei.STAR_NAMES[r.bottom.doukai.tsuki] || '';
+      html += `<div class="dk-block" style="margin-top:8px;"><div class="dk-head"><b>月同会: 本命が ${escapeHtml(tsukiKyu)} に同会 (${escapeHtml(doukaiStar)})</b></div><div class="dk-body">${z ? escapeHtml(z) : '(該当データなし)'}</div></div>`;
+    }
+    el.innerHTML = html;
+  }
+
+  // ----- ⑯ 鬼門・裏鬼門 -----
+  function renderKimon(r) {
+    const el = $('o-kimon');
+    if (!el || !window.Kimon) return;
+    const honmeisei = r.birth.honmeisei;
+    const boards = [
+      { key: '年盤', center: r.consult.yearCenter,  bIdx: r.consult.yearEto.branchIdx },
+      { key: '月盤', center: r.consult.monthCenter, bIdx: r.consult.monthEto.branchIdx }
+    ];
+    let html = '<table class="ks-table"><thead><tr><th>盤</th><th>鬼門(艮宮)</th><th>裏鬼門(坤宮)</th><th>状態</th></tr></thead><tbody>';
+    boards.forEach(b => {
+      const a = Kimon.analyze(b.center, b.bIdx, honmeisei);
+      const sev = Kimon.severity(a);
+      const fmt = (x) => `${x.starName}${x.bad.length ? ' <span class="ks-mark">' + x.bad.join('/') + '</span>' : ''}`;
+      const sevCls = sev === '要警戒' ? 'bad' : (sev === '注意' ? 'kichi' : '');
+      html += `<tr><th>${b.key}</th><td>${fmt(a.kimon)}</td><td>${fmt(a.urakimon)}</td><td class="${sevCls}">${sev}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    html += '<div class="ks-legend">※ 五黄殺・暗剣殺が鬼門/裏鬼門に重なる年は家相・家庭運に注意。</div>';
+    el.innerHTML = html;
+  }
+
+  // ----- ⑰ 厄年表 -----
+  function renderYakudoshi(birth, consult) {
+    const el = $('o-yakudoshi');
+    if (!el || !window.Yakudoshi) return;
+    const gender = $('f-gender').value || '男';
+    const info = Yakudoshi.upcoming(birth, consult, gender, 10);
+    let html = `<div class="yk-head">数え年: <b>${info.kazoeAge}</b>歳 (${escapeHtml(gender)})</div>`;
+    if (!info.upcoming.length) {
+      html += '<div style="color:#888;">向こう10年に該当する厄年はありません。</div>';
+    } else {
+      html += '<table class="ks-table"><thead><tr><th>厄</th><th>数え年</th><th>西暦</th><th>あと</th></tr></thead><tbody>';
+      info.upcoming.forEach(y => {
+        const kind = y.taiyaku ? `${y.kind}(大厄)` : y.kind;
+        const cls = y.yearsAway === 0 ? 'current' : (y.yearsAway < 0 ? '' : '');
+        const trCls = y.yearsAway === 0 ? ' class="current"' : '';
+        const ya = y.yearsAway === 0 ? '今年' : (y.yearsAway < 0 ? `${-y.yearsAway}年前` : `${y.yearsAway}年後`);
+        html += `<tr${trCls}><td>${kind}</td><td>${y.age}</td><td>${y.year}</td><td>${ya}</td></tr>`;
+      });
+      html += '</tbody></table>';
+    }
+    el.innerHTML = html;
+  }
+
+  // ----- ⑱ 四柱命式・蔵干 -----
+  function renderShichu(r) {
+    const el = $('o-shichu');
+    if (!el || !window.Zoukan) return;
+    const dayStemIdx = r.birth.dayEto.stemIdx;
+    const pillars = [
+      { label: '年柱', eto: r.birth.yearEto },
+      { label: '月柱', eto: r.birth.monthEto },
+      { label: '日柱', eto: r.birth.dayEto, isDay: true },
+      { label: '時柱', eto: r.birth.hourEto }
+    ];
+    let html = '<table class="ks-table shichu-table"><thead><tr>';
+    pillars.forEach(p => { html += `<th>${p.label}</th>`; });
+    html += '</tr></thead><tbody>';
+    // 天干行
+    html += '<tr>';
+    pillars.forEach(p => {
+      const an = Zoukan.analyzePillar(p.eto, dayStemIdx);
+      html += `<td><div class="sc-stem">${an.stem}</div><div class="sc-tsu">${p.isDay ? '日干' : an.stemTsuhen}</div></td>`;
+    });
+    html += '</tr>';
+    // 地支行
+    html += '<tr>';
+    pillars.forEach(p => {
+      html += `<td><div class="sc-branch">${p.eto.branch}</div></td>`;
+    });
+    html += '</tr>';
+    // 蔵干行
+    html += '<tr>';
+    pillars.forEach(p => {
+      const an = Zoukan.analyzePillar(p.eto, dayStemIdx);
+      const items = an.zoukan.map(z => `<span class="sc-zk">${z.name}<small>${z.tsuhen}</small></span>`).join(' ');
+      html += `<td><div class="sc-zk-list">${items}</div></td>`;
+    });
+    html += '</tr></tbody></table>';
+    html += '<div class="ks-legend">※ 日干(日柱の天干)を「我」として、各柱の天干・蔵干との通変を表示。比肩/劫財=同我、食神/傷官=我が生む、偏財/正財=我が剋す、偏官/正官=我を剋す、偏印/印綬=我を生む。</div>';
+    el.innerHTML = html;
+  }
+
+  // ----- ⑲ 七十二候 -----
+  function renderKou(consult) {
+    const el = $('o-kou');
+    if (!el || !window.ShichijuniKou) return;
+    const k = ShichijuniKou.findCurrentKou(consult);
+    if (!k) { el.innerHTML = '(計算不可)'; return; }
+    const startStr = `${k.sekkiStart.getMonth()+1}/${k.sekkiStart.getDate()}`;
+    el.innerHTML = `
+      <div class="kou-card">
+        <div class="kou-head"><span class="kou-sekki">${k.sekkiName}</span> <span class="kou-candle">${k.candleName}</span> <span class="kou-since">節入から${k.daysSinceSekki}日目</span></div>
+        <div class="kou-name">${k.kanji}</div>
+        <div class="kou-yomi">${k.yomi}</div>
+        <div class="kou-meta">節気開始: ${startStr}</div>
+      </div>`;
+  }
+
+  // ----- ⑳ 節気タイムライン -----
+  function renderSekki(consult) {
+    const el = $('o-sekki');
+    if (!el || !window.SekkiTimeline) return;
+    const info = SekkiTimeline.info(consult);
+    if (!info) { el.innerHTML = '(計算不可)'; return; }
+    const fmt = (d) => `${d.getMonth()+1}/${d.getDate()}`;
+    let html = '<div class="sk-timeline">';
+    if (info.prev) html += `<div class="sk-cell sk-prev"><div class="sk-lbl">前節気</div><div class="sk-name">${info.prev.name}</div><div class="sk-date">${fmt(info.prev.date)}</div></div>`;
+    html += `<div class="sk-cell sk-cur"><div class="sk-lbl">現節気</div><div class="sk-name">${info.cur.name}</div><div class="sk-date">${fmt(info.cur.date)} 起点</div><div class="sk-since">${info.cur.daysSince}日経過</div></div>`;
+    html += `<div class="sk-cell sk-next"><div class="sk-lbl">次節気</div><div class="sk-name">${info.next.name}</div><div class="sk-date">${fmt(info.next.date)}</div><div class="sk-since">あと${info.next.daysUntil}日</div></div>`;
+    html += '</div>';
+    el.innerHTML = html;
+  }
 
   function renderKyuZasuru(toshiPos, tsukiPos) {
     const el = $('o-kyu-zasuru');

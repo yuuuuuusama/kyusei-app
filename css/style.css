@@ -1569,6 +1569,145 @@ input[type="search"]:focus,
 .ai-good td { background: rgba(184,146,74,.10); }
 .ai-bad td  { background: rgba(168,50,50,.08); }
 
+/* ===== ⑪ 選日 ===== */
+.senjitsu-table th { white-space: nowrap; width: 6em; }
+.senjitsu-table .sj-mean { text-align: left; font-size: 10px; color: var(--c-sumi-soft); }
+.senjitsu-table .sj-dates { text-align: left; }
+.sj-day {
+  display: inline-block;
+  padding: 1px 5px;
+  margin: 1px 2px;
+  font-size: 10px;
+  border-radius: 1px;
+  font-family: var(--font-jp);
+}
+.sj-day.sj-good { background: rgba(184,146,74,.18); color: var(--c-kin-deep); border: 1px solid var(--c-kin); }
+.sj-day.sj-bad  { background: rgba(168,50,50,.10); color: var(--c-shu);      border: 1px solid rgba(168,50,50,.4); }
+.sj-row-good > th { color: var(--c-kin-deep); }
+.sj-row-bad  > th { color: var(--c-shu); }
+
+/* ===== ⑬ 大運 ===== */
+.daiun-current {
+  padding: 8px 12px;
+  background: linear-gradient(180deg, rgba(184,146,74,.16) 0%, rgba(184,146,74,.04) 100%);
+  border: 1px solid var(--c-kin);
+  border-radius: 1px;
+  margin-bottom: 6px;
+}
+.daiun-current.daiun-bad { background: linear-gradient(180deg, rgba(168,50,50,.12) 0%, rgba(168,50,50,.03) 100%); border-color: var(--c-shu); }
+.dn-head { display: flex; align-items: baseline; gap: 8px; }
+.dn-name { font-size: 18px; font-weight: bold; font-family: var(--font-jp); color: var(--c-sumi); letter-spacing: .15em; }
+.dn-year { font-size: 11px; color: var(--c-kin-deep); }
+.dn-desc { font-size: 11px; margin-top: 4px; color: var(--c-sumi-soft); line-height: 1.5; }
+.daiun-tag {
+  display: inline-block;
+  padding: 1px 6px;
+  font-size: 10px;
+  border-radius: 1px;
+  font-family: var(--font-jp);
+  letter-spacing: .04em;
+}
+.daiun-tag.daiun-good    { background: rgba(184,146,74,.18); color: var(--c-kin-deep); }
+.daiun-tag.daiun-neutral { background: rgba(107,124,79,.15); color: var(--c-matcha);   }
+.daiun-tag.daiun-bad     { background: rgba(168,50,50,.12);  color: var(--c-shu);      }
+tr.transition td { border-top: 2px dashed var(--c-kin); }
+
+/* ===== ⑭ 月命傾斜 ===== */
+.gemmei-head { font-family: var(--font-jp); font-size: 13px; color: var(--c-sumi); margin-bottom: 6px; letter-spacing: .1em; }
+.gemmei-text { font-size: 12px; line-height: 1.6; color: var(--c-sumi-soft); margin-bottom: 6px; }
+.gemmei-zasuru { font-size: 11px; line-height: 1.6; padding: 6px 10px; background: rgba(184,146,74,.08); border-left: 3px solid var(--c-kin); }
+
+/* ===== ⑮ 同会の宮意味 ===== */
+.dk-block .dk-head { font-family: var(--font-jp); color: var(--c-sumi); font-size: 12px; margin-bottom: 4px; letter-spacing: .08em; }
+.dk-block .dk-body { font-size: 11px; line-height: 1.6; color: var(--c-sumi-soft); padding: 6px 10px; background: rgba(184,146,74,.06); border-left: 3px solid var(--c-kin); }
+
+/* ===== ⑰ 厄年 ===== */
+.yk-head { font-family: var(--font-jp); font-size: 13px; margin-bottom: 6px; color: var(--c-sumi); }
+
+/* ===== ⑱ 四柱命式 ===== */
+.shichu-table td {
+  vertical-align: top;
+  padding: 6px 4px;
+  width: 25%;
+}
+.sc-stem {
+  font-family: var(--font-jp);
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--c-sumi);
+  letter-spacing: .1em;
+}
+.sc-branch {
+  font-family: var(--font-jp);
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--c-sumi);
+  letter-spacing: .1em;
+}
+.sc-tsu { font-size: 10px; color: var(--c-kin-deep); margin-top: 2px; }
+.sc-zk-list { display: flex; flex-direction: column; gap: 2px; align-items: center; }
+.sc-zk {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 1px 5px;
+  font-size: 11px;
+  background: rgba(184,146,74,.08);
+  border: 1px solid var(--c-border-fine);
+  border-radius: 1px;
+  font-family: var(--font-jp);
+}
+.sc-zk small { font-size: 8px; color: var(--c-sumi-soft); }
+
+/* ===== ⑲ 七十二候 ===== */
+.kou-card {
+  padding: 10px 14px;
+  background:
+    radial-gradient(circle at 80% 30%, rgba(184,146,74,.08) 0%, transparent 50%),
+    linear-gradient(180deg, #fdfbf3 0%, #f6efe0 100%);
+  border: 1px solid var(--c-kin);
+  border-radius: 1px;
+  text-align: center;
+}
+.kou-head { font-size: 10px; color: var(--c-kin-deep); letter-spacing: .15em; margin-bottom: 4px; }
+.kou-sekki { font-weight: bold; }
+.kou-candle { margin-left: 6px; }
+.kou-since { margin-left: 8px; color: var(--c-sumi-soft); }
+.kou-name {
+  font-family: var(--font-jp);
+  font-size: 26px;
+  letter-spacing: .25em;
+  color: var(--c-sumi);
+  font-weight: 500;
+  padding: 4px 0;
+}
+.kou-yomi { font-family: var(--font-jp); font-size: 12px; color: var(--c-sumi-soft); letter-spacing: .12em; }
+.kou-meta { font-size: 10px; color: #888; margin-top: 6px; }
+
+/* ===== ⑳ 節気タイムライン ===== */
+.sk-timeline {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: 6px;
+  align-items: stretch;
+}
+.sk-cell {
+  padding: 6px 8px;
+  border: 1px solid var(--c-border-soft);
+  background: rgba(184,146,74,.05);
+  border-radius: 1px;
+  text-align: center;
+}
+.sk-cell.sk-cur {
+  background: linear-gradient(180deg, rgba(184,146,74,.18) 0%, rgba(184,146,74,.04) 100%);
+  border-color: var(--c-kin);
+  box-shadow: 0 0 0 1px rgba(184,146,74,.3);
+}
+.sk-lbl { font-size: 10px; color: var(--c-kin-deep); letter-spacing: .1em; }
+.sk-name { font-family: var(--font-jp); font-size: 18px; color: var(--c-sumi); letter-spacing: .15em; padding: 4px 0; font-weight: 500; }
+.sk-date { font-size: 11px; color: var(--c-sumi-soft); }
+.sk-since { font-size: 10px; color: var(--c-kin-deep); margin-top: 2px; }
+
 /* ================== モバイル ================== */
 @media (max-width: 640px) {
   .page { margin: 8px; padding: 14px 12px 50px; }
