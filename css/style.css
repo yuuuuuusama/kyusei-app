@@ -33,6 +33,24 @@
 
   --shadow-paper: 0 1px 0 rgba(255,255,255,.6) inset, 0 12px 32px rgba(40,25,10,.10), 0 2px 6px rgba(40,25,10,.06);
   --shadow-soft:  0 1px 3px rgba(40,25,10,.08);
+
+  /* ── リッチ化トークン (Refined Luxury Layer) ── */
+  --c-kin-pale:     #ecd9a4;                 /* 淡箔 */
+  --c-kin-hairline: rgba(184,146,74,.45);    /* 金の極細線 */
+  --grad-th: linear-gradient(180deg, #f5eed9 0%, #ecdfbd 55%, #e5d4a9 100%);
+  --grad-th-hover: linear-gradient(180deg, #f8f1dd 0%, #efe2bf 55%, #e9d8ad 100%);
+  --grad-kin-line: linear-gradient(90deg, transparent 0%, rgba(184,146,74,.55) 22%, #ecd9a4 50%, rgba(184,146,74,.55) 78%, transparent 100%);
+  --grad-foil: linear-gradient(135deg, #dcbc78 0%, #b8924a 48%, #8b6b2e 95%);
+  --ease-silk: cubic-bezier(.23,.65,.28,1);
+  --shadow-card:
+    0 1px 0 rgba(255,255,255,.65) inset,
+    0 -1px 0 rgba(139,107,46,.07) inset,
+    0 1px 2px rgba(40,25,10,.05),
+    0 5px 14px rgba(40,25,10,.07);
+  --shadow-card-hover:
+    0 1px 0 rgba(255,255,255,.70) inset,
+    0 9px 24px rgba(40,25,10,.13),
+    0 0 0 1px rgba(184,146,74,.35);
 }
 
 * { box-sizing: border-box; }
@@ -1918,6 +1936,320 @@ tr.transition td { border-top: 2px dashed var(--c-kin); }
   .page-title { font-size: 18px; letter-spacing: 0.25em; }
 }
 
+/* ================================================================
+ * Refined Luxury Layer ── 料亭・ハイブランドの静謐な上質感
+ * 方針: 箔は要所のみ / 極細金線(hairline) / 統一された帯グラデ /
+ *       層状の影 / ゆとりの余白 / 絹のようなイージング
+ * ================================================================ */
+
+/* ===== 選択色・タップハイライト: 細部の品 ===== */
+::selection { background: rgba(212,176,106,.35); color: var(--c-sumi); }
+body { -webkit-tap-highlight-color: rgba(212,176,106,.15); }
+
+/* ===== 外周: 漆黒の帳に微かな金のオーラ ===== */
+html, body {
+  background:
+    radial-gradient(1200px 760px at 50% -12%, rgba(212,176,106,.11) 0%, transparent 55%),
+    radial-gradient(900px 540px at 88% 112%, rgba(168,50,50,.05) 0%, transparent 60%),
+    radial-gradient(700px 420px at 8% 96%, rgba(42,67,89,.06) 0%, transparent 55%),
+    linear-gradient(180deg, #171008 0%, #221709 46%, #1b1108 100%);
+  background-attachment: fixed;
+}
+
+/* ===== ヘッダー: 漆塗りの深み + 箔文字の題字 ===== */
+.app-header {
+  background: linear-gradient(180deg, #33210f 0%, #241608 55%, #180e06 100%);
+  border-bottom-color: #060302;
+}
+.app-header::after {
+  background: var(--grad-kin-line);
+  opacity: .9;
+}
+.app-header h1 {
+  background: linear-gradient(180deg, #f8ecc8 0%, #d9b878 52%, #f1dfae 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+.app-header h1::before {
+  /* 菱の金紋 */
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 12px;
+  transform: rotate(45deg);
+  background: var(--grad-foil);
+  box-shadow: 0 0 6px rgba(212,176,106,.45);
+  vertical-align: 1px;
+}
+.app-header nav a {
+  margin-left: 18px;
+  letter-spacing: .14em;
+  padding-bottom: 5px;
+}
+
+/* ===== 誌面: 掛軸の面持ち ── 二重の枠と四隅の金飾 ===== */
+.page {
+  border: 1px solid rgba(139,107,46,.28);
+  border-radius: 2px;
+}
+.page::before {
+  inset: 8px;
+  border: 1px solid rgba(184,146,74,.30);
+  box-shadow: 0 0 0 4px rgba(184,146,74,.05);
+}
+.page::after {
+  /* 四隅の角飾り (kado-kazari) */
+  content: "";
+  position: absolute;
+  inset: 8px;
+  pointer-events: none;
+  opacity: .6;
+  background:
+    linear-gradient(#caa45c, #caa45c) 0    0    / 22px 1.5px,
+    linear-gradient(#caa45c, #caa45c) 0    0    / 1.5px 22px,
+    linear-gradient(#caa45c, #caa45c) 100% 0    / 22px 1.5px,
+    linear-gradient(#caa45c, #caa45c) 100% 0    / 1.5px 22px,
+    linear-gradient(#caa45c, #caa45c) 0    100% / 22px 1.5px,
+    linear-gradient(#caa45c, #caa45c) 0    100% / 1.5px 22px,
+    linear-gradient(#caa45c, #caa45c) 100% 100% / 22px 1.5px,
+    linear-gradient(#caa45c, #caa45c) 100% 100% / 1.5px 22px;
+  background-repeat: no-repeat;
+}
+
+/* ===== 題字: 深い墨金のグラデ ===== */
+.page-title {
+  background: linear-gradient(180deg, #2c1c0e 0%, #6d4f26 42%, #a5854a 60%, #4a331a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ===== 帯 (th/label/見出し) の統一: 上端に絹の光 ===== */
+.form-table th,
+.kaijin-table th,
+.flow-table th,
+.ks-table th,
+.bottom-cell .lbl {
+  background: var(--grad-th);
+  box-shadow: 0 1px 0 rgba(255,255,255,.55) inset;
+  color: #4a3315;
+}
+.handan-section h3,
+.handan-details summary,
+.detail-card > summary {
+  background: var(--grad-th);
+  box-shadow: 0 1px 0 rgba(255,255,255,.55) inset;
+  color: #3d2a12;
+}
+.form-table th { letter-spacing: .12em; }
+
+/* ===== フォーム表: 紙の厚み ===== */
+.form-table {
+  border: 1px solid rgba(139,107,46,.45);
+  background: #fdfaf1;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.5) inset,
+    0 3px 10px rgba(40,25,10,.06);
+}
+.form-table td.td-topic textarea {
+  border-radius: 3px;
+  background: #fcf9ee;
+}
+
+/* ===== ボタン: 漆黒 × 金箔の縁 ===== */
+.btn {
+  padding: 10px 22px;
+  border-radius: 3px;
+  letter-spacing: .18em;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  border: 1px solid #100a05;
+  background: linear-gradient(180deg, #453019 0%, #2a1a0c 50%, #1b0f07 100%);
+  box-shadow:
+    0 0 0 1px rgba(184,146,74,.35),
+    0 1px 0 rgba(232,207,150,.45) inset,
+    0 -1px 0 rgba(0,0,0,.35) inset,
+    0 3px 8px rgba(0,0,0,.25);
+  transition:
+    transform .22s var(--ease-silk),
+    box-shadow .28s var(--ease-silk),
+    filter .18s ease;
+}
+.btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow:
+    0 0 0 1px rgba(212,176,106,.55),
+    0 1px 0 rgba(232,207,150,.5) inset,
+    0 -1px 0 rgba(0,0,0,.35) inset,
+    0 9px 20px rgba(0,0,0,.32),
+    0 0 16px rgba(212,176,106,.28);
+}
+.btn:active {
+  transform: translateY(1px);
+  filter: brightness(.96);
+  box-shadow:
+    0 0 0 1px rgba(184,146,74,.4),
+    0 1px 3px rgba(0,0,0,.5) inset;
+}
+.btn.secondary {
+  background: linear-gradient(180deg, #fdf8e9 0%, #f1e5c2 55%, #e6d5a8 100%);
+  color: #3d2a12;
+  border: 1px solid rgba(139,107,46,.6);
+  box-shadow:
+    0 0 0 1px rgba(184,146,74,.15),
+    0 1px 0 rgba(255,255,255,.75) inset,
+    0 -1px 0 rgba(139,107,46,.18) inset,
+    0 2px 6px rgba(40,25,10,.10);
+}
+.btn.secondary:hover {
+  background: linear-gradient(180deg, #fffbee 0%, #f4e8c6 55%, #ead9ac 100%);
+  box-shadow:
+    0 0 0 1px rgba(184,146,74,.4),
+    0 1px 0 rgba(255,255,255,.8) inset,
+    0 -1px 0 rgba(139,107,46,.22) inset,
+    0 8px 16px rgba(40,25,10,.15),
+    0 0 12px rgba(212,176,106,.32);
+}
+.btn.danger {
+  box-shadow:
+    0 0 0 1px rgba(168,50,50,.35),
+    0 1px 0 rgba(247,210,190,.35) inset,
+    0 -1px 0 rgba(0,0,0,.35) inset,
+    0 3px 8px rgba(0,0,0,.22);
+}
+
+/* ===== キーボード操作: 金の focus ring ===== */
+.btn:focus-visible,
+.memo-tools .mt-btn:focus-visible,
+.app-header nav a:focus-visible,
+.detail-card > summary:focus-visible,
+.handan-details summary:focus-visible {
+  outline: 1.5px solid var(--c-kin-light);
+  outline-offset: 2px;
+}
+
+/* ===== 八盤: 硯石の縁 + 二重金線 ===== */
+.ban {
+  border: 1px solid #2b1a0e;
+  background:
+    radial-gradient(circle at 30% 18%, #fefcf5 0%, transparent 55%),
+    linear-gradient(180deg, #fdfbf3 0%, #f5ecd2 100%);
+  box-shadow:
+    0 0 0 1px rgba(184,146,74,.3),
+    0 0 0 4px rgba(184,146,74,.06),
+    0 4px 10px rgba(40,25,10,.09);
+}
+.ban-label { letter-spacing: .3em; text-indent: .3em; }
+.ban .perimeter-age {
+  border-radius: 2px;
+  background: #fefcf4;
+}
+
+/* ===== 判断書セクション / 詳細カード: 上質なカード ===== */
+.handan-section {
+  border: 1px solid rgba(139,107,46,.4);
+  border-radius: 2px;
+  box-shadow: var(--shadow-card);
+}
+.handan-section:hover { box-shadow: var(--shadow-card-hover); }
+.handan-section h3 {
+  padding: 9px 14px;
+  letter-spacing: .2em;
+  border-bottom: 1px solid var(--c-kin-hairline);
+}
+.handan-section .body { padding: 11px 14px; }
+.handan-section textarea {
+  border-radius: 3px;
+  background: #fcf8ea;
+}
+.detail-card {
+  border: 1px solid rgba(139,107,46,.4);
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+.detail-card[open] { box-shadow: var(--shadow-card-hover); }
+.detail-card > summary {
+  padding: 11px 16px;
+  letter-spacing: .14em;
+  border-bottom: 1px solid var(--c-kin-hairline);
+  transition: background .25s var(--ease-silk);
+}
+.detail-card > summary:hover { background: var(--grad-th-hover); }
+.detail-card > summary .num {
+  background: var(--grad-foil);
+  color: #fdfaf0;
+  border-radius: 2px;
+  padding: 1px 7px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.4) inset,
+    0 1px 2px rgba(40,25,10,.25);
+}
+.detail-card > .body { padding: 12px 16px; }
+.detail-title::before,
+.detail-title::after { background: var(--grad-kin-line); }
+
+/* 判断書内の埋め込み表 (inline style 対策) */
+.handan-section .body table td[style*="background:#f8f0d8"] { background: var(--grad-th) !important; }
+.handan-section .body table td[style*="border:1px solid #888"] { border-color: #cbb98d !important; }
+
+/* ===== 下部宮位カード ===== */
+.bottom-cell { border-color: rgba(139,107,46,.42); }
+.bottom-cell:hover .lbl { background: var(--grad-th-hover); }
+
+/* ===== メモツールボタン: 小さな上質 ===== */
+.memo-tools .mt-btn {
+  border-radius: 3px;
+  letter-spacing: .08em;
+  border-color: rgba(139,107,46,.55);
+}
+
+/* ===== 相談者リスト (inline style 対策) ===== */
+.client-item { border-color: rgba(139,107,46,.4); border-radius: 2px; overflow: hidden; box-shadow: var(--shadow-card); }
+.client-item .client-header { background: var(--grad-th) !important; }
+.client-item .client-header:hover { background: var(--grad-th-hover) !important; }
+.client-records li { border-bottom: 1px dashed var(--c-border-fine) !important; }
+.client-records li:hover { background: rgba(184,146,74,.07); }
+.history-list li { padding: 13px 8px; }
+
+/* ===== スニペットパネル: 細い金のスクロールバー ===== */
+.mt-snip-panel::-webkit-scrollbar { width: 8px; }
+.mt-snip-panel::-webkit-scrollbar-track { background: transparent; }
+.mt-snip-panel::-webkit-scrollbar-thumb {
+  background: rgba(139,107,46,.35);
+  border-radius: 4px;
+  border: 2px solid #fdfbf3;
+}
+
+/* ===== 広幅 (Mac): ゆとりの余白と伸びやかな題字 ===== */
+@media (min-width: 641px) {
+  .page {
+    margin: 30px auto 46px;
+    padding: 34px 40px 78px;
+  }
+  .page-title {
+    font-size: 25px;
+    letter-spacing: .42em;
+    margin: 12px 0 30px;
+    padding: 10px 0 16px;
+  }
+  .detail-title {
+    font-size: 19px;
+    letter-spacing: .36em;
+    margin: 42px 0 16px;
+  }
+  .app-header { padding: 14px 24px; }
+  .app-header h1 { font-size: 17px; letter-spacing: .3em; }
+  .form-table th { letter-spacing: .16em; }
+  .bans-row { gap: 12px; margin: 18px 0; }
+  .bottom-grid { gap: 10px; margin-top: 18px; }
+}
+
 /* ================== 印刷時 (A4縦1ページ最適化) ================== */
 @media print {
   @page { size: A4 portrait; margin: 6mm; }
@@ -2199,4 +2531,46 @@ tr.transition td { border-top: 2px dashed var(--c-kin); }
   .rk-name { font-size: 10pt !important; }
   .rk-mean { font-size: 6.5pt !important; }
   .aishou-input { display: none !important; }
+}
+
+/* ===== 印刷追補: Refined Luxury Layer の装飾を紙面用に無効化 ===== */
+@media print {
+  .page::after { display: none !important; }
+  .page { border-radius: 0 !important; }
+  .app-header h1 {
+    background: none !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    color: #000 !important;
+  }
+  .app-header h1::before { display: none !important; }
+  .form-table,
+  .handan-section,
+  .detail-card,
+  .bottom-cell,
+  .ban,
+  .client-item,
+  .btn {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+  .form-table th,
+  .kaijin-table th,
+  .flow-table th,
+  .ks-table th,
+  .bottom-cell .lbl,
+  .handan-section h3,
+  .handan-details summary,
+  .detail-card > summary {
+    box-shadow: none !important;
+  }
+  .handan-section .body table td[style*="background:#f8f0d8"] { background: #f0e8d0 !important; }
+  .handan-section .body table td[style*="border:1px solid #888"] { border-color: #000 !important; }
+  .handan-section textarea,
+  .form-table td.td-topic textarea { border-radius: 0 !important; }
+  .detail-card > summary .num {
+    background: #000 !important;
+    color: #fff !important;
+    box-shadow: none !important;
+  }
 }
