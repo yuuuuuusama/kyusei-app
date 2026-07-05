@@ -317,6 +317,8 @@
     renderShichu(r);
     renderKou(consult);
     renderSekki(consult);
+    // ㉒〜㉛ 追加鑑定 + A-10 入力補助 (kantei-ext.js)
+    if (window.KanteiExt) window.KanteiExt.render(r, birth, consult);
   }
 
   // ----- ① 凶神方位 -----

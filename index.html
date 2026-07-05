@@ -41,7 +41,7 @@
           </select>
         </td>
         <th class="th-age">年齢</th>
-        <td class="td-age"><input type="number" id="f-age" min="0" max="120" inputmode="numeric" placeholder="歳"></td>
+        <td class="td-age"><input type="number" id="f-age" min="0" max="120" inputmode="numeric" placeholder="歳"><span id="o-kazoe" class="kazoe-badge"></span></td>
       </tr>
       <tr>
         <th>生年月日</th>
@@ -53,7 +53,7 @@
       </tr>
       <tr>
         <th>相談日</th>
-        <td class="td-dt" colspan="5"><div class="dt-picker" data-target="f-consult"></div></td>
+        <td class="td-dt" colspan="5"><div class="dt-picker" data-target="f-consult"></div><button type="button" class="btn secondary btn-today no-print" id="btn-today">今日</button></td>
       </tr>
       <tr>
         <th class="th-meishiki">相談日九星</th>
@@ -424,40 +424,107 @@
     </div>
   </details>
 
+  <!-- ===== 追加鑑定 ㉒〜㉛ ===== -->
+  <details class="detail-card" open>
+    <summary><span class="num">㉒</span> 姓名判断（五格） <span class="hint">氏名の画数から天格・人格・地格・外格・総格</span></summary>
+    <div class="body" id="o-seimei"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">㉓</span> 納音（なっちん） <span class="hint">生年・生日の六十花甲子の音と性質</span></summary>
+    <div class="body" id="o-nacchin"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">㉔</span> 本命星別 開運指針 <span class="hint">ラッキーカラー・方位・数・アイテム・食</span></summary>
+    <div class="body" id="o-kaiun"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">㉕</span> 事象別アドバイス <span class="hint">仕事・金運・健康・恋愛・結婚・引越・開業</span></summary>
+    <div class="body" id="o-jishou"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">㉖</span> 健康・身体の象意 <span class="hint">本命星の臓腑対応・不調傾向・養生</span></summary>
+    <div class="body" id="o-kenkou"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">㉗</span> 9年運気グラフ <span class="hint">大運（旺・相・休・囚・死気）の推移を可視化</span></summary>
+    <div class="body" id="o-unki-graph"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">㉘</span> 今日・今月の過ごし方 <span class="hint">相談日の日盤・月盤から本命星の位置と指針</span></summary>
+    <div class="body" id="o-kyou"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">㉙</span> 家族・グループ相性 <span class="hint">相談者＋関係者の本命星で相性マトリクス</span></summary>
+    <div class="body">
+      <div class="aishou-input no-print">
+        <input type="text" id="kazoku-name" placeholder="名前 (任意)">
+        <select id="kazoku-star"></select>
+        <button type="button" class="btn secondary" id="btn-kazoku-add">追加</button>
+        <button type="button" class="btn secondary" id="btn-kazoku-clear">全消去</button>
+      </div>
+      <div id="o-kazoku"></div>
+    </div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">㉚</span> 祐気取りガイド <span class="hint">お水取り・お砂取り・お土取り・参拝の実践法</span></summary>
+    <div class="body" id="o-yuki"></div>
+  </details>
+
+  <details class="detail-card">
+    <summary><span class="num">㉛</span> 凶方位の対処法 <span class="hint">五黄殺・暗剣殺・本命殺ほかの意味と対処</span></summary>
+    <div class="body" id="o-kyohoui"></div>
+  </details>
+
 </main>
 
-<script src="js/solar-terms.js?v=99"></script>
-<script src="js/eto.js?v=99"></script>
-<script src="js/kyusei.js?v=99"></script>
-<script src="js/kantei.js?v=99"></script>
-<script src="js/storage.js?v=99"></script>
-<script src="js/dt-picker.js?v=99"></script>
-<script src="js/eto-table.js?v=99"></script>
-<script src="js/keisha-data.js?v=99"></script>
-<script src="js/kyu-zasuru-data.js?v=99"></script>
-<script src="js/seigetsu-data.js?v=99"></script>
-<script src="js/seinichi-data.js?v=99"></script>
-<script src="js/seimatsuri-data.js?v=99"></script>
-<script src="js/nijuhasshuku-data.js?v=99"></script>
-<script src="js/koyomi.js?v=99"></script>
-<script src="js/eto-relations.js?v=99"></script>
-<script src="js/houi-analysis.js?v=99"></script>
-<script src="js/un-tables.js?v=99"></script>
-<script src="js/rekichu.js?v=99"></script>
-<script src="js/gogyou-balance.js?v=99"></script>
-<script src="js/aishou.js?v=99"></script>
-<script src="js/senjitsu.js?v=99"></script>
-<script src="js/dai-un.js?v=99"></script>
-<script src="js/gemmei-data.js?v=99"></script>
-<script src="js/kimon.js?v=99"></script>
-<script src="js/yakudoshi.js?v=99"></script>
-<script src="js/zoukan.js?v=99"></script>
-<script src="js/shichijuni-kou.js?v=99"></script>
-<script src="js/sekki-timeline.js?v=99"></script>
-<script src="js/snippets.js?v=99"></script>
-<script src="js/draft-gen.js?v=99"></script>
-<script src="js/voice.js?v=99"></script>
-<script src="js/app.js?v=99"></script>
+<script src="js/solar-terms.js?v=102"></script>
+<script src="js/eto.js?v=102"></script>
+<script src="js/kyusei.js?v=102"></script>
+<script src="js/kantei.js?v=102"></script>
+<script src="js/storage.js?v=102"></script>
+<script src="js/dt-picker.js?v=102"></script>
+<script src="js/eto-table.js?v=102"></script>
+<script src="js/keisha-data.js?v=102"></script>
+<script src="js/kyu-zasuru-data.js?v=102"></script>
+<script src="js/seigetsu-data.js?v=102"></script>
+<script src="js/seinichi-data.js?v=102"></script>
+<script src="js/seimatsuri-data.js?v=102"></script>
+<script src="js/nijuhasshuku-data.js?v=102"></script>
+<script src="js/koyomi.js?v=102"></script>
+<script src="js/eto-relations.js?v=102"></script>
+<script src="js/houi-analysis.js?v=102"></script>
+<script src="js/un-tables.js?v=102"></script>
+<script src="js/rekichu.js?v=102"></script>
+<script src="js/gogyou-balance.js?v=102"></script>
+<script src="js/aishou.js?v=102"></script>
+<script src="js/senjitsu.js?v=102"></script>
+<script src="js/dai-un.js?v=102"></script>
+<script src="js/gemmei-data.js?v=102"></script>
+<script src="js/kimon.js?v=102"></script>
+<script src="js/yakudoshi.js?v=102"></script>
+<script src="js/zoukan.js?v=102"></script>
+<script src="js/shichijuni-kou.js?v=102"></script>
+<script src="js/sekki-timeline.js?v=102"></script>
+<script src="js/snippets.js?v=102"></script>
+<script src="js/draft-gen.js?v=102"></script>
+<script src="js/voice.js?v=102"></script>
+<script src="js/seimei-data.js?v=102"></script>
+<script src="js/nacchin-data.js?v=102"></script>
+<script src="js/kaiun-shishin-data.js?v=102"></script>
+<script src="js/kenkou-data.js?v=102"></script>
+<script src="js/jishou-data.js?v=102"></script>
+<script src="js/yuki-data.js?v=102"></script>
+<script src="js/kyohoui-data.js?v=102"></script>
+<script src="js/kantei-ext.js?v=102"></script>
+<script src="js/app.js?v=102"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
