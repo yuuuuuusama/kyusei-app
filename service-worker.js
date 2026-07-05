@@ -1,7 +1,7 @@
 // service-worker.js
 // オフライン対応用
 
-const CACHE_NAME = 'kyusei-app-v100';
+const CACHE_NAME = 'kyusei-app-v101';
 const ASSETS = [
   './',
   './index.html',
@@ -42,7 +42,9 @@ const ASSETS = [
   './js/draft-gen.js',
   './js/voice.js',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
+  './icons/icon-1024.png',
+  './icons/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', (e) => {
