@@ -1180,7 +1180,8 @@
       handan: {
         honnin: $('m-honnin').value,
         nengetsu: $('m-nengetsu').value,
-        naizou: $('m-naizou').value
+        naizou: $('m-naizou').value,
+        sougou: $('m-sougou') ? $('m-sougou').value : ''
       }
     };
     const saved = Storage.upsert(record);
@@ -1202,6 +1203,7 @@
       $('m-honnin').value = rec.handan.honnin || '';
       $('m-nengetsu').value = rec.handan.nengetsu || '';
       $('m-naizou').value = rec.handan.naizou || '';
+      if ($('m-sougou')) $('m-sougou').value = rec.handan.sougou || '';
     }
     // 内蔵・宿命 は compute() 内で常に最新の計算結果に上書きされる
     compute();
@@ -1211,7 +1213,7 @@
     if (currentRecordId && !confirm('現在のデータは保存されていません。新規作成しますか?')) return;
     currentRecordId = null;
     history.replaceState(null, '', location.pathname);
-    ['f-name','f-gender','f-age','f-topic','m-honnin','m-nengetsu','m-naizou'].forEach(id => {
+    ['f-name','f-gender','f-age','f-topic','m-honnin','m-nengetsu','m-naizou','m-sougou'].forEach(id => {
       const el = $(id);
       if (el) el.value = '';
     });

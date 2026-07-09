@@ -720,9 +720,35 @@ html, body {
 .kyohoui-table td { font-size:11.5px; line-height:1.55; text-align:left; vertical-align:top; }
 .kyohoui-table .kh-remedy { color:#3f4b2e; }
 
+/* ===== 総合診断 (AI自動) / 総合判断 (鑑定者記入) ===== */
+.h3-sub { font-size:11px; font-weight:400; color:var(--c-kin-deep); font-family:var(--font-sans);
+  letter-spacing:.04em; margin-left:8px; padding:1px 8px; border:1px solid rgba(184,146,74,.5);
+  border-radius:9px; background:rgba(184,146,74,.08); vertical-align:middle; }
+.sougou-shindan > .body, .sougou-handan > .body { position:relative; }
+.sougou-shindan { border-left:3px solid var(--c-kin); }
+.ss-verdict { display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:6px;
+  margin-bottom:10px; background:linear-gradient(180deg,#fdf8ea,#f5ecd3); box-shadow:var(--shadow-soft); }
+.ss-badge { flex:0 0 auto; font-family:var(--font-jp); font-size:15px; font-weight:600; letter-spacing:.08em;
+  padding:5px 14px; border-radius:20px; color:#fff; white-space:nowrap; box-shadow:0 1px 3px rgba(40,25,10,.25); }
+.ss-verdict.ss-good    .ss-badge { background:linear-gradient(180deg,#7d9058,#63764a); }
+.ss-verdict.ss-neutral .ss-badge { background:linear-gradient(180deg,#c8a24e,#a9843a); }
+.ss-verdict.ss-bad     .ss-badge { background:linear-gradient(180deg,#b06a5a,#94513f); }
+.ss-lead { font-family:var(--font-jp); font-size:13px; line-height:1.65; color:#3d3320; }
+.ss-list { list-style:none; margin:0; padding:0; }
+.ss-list li { position:relative; padding:6px 6px 6px 16px; font-size:12.5px; line-height:1.7; color:#2e2718;
+  border-bottom:1px dotted var(--c-border-fine); }
+.ss-list li:before { content:""; position:absolute; left:2px; top:12px; width:5px; height:5px;
+  border-radius:50%; background:var(--c-kin); }
+.ss-list li b { color:var(--c-kin-deep); font-weight:600; font-family:var(--font-jp); margin-right:6px; }
+.ss-list li em { font-style:normal; font-weight:600; color:var(--c-sumi); }
+.ss-list li em.ss-warn { color:var(--c-shu); }
+.ss-foot { font-size:10.5px; color:#8a7c5c; margin-top:8px; line-height:1.5; }
+.sougou-handan textarea { min-height:120px; }
+
 @media (max-width: 640px) {
   .kenkou-cols .kk-col, .kyou-block { flex-basis:100%; }
   .btn-today { display:block; margin:6px 0 0; }
+  .ss-verdict { flex-direction:column; align-items:flex-start; gap:6px; }
 }
 @media print {
   .ban-cell-inner .cell-marks .mark { font-size: 8pt; }

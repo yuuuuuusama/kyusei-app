@@ -353,11 +353,84 @@
   }
 
   // ============================================================
+  // 総合診断 (AI自動判定) — 全体の計算結果からの自動所見
+  // ============================================================
+  const VERDICT = {
+    good:    { label: '伸展期', text: '全体に運気は上向き。攻めに転じてよい好機で、新規・拡大・人脈づくりに向く時期です。' },
+    neutral: { label: '調整期', text: '整えと充電の時期。大きく広げるより、内実を固め足場を整えると次の伸びにつながります。' },
+    bad:     { label: '守勢期', text: '守りと整理の時期。大きな決断・移動は慎重に。無理をせず力を蓄えるのが結果的に吉です。' }
+  };
+  function clip(s, n) { s = (s || '').toString(); return s.length > n ? s.slice(0, n) + '…' : s; }
+
+  function renderSougouShindan(r, consult) {
+    const el = $('o-sougou-shindan');
+    if (!el) return;
+    const honmeisei = r.birth.honmeisei;
+    const DU = global.DaiUn;
+    const KZ = global.KyuZasuruData;
+
+    // 本年の位相 → 総評トーン
+    let phase = null;
+    if (DU) phase = DU.phaseOf(honmeisei, r.consult.yearCenter);
+    const kind = phase ? phase.kind : 'neutral';
+    const v = VERDICT[kind] || VERDICT.neutral;
+
+    let html = `<div class="ss-verdict ss-${kind}"><span class="ss-badge">${esc(v.label)}</span>`
+      + `<span class="ss-lead">${esc(v.text)}</span></div>`;
+
+    const items = [];
+    // 基本
+    items.push(`<b>基本</b> 本命星 <em>${STAR(honmeisei)}</em>／月命星 ${STAR(r.birth.getsumeisei)}／宮傾斜 ${esc(r.bottom.keisha)}`);
+    // 本年の運気
+    if (phase) items.push(`<b>本年の運気</b> <em>${esc(phase.name)}</em> — ${esc(phase.desc)}`);
+    // 年同会・月同会
+    const toshiPos = r.bottom.doukai.toshiPos, tsukiPos = r.bottom.doukai.tsukiPos;
+    if (typeof toshiPos === 'number') {
+      const kyu = KYU_NAME(toshiPos);
+      const z = (KZ && kyu) ? KZ.get(kyu) : null;
+      items.push(`<b>年同会</b> ${esc(kyu)}（同会星 ${STAR(r.bottom.doukai.toshi)}）${z ? ' — ' + esc(clip(z, 46)) : ''}`);
+    }
+    if (typeof tsukiPos === 'number' && tsukiPos !== toshiPos) {
+      const kyu = KYU_NAME(tsukiPos);
+      const z = (KZ && kyu) ? KZ.get(kyu) : null;
+      items.push(`<b>月同会</b> ${esc(kyu)}（同会星 ${STAR(r.bottom.doukai.tsuki)}）${z ? ' — ' + esc(clip(z, 46)) : ''}`);
+    }
+    // 厄年
+    const YK = global.Yakudoshi;
+    if (YK && global.SolarTerms) {
+      try {
+        const sm = global.SolarTerms.getSetsuMonth(consult);
+        const yi = YK.upcoming(honmeisei, sm.setsuYear, 3);
+        const now = yi.upcoming.find(x => x.yearsAway === 0);
+        if (now) items.push(`<b>厄年</b> 本年は<em class="ss-warn">${esc(now.kind)}</em>に該当（本厄年=${now.honyakuYear}）。参拝・お祓いの検討を。`);
+      } catch (e) {}
+    }
+    // 姓名判断(総格)
+    const SD = global.SeimeiData;
+    const nameRaw = ($('f-name') ? $('f-name').value : '').trim();
+    if (SD && nameRaw) {
+      const parts = nameRaw.split(/[\s　]+/).filter(Boolean);
+      let so;
+      if (parts.length >= 2) so = SD.gokaku(parts[0], parts.slice(1).join('')).soukaku;
+      else { const c = SD.count(parts[0]); so = { n: c.total, fortune: SD.fortune(c.total) }; }
+      if (so && so.fortune) items.push(`<b>姓名（総格）</b> ${so.n}画 <em>${esc(so.fortune.kind)}</em> — ${esc(so.fortune.text)}`);
+    }
+    // 開運の一手
+    const KS = global.KaiunShishin;
+    if (KS) { const d = KS.get(honmeisei); if (d && d.action) items.push(`<b>開運の一手</b> ${esc(d.action)}`); }
+
+    html += '<ul class="ss-list">' + items.map(x => `<li>${x}</li>`).join('') + '</ul>';
+    html += '<div class="ss-foot">※ 計算結果からの自動所見です。最終的な総合判断は下欄に鑑定者がご記入ください。</div>';
+    el.innerHTML = html;
+  }
+
+  // ============================================================
   // メイン: 計算結果ごとに全カードを描画
   // ============================================================
   function render(r, birth, consult) {
     _lastR = r;
     if (!consult) consult = new Date($('f-consult') && $('f-consult').value || Date.now());
+    try { renderSougouShindan(r, consult); } catch (e) { console.warn('sougou-shindan', e); }
     try { renderSeimei(); } catch (e) { console.warn('seimei', e); }
     try { renderNacchin(r); } catch (e) { console.warn('nacchin', e); }
     try { renderKaiun(r); } catch (e) { console.warn('kaiun', e); }
