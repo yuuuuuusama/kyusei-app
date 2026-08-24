@@ -1,0 +1,19 @@
+# 九星鑑定を配るための設定。
+#
+# 中身は静的な HTML・JS だけなので、動かす本体（Worker のコード）は要らない。
+# 置いてあるものをそのまま配る。
+#
+#   npx wrangler deploy        載せる
+#   npx wrangler versions list 過去の版を見る
+#
+# 鑑定の記録は各自のブラウザ（localStorage）に残る。
+# こちらへは送られないので、URL を知らせても記録は共有されない。
+
+name = "kyusei-app"
+compatibility_date = "2026-05-01"
+
+[assets]
+directory = "."
+# 見つからない道は index.html へ返さず、そのまま 404 にする。
+# 画面ごとに別の html があるため。
+not_found_handling = "404-page"

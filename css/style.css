@@ -2723,3 +2723,280 @@ html, body {
     box-shadow: none !important;
   }
 }
+
+/* ================================================================
+ * 詳細鑑定ナビ ── 31項目を7分類に畳み、探して辿り着けるようにする帯
+ * 構成: 検索 / 分類チップ / 件数・一括開閉
+ * ================================================================ */
+
+:root {
+  --cat-meishiki: #2a4359;   /* 藍 */
+  --cat-unki:     #8b6b2e;   /* 古金 */
+  --cat-houi:     #a83232;   /* 朱 */
+  --cat-kaiun:    #b06c2e;   /* 柿 */
+  --cat-aishou:   #7a4a63;   /* 梅紫 */
+  --cat-koyomi:   #6b7c4f;   /* 抹茶 */
+  --cat-dougu:    #5a5148;   /* 鼠 */
+  --h-app-header: 44px;      /* JS が実測値で上書きする */
+}
+
+.detail-nav {
+  position: sticky;
+  top: var(--h-app-header);
+  z-index: 40;
+  margin: 0 0 14px;
+  padding: 8px 10px 7px;
+  background: linear-gradient(180deg, #fbf6e8 0%, #f3ead2 100%);
+  border: 1px solid var(--c-border-soft);
+  border-radius: 3px;
+  box-shadow: var(--shadow-card);
+}
+.detail-nav::after {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-top: 7px;
+  background: var(--grad-kin-line);
+  opacity: .7;
+}
+
+/* ── 検索 ── */
+.dn-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.dn-search-icon {
+  position: absolute;
+  left: 9px;
+  font-size: 12px;
+  opacity: .55;
+  pointer-events: none;
+}
+.dn-search input {
+  width: 100%;
+  font-family: var(--font-jp);
+  font-size: 14px;               /* iOS でフォーカス時に拡大しない下限 */
+  padding: 8px 30px 8px 28px;
+  border: 1px solid var(--c-border-fine);
+  border-radius: 3px;
+  background: var(--c-paper);
+  color: var(--c-sumi);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.dn-search input::-webkit-search-decoration,
+.dn-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.dn-search input::placeholder { color: #a2917a; }
+.dn-search input:focus {
+  outline: none;
+  border-color: var(--c-kin);
+  box-shadow: 0 0 0 2px rgba(184,146,74,.22);
+}
+.dn-clear {
+  position: absolute;
+  right: 5px;
+  width: 22px; height: 22px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(61,42,26,.10);
+  color: var(--c-sumi-soft);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+}
+.dn-clear:hover { background: rgba(61,42,26,.20); }
+
+/* ── 分類チップ (iPhone では横スクロール) ── */
+.dn-chips {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+.dn-chips::-webkit-scrollbar { display: none; }
+.dn-chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-jp);
+  font-size: 13px;
+  letter-spacing: .06em;
+  padding: 6px 11px;
+  min-height: 32px;              /* 指で押せる高さ */
+  border: 1px solid var(--c-border-fine);
+  border-radius: 16px;
+  background: var(--c-paper);
+  color: var(--c-sumi-soft);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .18s var(--ease-silk), color .18s, border-color .18s, box-shadow .18s;
+}
+.dn-chip:hover { border-color: var(--c-kin); }
+.dn-chip.is-on {
+  background: var(--grad-foil);
+  border-color: var(--c-kin-deep);
+  color: #fff8e4;
+  box-shadow: 0 2px 6px rgba(40,25,10,.18);
+}
+.dn-n {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  padding: 0 4px;
+  min-width: 15px;
+  text-align: center;
+  border-radius: 8px;
+  background: rgba(61,42,26,.09);
+  color: var(--c-sumi-soft);
+}
+.dn-chip.is-on .dn-n { background: rgba(255,255,255,.26); color: #fff8e4; }
+
+/* 分類ごとの色は小さな点で示す (チップ・見出し・カードで一致させる) */
+.dn-chip[data-cat]:not([data-cat="all"])::before {
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--cat-dot, var(--c-kin));
+  box-shadow: 0 0 0 1px rgba(255,255,255,.5) inset;
+  flex: 0 0 auto;
+}
+.dn-chip[data-cat="meishiki"] { --cat-dot: var(--cat-meishiki); }
+.dn-chip[data-cat="unki"]     { --cat-dot: var(--cat-unki); }
+.dn-chip[data-cat="houi"]     { --cat-dot: var(--cat-houi); }
+.dn-chip[data-cat="kaiun"]    { --cat-dot: var(--cat-kaiun); }
+.dn-chip[data-cat="aishou"]   { --cat-dot: var(--cat-aishou); }
+.dn-chip[data-cat="koyomi"]   { --cat-dot: var(--cat-koyomi); }
+.dn-chip[data-cat="dougu"]    { --cat-dot: var(--cat-dougu); }
+.dn-chip.is-on::before { box-shadow: 0 0 0 1px rgba(255,255,255,.85); }
+
+/* ── 件数と一括開閉 ── */
+.dn-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 7px;
+}
+.dn-count {
+  flex: 1;
+  font-family: var(--font-jp);
+  font-size: 11px;
+  color: var(--c-kin-deep);
+  letter-spacing: .06em;
+}
+.dn-act {
+  font-family: var(--font-jp);
+  font-size: 11px;
+  letter-spacing: .06em;
+  padding: 5px 9px;
+  min-height: 28px;
+  border: 1px solid var(--c-border-fine);
+  border-radius: 3px;
+  background: var(--c-paper);
+  color: var(--c-sumi-soft);
+  cursor: pointer;
+}
+.dn-act:hover { border-color: var(--c-kin); color: var(--c-sumi); }
+
+.dn-empty {
+  font-family: var(--font-jp);
+  font-size: 12px;
+  text-align: center;
+  color: var(--c-kin-deep);
+  padding: 24px 0;
+  margin: 0;
+}
+
+/* ── 分類の見出し ── */
+.cat-group { margin: 0 0 4px; }
+.cat-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--font-jp);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .18em;
+  color: var(--c-sumi);
+  margin: 18px 0 8px;
+  padding-left: 10px;
+  border-left: 3px solid var(--c-kin);
+}
+.cat-note {
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  color: var(--c-kin-deep);
+  font-weight: normal;
+}
+.cat-group[data-cat="meishiki"] .cat-head { border-left-color: var(--cat-meishiki); }
+.cat-group[data-cat="unki"]     .cat-head { border-left-color: var(--cat-unki); }
+.cat-group[data-cat="houi"]     .cat-head { border-left-color: var(--cat-houi); }
+.cat-group[data-cat="kaiun"]    .cat-head { border-left-color: var(--cat-kaiun); }
+.cat-group[data-cat="aishou"]   .cat-head { border-left-color: var(--cat-aishou); }
+.cat-group[data-cat="koyomi"]   .cat-head { border-left-color: var(--cat-koyomi); }
+.cat-group[data-cat="dougu"]    .cat-head { border-left-color: var(--cat-dougu); }
+
+/* カード左端の飾り線も分類色に揃える (どの分類の項目か一目で分かる) */
+.detail-card[data-cat="meishiki"] > summary::before { background: var(--cat-meishiki); }
+.detail-card[data-cat="unki"]     > summary::before { background: var(--cat-unki); }
+.detail-card[data-cat="houi"]     > summary::before { background: var(--cat-houi); }
+.detail-card[data-cat="kaiun"]    > summary::before { background: var(--cat-kaiun); }
+.detail-card[data-cat="aishou"]   > summary::before { background: var(--cat-aishou); }
+.detail-card[data-cat="koyomi"]   > summary::before { background: var(--cat-koyomi); }
+.detail-card[data-cat="dougu"]    > summary::before { background: var(--cat-dougu); }
+
+/* 見出しを主役にし、通し番号は控えめな参照符号に落とす */
+.detail-card > summary .num {
+  background: transparent;
+  color: var(--c-kin-deep);
+  font-size: 10px;
+  opacity: .7;
+  padding: 0;
+  margin-right: 6px;
+  box-shadow: none;
+}
+.detail-card > summary {
+  font-size: 14px;
+  padding: 11px 34px 11px 16px;
+  line-height: 1.4;
+}
+.detail-card > summary .hint { display: block; margin-left: 0; margin-top: 3px; }
+
+/* 絞り込みで外れた項目 */
+.detail-card.is-hidden,
+.cat-group.is-hidden { display: none; }
+
+@media (max-width: 640px) {
+  .detail-nav { margin-left: -4px; margin-right: -4px; padding: 7px 8px 6px; }
+  .cat-head { font-size: 13px; letter-spacing: .12em; margin: 14px 0 7px; }
+  .cat-head { flex-wrap: wrap; gap: 2px 8px; }
+  .detail-card > summary { font-size: 13.5px; padding: 12px 30px 12px 14px; }
+  .dn-act { font-size: 10.5px; padding: 5px 7px; }
+}
+
+/* 印刷時は分類のまま全項目を出す (絞り込みは画面上の都合にすぎない) */
+@media print {
+  .detail-nav, .dn-empty { display: none !important; }
+  .detail-card.is-hidden { display: block !important; }
+  .cat-group.is-hidden { display: block !important; }
+  .cat-head {
+    font-size: 9.5pt !important;
+    margin: 6pt 0 3pt !important;
+    padding-left: 4pt !important;
+    border-left: 2pt solid #000 !important;
+    color: #000 !important;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  .cat-note { display: none !important; }
+  .detail-card > summary { font-size: 8.5pt !important; padding: 2pt 4pt !important; }
+  .detail-card > summary .num {
+    background: transparent !important;
+    color: #000 !important;
+    opacity: 1 !important;
+  }
+}

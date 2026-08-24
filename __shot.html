@@ -1,0 +1,18 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#111}</style></head><body>
+<iframe id="f" src="/index.html" style="width:390px;height:1500px;border:0;display:block"></iframe>
+<script>
+const CAT = new URLSearchParams(location.search).get('cat') || '';
+document.getElementById('f').addEventListener('load', () => {
+  const d = document.getElementById('f').contentDocument, w = document.getElementById('f').contentWindow;
+  d.getElementById('f-name').value = '山田太郎';
+  d.getElementById('f-birth').value = '1975-06-15T09:30';
+  d.getElementById('f-consult').value = '2026-08-24T10:00';
+  d.getElementById('btn-compute').click();
+  if (CAT) d.querySelector(`.dn-chip[data-cat="${CAT}"]`).click();
+  else d.querySelector('.dn-chip[data-cat="all"]').click();
+  setTimeout(() => {
+    const nav = d.getElementById('detail-nav');
+    w.scrollTo(0, nav.getBoundingClientRect().top + w.scrollY - d.querySelector('.app-header').offsetHeight - 60);
+  }, 300);
+});
+</script></body></html>
