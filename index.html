@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#2b1a0e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="css/style.css?v=105">
+<link rel="stylesheet" href="css/style.css?v=106">
 <title>九星 鑑定書</title>
 </head>
 <body>
@@ -26,50 +26,85 @@
 <main class="page">
   <h2 class="page-title">九星　鑑定書</h2>
 
-  <!-- ===== 入力ヘッダー ===== -->
-  <table class="form-table">
-    <tbody>
-      <tr>
-        <th class="th-name"><span class="label-full">相談者氏名</span><span class="label-short">氏名</span></th>
-        <td class="td-name"><input type="text" id="f-name" placeholder="氏名"></td>
-        <th class="th-gender">性別</th>
-        <td class="td-gender">
-          <select id="f-gender">
-            <option value="">—</option>
-            <option value="男">男</option>
-            <option value="女">女</option>
-          </select>
-        </td>
-        <th class="th-age">年齢</th>
-        <td class="td-age"><input type="number" id="f-age" min="0" max="120" inputmode="numeric" placeholder="歳"><span id="o-kazoe" class="kazoe-badge"></span></td>
-      </tr>
-      <tr>
-        <th>生年月日</th>
-        <td class="td-dt" colspan="5"><div class="dt-picker" data-target="f-birth"></div></td>
-      </tr>
-      <tr>
-        <th class="th-meishiki">命式</th>
-        <td class="td-meishiki" colspan="5"><span id="o-meishiki" class="auto"></span></td>
-      </tr>
-      <tr>
-        <th>相談日</th>
-        <td class="td-dt" colspan="5"><div class="dt-picker" data-target="f-consult"></div><button type="button" class="btn secondary btn-today no-print" id="btn-today">今日</button></td>
-      </tr>
-      <tr>
-        <th class="th-meishiki">相談日九星</th>
-        <td class="td-meishiki" colspan="5"><span id="o-consult-summary" class="auto"></span></td>
-      </tr>
-      <tr>
-        <th class="th-topic">相談内容</th>
-        <td class="td-topic" colspan="5">
-          <textarea id="f-topic" rows="4" placeholder="相談内容"></textarea>
-          <div class="memo-tools no-print" data-target="f-topic" data-section="">
-            <button type="button" class="mt-btn mt-voice">🎤 音声</button>
+  <!-- ===== 入力 ===== -->
+  <div class="fm">
+
+    <section class="fm-group">
+      <h3 class="fm-title">相談者</h3>
+      <div class="fm-list">
+        <div class="fm-row">
+          <label class="fm-label" for="f-name">氏名</label>
+          <div class="fm-value">
+            <input type="text" id="f-name" placeholder="山田 太郎" autocomplete="off" autocapitalize="off">
           </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </div>
+
+        <div class="fm-row">
+          <span class="fm-label" id="lbl-gender">性別</span>
+          <div class="fm-value">
+            <!-- 見た目はセグメント。値は下の select が持ち、既存の保存処理はそのまま動く -->
+            <div class="seg" role="radiogroup" aria-labelledby="lbl-gender" data-target="f-gender">
+              <button type="button" class="seg-btn" data-v="男"  role="radio" aria-checked="false">男</button>
+              <button type="button" class="seg-btn" data-v="女"  role="radio" aria-checked="false">女</button>
+              <button type="button" class="seg-btn is-on" data-v="" role="radio" aria-checked="true">未記入</button>
+            </div>
+            <select id="f-gender" class="fm-shadow-input" tabindex="-1" aria-hidden="true">
+              <option value=""></option>
+              <option value="男">男</option>
+              <option value="女">女</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fm-row fm-row-stack">
+          <span class="fm-label">生年月日</span>
+          <div class="fm-value"><div class="dt-picker" data-target="f-birth"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fm-group">
+      <h3 class="fm-title">相談</h3>
+      <div class="fm-list">
+        <div class="fm-row fm-row-stack">
+          <span class="fm-label">相談日<button type="button" class="fm-mini no-print" id="btn-today">今日</button></span>
+          <div class="fm-value"><div class="dt-picker" data-target="f-consult"></div></div>
+        </div>
+
+        <div class="fm-row fm-row-stack">
+          <label class="fm-label" for="f-topic">相談内容</label>
+          <div class="fm-value">
+            <textarea id="f-topic" rows="4" placeholder="お話をそのまま書き留めてください"></textarea>
+            <div class="memo-tools no-print" data-target="f-topic" data-section="">
+              <button type="button" class="mt-btn mt-voice">🎤 音声</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fm-group fm-group-auto">
+      <h3 class="fm-title">自動で出るもの<span class="fm-title-note">触らなくて構いません</span></h3>
+      <div class="fm-list">
+        <div class="fm-row">
+          <span class="fm-label">年齢</span>
+          <div class="fm-value fm-auto">
+            <input type="number" id="f-age" min="0" max="120" inputmode="numeric" placeholder="—" readonly>
+            <span class="fm-unit">歳</span><span id="o-kazoe" class="kazoe-badge"></span>
+          </div>
+        </div>
+        <div class="fm-row">
+          <span class="fm-label">命式</span>
+          <div class="fm-value fm-auto"><span id="o-meishiki" class="auto"></span></div>
+        </div>
+        <div class="fm-row">
+          <span class="fm-label">相談日九星</span>
+          <div class="fm-value fm-auto"><span id="o-consult-summary" class="auto"></span></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
 
   <div class="btn-row no-print">
     <button class="btn" id="btn-compute">計算する</button>
@@ -564,47 +599,48 @@
 
 </main>
 
-<script src="js/solar-terms.js?v=105"></script>
-<script src="js/eto.js?v=105"></script>
-<script src="js/kyusei.js?v=105"></script>
-<script src="js/kantei.js?v=105"></script>
-<script src="js/storage.js?v=105"></script>
-<script src="js/dt-picker.js?v=105"></script>
-<script src="js/eto-table.js?v=105"></script>
-<script src="js/keisha-data.js?v=105"></script>
-<script src="js/kyu-zasuru-data.js?v=105"></script>
-<script src="js/seigetsu-data.js?v=105"></script>
-<script src="js/seinichi-data.js?v=105"></script>
-<script src="js/seimatsuri-data.js?v=105"></script>
-<script src="js/nijuhasshuku-data.js?v=105"></script>
-<script src="js/koyomi.js?v=105"></script>
-<script src="js/eto-relations.js?v=105"></script>
-<script src="js/houi-analysis.js?v=105"></script>
-<script src="js/un-tables.js?v=105"></script>
-<script src="js/rekichu.js?v=105"></script>
-<script src="js/gogyou-balance.js?v=105"></script>
-<script src="js/aishou.js?v=105"></script>
-<script src="js/senjitsu.js?v=105"></script>
-<script src="js/dai-un.js?v=105"></script>
-<script src="js/gemmei-data.js?v=105"></script>
-<script src="js/kimon.js?v=105"></script>
-<script src="js/yakudoshi.js?v=105"></script>
-<script src="js/zoukan.js?v=105"></script>
-<script src="js/shichijuni-kou.js?v=105"></script>
-<script src="js/sekki-timeline.js?v=105"></script>
-<script src="js/snippets.js?v=105"></script>
-<script src="js/draft-gen.js?v=105"></script>
-<script src="js/voice.js?v=105"></script>
-<script src="js/seimei-data.js?v=105"></script>
-<script src="js/nacchin-data.js?v=105"></script>
-<script src="js/kaiun-shishin-data.js?v=105"></script>
-<script src="js/kenkou-data.js?v=105"></script>
-<script src="js/jishou-data.js?v=105"></script>
-<script src="js/yuki-data.js?v=105"></script>
-<script src="js/kyohoui-data.js?v=105"></script>
-<script src="js/kantei-ext.js?v=105"></script>
-<script src="js/app.js?v=105"></script>
-<script src="js/detail-nav.js?v=105"></script>
+<script src="js/solar-terms.js?v=106"></script>
+<script src="js/eto.js?v=106"></script>
+<script src="js/kyusei.js?v=106"></script>
+<script src="js/kantei.js?v=106"></script>
+<script src="js/storage.js?v=106"></script>
+<script src="js/dt-picker.js?v=106"></script>
+<script src="js/eto-table.js?v=106"></script>
+<script src="js/keisha-data.js?v=106"></script>
+<script src="js/kyu-zasuru-data.js?v=106"></script>
+<script src="js/seigetsu-data.js?v=106"></script>
+<script src="js/seinichi-data.js?v=106"></script>
+<script src="js/seimatsuri-data.js?v=106"></script>
+<script src="js/nijuhasshuku-data.js?v=106"></script>
+<script src="js/koyomi.js?v=106"></script>
+<script src="js/eto-relations.js?v=106"></script>
+<script src="js/houi-analysis.js?v=106"></script>
+<script src="js/un-tables.js?v=106"></script>
+<script src="js/rekichu.js?v=106"></script>
+<script src="js/gogyou-balance.js?v=106"></script>
+<script src="js/aishou.js?v=106"></script>
+<script src="js/senjitsu.js?v=106"></script>
+<script src="js/dai-un.js?v=106"></script>
+<script src="js/gemmei-data.js?v=106"></script>
+<script src="js/kimon.js?v=106"></script>
+<script src="js/yakudoshi.js?v=106"></script>
+<script src="js/zoukan.js?v=106"></script>
+<script src="js/shichijuni-kou.js?v=106"></script>
+<script src="js/sekki-timeline.js?v=106"></script>
+<script src="js/snippets.js?v=106"></script>
+<script src="js/draft-gen.js?v=106"></script>
+<script src="js/voice.js?v=106"></script>
+<script src="js/seimei-data.js?v=106"></script>
+<script src="js/nacchin-data.js?v=106"></script>
+<script src="js/kaiun-shishin-data.js?v=106"></script>
+<script src="js/kenkou-data.js?v=106"></script>
+<script src="js/jishou-data.js?v=106"></script>
+<script src="js/yuki-data.js?v=106"></script>
+<script src="js/kyohoui-data.js?v=106"></script>
+<script src="js/kantei-ext.js?v=106"></script>
+<script src="js/app.js?v=106"></script>
+<script src="js/detail-nav.js?v=106"></script>
+<script src="js/form-ui.js?v=106"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));
