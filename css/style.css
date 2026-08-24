@@ -3364,3 +3364,138 @@ html, body {
   .fm .dt-row-wareki { background: none !important; box-shadow: none !important; padding: 0 !important; }
   .fm .dt-picker { gap: 0 6px !important; }
 }
+
+/* ================================================================
+ * 日時プルダウン ── 性別のセグメントと同じ手ざわりに揃える。
+ * 沈んだ受け皿 (.dt-row) の上に、浮いた札 (select) が並ぶ。
+ * 押すと札が沈む。和暦の受け皿だけ淡い箔地にして西暦と見分ける。
+ * ================================================================ */
+
+.fm .dt-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  width: 100%;
+}
+
+.fm .dt-picker .dt-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 3px;
+  flex: 0 0 auto;
+  padding: 3px 7px 3px 4px;
+  border-radius: 10px;
+  background: rgba(61,42,26,.07);
+  box-shadow: inset 0 1px 2px rgba(40,25,10,.10),
+              inset 0 0 0 1px rgba(184,146,74,.16);
+}
+/* 和暦の受け皿は淡い箔地。西暦と取り違えないように */
+.fm .dt-picker .dt-row-wareki {
+  background: rgba(184,146,74,.26);
+  box-shadow: inset 0 1px 2px rgba(139,107,46,.18),
+              inset 0 0 0 1px rgba(184,146,74,.42);
+}
+.fm .dt-picker .dt-row-wareki .unit { color: var(--c-kin-deep); }
+
+/* 浮いた札 */
+.fm .dt-picker select {
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: var(--font-jp);
+  font-size: 14px;
+  letter-spacing: .02em;
+  color: var(--c-sumi);
+  background-color: var(--c-paper);
+  /* 右端の小さな山形。押せることが一目で分かるように */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='6' viewBox='0 0 9 6'><path d='M1 1.4L4.5 4.9L8 1.4' fill='none' stroke='%238b6b2e' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  border: 0;
+  border-radius: 7px;
+  padding: 0 17px 0 8px;
+  height: 32px;                       /* 指で押せる高さ */
+  min-width: 0;
+  flex: 0 0 auto;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(40,25,10,.16),
+              0 0 0 1px rgba(184,146,74,.30),
+              inset 0 1px 0 rgba(255,255,255,.75);
+  transition: box-shadow .14s var(--ease-silk), transform .14s var(--ease-silk), background-color .14s;
+}
+/* 押している間は札が沈む */
+.fm .dt-picker select:active {
+  transform: translateY(1px);
+  background-color: #f4ecd8;
+  box-shadow: inset 0 1px 3px rgba(40,25,10,.20),
+              0 0 0 1px rgba(184,146,74,.34);
+}
+.fm .dt-picker select:focus {
+  outline: none;
+  box-shadow: 0 1px 2px rgba(40,25,10,.16),
+              0 0 0 2px var(--c-kin),
+              inset 0 1px 0 rgba(255,255,255,.75);
+}
+.fm .dt-picker select:hover { background-color: #fffdf6; }
+
+/* 幅は桁数に合わせる。中身が動かないよう固定で持つ */
+.fm .dt-picker select.era { width: 4.9em; }
+.fm .dt-picker select.y   { width: 5.1em; }
+.fm .dt-picker select.wy,
+.fm .dt-picker select.M,
+.fm .dt-picker select.d,
+.fm .dt-picker select.h,
+.fm .dt-picker select.mi  { width: 3.5em; }
+
+.fm .dt-picker .unit {
+  font-family: var(--font-jp);
+  font-size: 11px;
+  color: var(--c-sumi-soft);
+  flex: 0 0 auto;
+  margin: 0 2px 0 0;
+  letter-spacing: 0;
+}
+
+@media (max-width: 640px) {
+  .fm .dt-picker { gap: 5px; }
+  .fm .dt-picker .dt-row { padding: 3px 6px 3px 3px; gap: 2px; }
+  .fm .dt-picker select { font-size: 13.5px; height: 31px; padding: 0 16px 0 7px; }
+  .fm .dt-picker select.era { width: 4.7em; }
+  .fm .dt-picker select.y   { width: 4.9em; }
+  .fm .dt-picker select.wy,
+  .fm .dt-picker select.M,
+  .fm .dt-picker select.d,
+  .fm .dt-picker select.h,
+  .fm .dt-picker select.mi  { width: 3.3em; }
+  .fm .dt-picker .unit { font-size: 10px; margin-right: 1px; }
+}
+
+/* 印刷: 立体の演出は落とし、値だけを平らに出す */
+@media print {
+  .fm .dt-picker { gap: 0 5pt !important; }
+  .fm .dt-picker .dt-row,
+  .fm .dt-picker .dt-row-wareki {
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    border-radius: 0 !important;
+  }
+  .fm .dt-picker select {
+    background: none !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    height: auto !important;
+    padding: 0 1pt !important;
+    width: auto !important;
+    font-size: 8.5pt !important;
+    text-align: left !important;
+    text-align-last: left !important;
+    color: #000 !important;
+  }
+  .fm .dt-picker .unit { font-size: 7.5pt !important; margin: 0 !important; }
+}

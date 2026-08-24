@@ -189,13 +189,14 @@
       return s;
     }
 
-    // 配置: 和暦の組と西暦の組。狭い画面では2行に折り返る
+    // 配置: 和暦の年 / 西暦の年 / 月日 / 時刻 の4つの受け皿。
+    // 二通りの書き方が違うのは年だけなので、年同士を隣に並べる。
+    // 受け皿の単位で折り返るため、狭い画面でも数字と単位が離れない
     container.innerHTML = '';
-    container.appendChild(row('dt-row-wareki', [eraSel, wySel, unitSpan('年')]));
-    container.appendChild(row('dt-row-seireki', [
-      ySel, unitSpan('年'), MSel, unitSpan('月'), dSel, unitSpan('日'),
-      hSel, unitSpan('時'), miSel, unitSpan('分')
-    ]));
+    container.appendChild(row('dt-row-wareki',  [eraSel, wySel, unitSpan('年')]));
+    container.appendChild(row('dt-row-seireki', [ySel, unitSpan('年')]));
+    container.appendChild(row('dt-row-md',      [MSel, unitSpan('月'), dSel, unitSpan('日')]));
+    container.appendChild(row('dt-row-hm',      [hSel, unitSpan('時'), miSel, unitSpan('分')]));
     container.appendChild(hidden);
 
     rebuildDays();
