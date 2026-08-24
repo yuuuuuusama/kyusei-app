@@ -362,10 +362,24 @@ html, body {
 /* 日時プルダウン */
 .dt-picker {
   display: flex;
+  flex-wrap: wrap;            /* 和暦の組と西暦の組。狭ければ2行になる */
+  gap: 3px 10px;
+  align-items: baseline;
+  width: 100%;
+}
+.dt-row {
+  display: flex;
   flex-wrap: nowrap;
   gap: 1px;
   align-items: baseline;
-  width: 100%;
+  flex: 0 0 auto;
+}
+/* 和暦の組は西暦と取り違えないよう、淡い箔地で括る */
+.dt-row-wareki {
+  padding: 1px 6px 1px 4px;
+  border-radius: 3px;
+  background: rgba(184,146,74,.10);
+  box-shadow: inset 0 0 0 1px rgba(184,146,74,.22);
 }
 .dt-picker select {
   font-family: inherit;
@@ -384,6 +398,8 @@ html, body {
 .dt-picker select.y { min-width: 4.4em; flex: 0 0 auto; }
 .dt-picker select.M, .dt-picker select.d { min-width: 2.6em; }
 .dt-picker select.h, .dt-picker select.mi { min-width: 2.8em; }
+.dt-picker select.era { min-width: 4.2em; font-family: var(--font-jp); }
+.dt-picker select.wy { min-width: 3.0em; }
 .dt-picker .unit {
   font-size: 11px;
   color: var(--c-sumi-soft);
@@ -412,6 +428,10 @@ html, body {
   .dt-picker select.y { min-width: 3.8em; }
   .dt-picker select.M, .dt-picker select.d { min-width: 2.3em; }
   .dt-picker select.h, .dt-picker select.mi { min-width: 2.5em; }
+  .dt-picker select.era { min-width: 4.0em; }
+  .dt-picker select.wy { min-width: 2.8em; }
+  .dt-picker { gap: 3px 6px; }
+  .dt-row-wareki { padding: 1px 4px 1px 3px; }
   .dt-picker .unit {
     font-size: 9px;
     margin: 0 0 0 0;
@@ -2464,6 +2484,12 @@ html, body {
   .form-table .dt-picker select { font-size: 8.5pt !important; padding: 0 1pt !important; min-width: 0 !important; border-color: #000 !important; }
   .form-table .dt-picker .unit { font-size: 7.5pt !important; }
   .form-table .dt-picker .wareki { display: none !important; }
+  .form-table .dt-row-wareki {
+    background: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+  .form-table .dt-picker { gap: 0 6px !important; }
   .form-table textarea { resize: none !important; }
   .form-table td.td-topic {
     vertical-align: top !important;
