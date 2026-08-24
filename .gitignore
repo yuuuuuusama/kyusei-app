@@ -4,3 +4,9 @@ _misc/
 *.pdf
 *.xlsx
 *.zip
+
+# Cloudflare の手元キャッシュ（アカウントIDが入る）
+.wrangler/
+
+# 動作確認用の使い捨てページ
+__*.html

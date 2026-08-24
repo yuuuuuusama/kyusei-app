@@ -3000,3 +3000,23 @@ html, body {
     opacity: 1 !important;
   }
 }
+
+/* iPhone 幅ではヘッダーが2行に折り返していたため、1行に収める
+ * (帯が厚くなるとスティッキーな詳細ナビの位置も下がってしまう) */
+@media (max-width: 640px) {
+  .app-header { padding: 10px 12px; gap: 8px; flex-wrap: nowrap; }
+  .app-header h1 {
+    font-size: 14px;
+    letter-spacing: .10em;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+  .app-header nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+  .app-header nav a { margin-left: 0; font-size: 12px; letter-spacing: .02em; }
+}
