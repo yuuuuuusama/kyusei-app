@@ -1061,7 +1061,6 @@
     if (!el) return;
     el.innerHTML = '';
     const DRAW_ORDER = [8, 7, 6, 5, 4, 3, 2, 1, 0];
-    const DIRS_KAKKA = { 0:'乾',1:'坎',2:'艮',3:'兌',4:'',5:'震',6:'坤',7:'離',8:'巽' };
     const DEFAULT_POS_STAR = Kyusei.DEFAULT_POSITION_STARS;
     const STEMS = window.Eto.STEMS;
     const BRANCHES = window.Eto.BRANCHES;
@@ -1098,11 +1097,6 @@
       if (pos === 4) cell.classList.add('center');
       if (pos === honmeiPos) cell.classList.add('honmei');
       if (pos === taichuPos) cell.classList.add('taichu');
-
-      const kakkaSpan = document.createElement('span');
-      kakkaSpan.className = 'kakka';
-      kakkaSpan.textContent = DIRS_KAKKA[pos];
-      cell.appendChild(kakkaSpan);
 
       // 中央行: 九星 + 干支 (横並び)
       const mainRow = document.createElement('div');

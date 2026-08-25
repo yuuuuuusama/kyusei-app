@@ -529,14 +529,6 @@ html, body {
   padding: 1px;
   color: var(--c-sumi);
 }
-.ban-cell-inner .kakka {
-  font-size: 8px;
-  color: var(--c-kin-deep);
-  position: absolute;
-  top: 1px;
-  left: 2px;
-  letter-spacing: 0;
-}
 .ban-cell-inner .cell-main {
   display: flex;
   flex-direction: row;
@@ -617,7 +609,6 @@ html, body {
 @media (min-width: 641px) {
   .ban-cell-inner .cell-main .star { font-size: 14px; }
   .ban-cell-inner .cell-main .eto { font-size: 11px; }
-  .ban-cell-inner .kakka { font-size: 9px; }
   .ban-cell-inner .cell-marks .mark { font-size: 11px; }
   .ban .perimeter-age { font-size: 10px; }
 }
@@ -2546,7 +2537,6 @@ html, body {
   }
   .ban-cell-inner .cell-main .star { font-size: 8.5pt !important; }
   .ban-cell-inner .cell-main .eto { font-size: 6pt !important; }
-  .ban-cell-inner .kakka { font-size: 5pt !important; top: 0 !important; left: 1px !important; }
   .ban-cell-inner .cell-marks .mark { font-size: 6pt !important; }
   .ban .perimeter-age { font-size: 5pt !important; padding: 0 1pt !important; border: none !important; background: #fff !important; }
   .ban-cell-inner.center { background: #f0e0a0 !important; box-shadow: none !important; }

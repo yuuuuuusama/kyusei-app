@@ -35,8 +35,37 @@
     <button class="btn danger" id="btn-clear">全削除</button>
   </div>
 
+  <!-- 取り込み方の選び。confirm を二段に重ねると「キャンセルを押して入れ替える」
+       という分かりにくい作法になるので、その場で選ばせる。 -->
+  <div class="no-print" id="import-choice" hidden
+       style="background:#fff8e6;border:1px solid #e5d5a8;border-radius:8px;padding:12px 14px;margin-bottom:10px;">
+    <p id="import-note" style="font-size:13px;color:#5c4a32;margin:0 0 10px;"></p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn" id="btn-merge">足す</button>
+      <button class="btn danger" id="btn-replace">入れ替える</button>
+      <button class="btn secondary" id="btn-cancel-import">やめる</button>
+    </div>
+    <p style="font-size:11px;color:#8a7a5e;margin:8px 0 0;">
+      足す … 同じ鑑定は読み込んだほうを採り、無いものは残す<br>
+      入れ替える … いまの鑑定を捨てる（直後なら戻せます）
+    </p>
+  </div>
+
+  <div class="btn-row no-print" id="undo-row" hidden
+       style="align-items:center;gap:10px;background:#fff8e6;border:1px solid #e5d5a8;border-radius:8px;padding:8px 12px;">
+    <span id="undo-note" style="font-size:12px;color:#6b5b3e;"></span>
+    <button class="btn secondary" id="btn-undo" style="font-size:12px;padding:4px 10px;">取り込みを戻す</button>
+  </div>
+
   <p style="font-size:12px;color:#888;">
-    データは本端末のブラウザに保存されます。バックアップ・他端末への移行はエクスポート/インポートで行えます。
+    鑑定の記録は<b>この端末の中だけ</b>に残ります。どこへも送られません。<br>
+    ただし端末の空きが乏しくなると、ブラウザが消すことがあります。
+    <b>大切な記録はエクスポートで控えを取ってください。</b>
+    端末を替えるときも、エクスポートした控えをインポートで移します。
+  </p>
+  <p style="font-size:12px;color:#a06b3e;">
+    相談者の氏名・生年月日・お話が入ります。人手に渡す端末では、
+    先に「全削除」で消してください。
   </p>
 
   <ul class="history-list" id="list"></ul>
@@ -95,27 +124,90 @@
     URL.revokeObjectURL(url);
   };
 
+  // 選んでもらうまで、読み込んだ中身をここに預けておく
+  let pending = null;
+  const choice = document.getElementById('import-choice');
+
+  function hideChoice() { pending = null; choice.hidden = true; }
+
+  function runImport(mode) {
+    if (pending === null) return;
+    const text = pending;
+    hideChoice();
+    try {
+      const r = Storage.importJSON(text, mode);
+      render();
+      showUndo();
+      const parts = [];
+      if (r.added) parts.push(`新しく ${r.added} 件`);
+      if (r.updated) parts.push(`読み込んだもので上書き ${r.updated} 件`);
+      if (r.skipped) parts.push(`鑑定として読めず飛ばした ${r.skipped} 件`);
+      alert('取り込みました。\n' + parts.join('\n'));
+    } catch (err) {
+      // 控えを取ってからでないと書き換えないので、ここへ来た時点で手元は無傷
+      alert('取り込めませんでした。\n\n' + err.message + '\n\nいまの鑑定はそのままです。');
+    }
+  }
+
   document.getElementById('file-import').onchange = (e) => {
     const f = e.target.files[0];
     if (!f) return;
+    e.target.value = '';   // 同じ控えをもう一度選べるようにする
     const reader = new FileReader();
     reader.onload = () => {
-      try {
-        Storage.importJSON(reader.result);
-        render();
-        alert('インポートしました');
-      } catch (err) {
-        alert('インポート失敗: ' + err.message);
+      const now = Storage.loadAll().length;
+      if (now === 0) {
+        // 手元が空なら迷う余地がない
+        pending = reader.result;
+        runImport('replace');
+        return;
       }
+      pending = reader.result;
+      document.getElementById('import-note').textContent =
+        `いま ${now} 件の鑑定があります。読み込んだものをどうしますか。`;
+      choice.hidden = false;
+      choice.scrollIntoView({ block: 'nearest' });
     };
+    reader.onerror = () => alert('ファイルを読めませんでした');
     reader.readAsText(f);
   };
 
+  document.getElementById('btn-merge').onclick = () => runImport('merge');
+  document.getElementById('btn-replace').onclick = () => runImport('replace');
+  document.getElementById('btn-cancel-import').onclick = hideChoice;
+
+  // 取り込みを誤ったときの戻り口。控えがあるときだけ出す。
+  function showUndo() {
+    const row = document.getElementById('undo-row');
+    const u = Storage.undoAvailable();
+    if (!u) { row.hidden = true; return; }
+    row.hidden = false;
+    document.getElementById('undo-note').textContent =
+      `直前の取り込みの前（${u.count} 件）へ戻せます`;
+  }
+
+  document.getElementById('btn-undo').onclick = () => {
+    const u = Storage.undoAvailable();
+    if (!u) return;
+    if (!confirm(`取り込みを取り消し、${u.count} 件の状態へ戻します。よろしいですか。`)) return;
+    const n = Storage.undoImport();
+    render();
+    showUndo();
+    alert(`${n} 件の状態へ戻しました。`);
+  };
+
+  showUndo();
+
   document.getElementById('btn-clear').onclick = () => {
-    if (confirm('全データを削除しますか? この操作は取り消せません')) {
-      localStorage.removeItem('kyusei_records_v1');
-      render();
-    }
+    const n = Storage.loadAll().length;
+    if (n === 0) { alert('消す鑑定がありません。'); return; }
+    if (!confirm(`${n} 件の鑑定をすべて消します。取り消せません。\n\n相談者の氏名・生年月日・お話も一緒に消えます。`)) return;
+    localStorage.removeItem('kyusei_records_v1');
+    // 取り込みの控えにも相談者の情報が入っている。一緒に消さないと残る。
+    localStorage.removeItem(Storage.UNDO_KEY);
+    render();
+    showUndo();
+    alert(`${n} 件を消しました。`);
   };
 })();
 </script>
