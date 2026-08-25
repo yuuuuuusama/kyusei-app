@@ -52,7 +52,7 @@
       $(id).addEventListener('change', compute);
     });
 
-    // メモツール (定型・AI下書き・音声) と スニペット管理
+    // メモツール (定型・下書き・音声) と スニペット管理
     setupMemoTools();
     setupSnippetManager();
   });
@@ -505,7 +505,7 @@
     el.innerHTML = html;
   }
 
-  // ----- ⑩ 相性診断 -----
+  // ----- ⑩ 相性判断 -----
   function setupAishouUI(r) {
     const sel = $('aishou-star');
     if (sel && !sel.dataset.ready && window.Aishou) {
@@ -806,7 +806,7 @@
   }
 
   // ========================================================
-  // メモツール: 定型 / AIドラフト / 音声 (機能 5/6/7)
+  // メモツール: 定型 / 下書き / 音声 (機能 5/6/7)
   // ========================================================
   function setupMemoTools() {
     document.querySelectorAll('.memo-tools').forEach(box => {
@@ -829,7 +829,7 @@
         });
       }
 
-      // ---- AI下書き ----
+      // ---- 下書き（手元の表からの組み立て。AI ではない） ----
       if (draftBtn) {
         draftBtn.addEventListener('click', () => {
           if (!_lastResult) { alert('まず計算してください'); return; }

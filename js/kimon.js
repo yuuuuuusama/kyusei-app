@@ -1,4 +1,4 @@
-// kimon.js — 鬼門(艮宮=pos 2)・裏鬼門(坤宮=pos 6) の年月診断
+// kimon.js — 鬼門(艮宮=pos 2)・裏鬼門(坤宮=pos 6) の年月判断
 (function (global) {
   'use strict';
   const Kyusei = global.Kyusei;

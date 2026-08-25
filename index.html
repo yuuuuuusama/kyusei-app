@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#2b1a0e">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="stylesheet" href="css/style.css?v=107">
+<link rel="stylesheet" href="css/style.css?v=109">
 <title>九星 鑑定書</title>
 </head>
 <body>
@@ -234,7 +234,7 @@
         <textarea id="m-honnin" placeholder="メモ"></textarea>
         <div class="memo-tools no-print" data-target="m-honnin" data-section="honnin">
           <button type="button" class="mt-btn mt-snip">💡 定型</button>
-          <button type="button" class="mt-btn mt-draft">✦ AI下書き</button>
+          <button type="button" class="mt-btn mt-draft">✦ 下書き</button>
           <button type="button" class="mt-btn mt-voice">🎤 音声</button>
           <div class="mt-snip-panel" hidden></div>
         </div>
@@ -262,7 +262,7 @@
         <textarea id="m-nengetsu" style="margin-top:4px;" placeholder="メモ"></textarea>
         <div class="memo-tools no-print" data-target="m-nengetsu" data-section="nengetsu">
           <button type="button" class="mt-btn mt-snip">💡 定型</button>
-          <button type="button" class="mt-btn mt-draft">✦ AI下書き</button>
+          <button type="button" class="mt-btn mt-draft">✦ 下書き</button>
           <button type="button" class="mt-btn mt-voice">🎤 音声</button>
           <div class="mt-snip-panel" hidden></div>
         </div>
@@ -289,7 +289,7 @@
         <textarea id="m-naizou" style="margin-top:4px;" placeholder="メモ"></textarea>
         <div class="memo-tools no-print" data-target="m-naizou" data-section="naizou">
           <button type="button" class="mt-btn mt-snip">💡 定型</button>
-          <button type="button" class="mt-btn mt-draft">✦ AI下書き</button>
+          <button type="button" class="mt-btn mt-draft">✦ 下書き</button>
           <button type="button" class="mt-btn mt-voice">🎤 音声</button>
           <div class="mt-snip-panel" hidden></div>
         </div>
@@ -297,11 +297,11 @@
     </div>
   </div>
 
-  <!-- ===== 総合診断 (AI自動) / 総合判断 (鑑定者記入) ===== -->
+  <!-- ===== 自動判断 (計算から) / 総合判断 (鑑定者記入) ===== -->
   <div class="handan-section sougou-shindan" style="margin-top:16px;">
-    <h3>総合診断 <span class="h3-sub">AI自動判定</span></h3>
+    <h3>自動判断 <span class="h3-sub">計算から</span></h3>
     <div class="body">
-      <div id="o-sougou-shindan"><div class="ext-empty">「計算する」を押すと、全体の総合診断が自動表示されます。</div></div>
+      <div id="o-sougou-shindan"><div class="ext-empty">「計算する」を押すと、計算からの判断が出ます。</div></div>
     </div>
   </div>
 
@@ -311,7 +311,7 @@
       <textarea id="m-sougou" rows="6" placeholder="総合判断（鑑定者の所見・結論を記入）"></textarea>
       <div class="memo-tools no-print" data-target="m-sougou" data-section="sougou">
         <button type="button" class="mt-btn mt-snip">💡 定型</button>
-        <button type="button" class="mt-btn mt-draft">✦ AI下書き</button>
+        <button type="button" class="mt-btn mt-draft">✦ 下書き</button>
         <button type="button" class="mt-btn mt-voice">🎤 音声</button>
         <div class="mt-snip-panel" hidden></div>
       </div>
@@ -480,8 +480,8 @@
       <div class="body" id="o-yuki"></div>
     </details>
 
-    <details class="detail-card" data-cat="houi" data-kw="鬼門 裏鬼門 艮 坤 年月 診断 きもん">
-      <summary><span class="num">⑯</span> 鬼門・裏鬼門の年月診断</summary>
+    <details class="detail-card" data-cat="houi" data-kw="鬼門 裏鬼門 艮 坤 年月 判断 きもん">
+      <summary><span class="num">⑯</span> 鬼門・裏鬼門の年月判断</summary>
       <div class="body" id="o-kimon"></div>
     </details>
   </section>
@@ -515,8 +515,8 @@
   <section class="cat-group" data-cat="aishou">
     <h3 class="cat-head">相性<span class="cat-note">人と人の組み合わせ</span></h3>
 
-    <details class="detail-card" data-cat="aishou" data-kw="相性 診断 本命星 比較 あいしょう">
-      <summary><span class="num">⑩</span> 相性診断 <span class="hint">相手の本命星と比較</span></summary>
+    <details class="detail-card" data-cat="aishou" data-kw="相性 判断 本命星 比較 あいしょう">
+      <summary><span class="num">⑩</span> 相性判断 <span class="hint">相手の本命星と比較</span></summary>
       <div class="body">
         <div class="aishou-input no-print">
           <input type="text" id="aishou-name" placeholder="相手の名前 (任意)">
@@ -599,48 +599,48 @@
 
 </main>
 
-<script src="js/solar-terms.js?v=107"></script>
-<script src="js/eto.js?v=107"></script>
-<script src="js/kyusei.js?v=107"></script>
-<script src="js/kantei.js?v=107"></script>
-<script src="js/storage.js?v=107"></script>
-<script src="js/dt-picker.js?v=107"></script>
-<script src="js/eto-table.js?v=107"></script>
-<script src="js/keisha-data.js?v=107"></script>
-<script src="js/kyu-zasuru-data.js?v=107"></script>
-<script src="js/seigetsu-data.js?v=107"></script>
-<script src="js/seinichi-data.js?v=107"></script>
-<script src="js/seimatsuri-data.js?v=107"></script>
-<script src="js/nijuhasshuku-data.js?v=107"></script>
-<script src="js/koyomi.js?v=107"></script>
-<script src="js/eto-relations.js?v=107"></script>
-<script src="js/houi-analysis.js?v=107"></script>
-<script src="js/un-tables.js?v=107"></script>
-<script src="js/rekichu.js?v=107"></script>
-<script src="js/gogyou-balance.js?v=107"></script>
-<script src="js/aishou.js?v=107"></script>
-<script src="js/senjitsu.js?v=107"></script>
-<script src="js/dai-un.js?v=107"></script>
-<script src="js/gemmei-data.js?v=107"></script>
-<script src="js/kimon.js?v=107"></script>
-<script src="js/yakudoshi.js?v=107"></script>
-<script src="js/zoukan.js?v=107"></script>
-<script src="js/shichijuni-kou.js?v=107"></script>
-<script src="js/sekki-timeline.js?v=107"></script>
-<script src="js/snippets.js?v=107"></script>
-<script src="js/draft-gen.js?v=107"></script>
-<script src="js/voice.js?v=107"></script>
-<script src="js/seimei-data.js?v=107"></script>
-<script src="js/nacchin-data.js?v=107"></script>
-<script src="js/kaiun-shishin-data.js?v=107"></script>
-<script src="js/kenkou-data.js?v=107"></script>
-<script src="js/jishou-data.js?v=107"></script>
-<script src="js/yuki-data.js?v=107"></script>
-<script src="js/kyohoui-data.js?v=107"></script>
-<script src="js/kantei-ext.js?v=107"></script>
-<script src="js/app.js?v=107"></script>
-<script src="js/detail-nav.js?v=107"></script>
-<script src="js/form-ui.js?v=107"></script>
+<script src="js/solar-terms.js?v=109"></script>
+<script src="js/eto.js?v=109"></script>
+<script src="js/kyusei.js?v=109"></script>
+<script src="js/kantei.js?v=109"></script>
+<script src="js/storage.js?v=109"></script>
+<script src="js/dt-picker.js?v=109"></script>
+<script src="js/eto-table.js?v=109"></script>
+<script src="js/keisha-data.js?v=109"></script>
+<script src="js/kyu-zasuru-data.js?v=109"></script>
+<script src="js/seigetsu-data.js?v=109"></script>
+<script src="js/seinichi-data.js?v=109"></script>
+<script src="js/seimatsuri-data.js?v=109"></script>
+<script src="js/nijuhasshuku-data.js?v=109"></script>
+<script src="js/koyomi.js?v=109"></script>
+<script src="js/eto-relations.js?v=109"></script>
+<script src="js/houi-analysis.js?v=109"></script>
+<script src="js/un-tables.js?v=109"></script>
+<script src="js/rekichu.js?v=109"></script>
+<script src="js/gogyou-balance.js?v=109"></script>
+<script src="js/aishou.js?v=109"></script>
+<script src="js/senjitsu.js?v=109"></script>
+<script src="js/dai-un.js?v=109"></script>
+<script src="js/gemmei-data.js?v=109"></script>
+<script src="js/kimon.js?v=109"></script>
+<script src="js/yakudoshi.js?v=109"></script>
+<script src="js/zoukan.js?v=109"></script>
+<script src="js/shichijuni-kou.js?v=109"></script>
+<script src="js/sekki-timeline.js?v=109"></script>
+<script src="js/snippets.js?v=109"></script>
+<script src="js/draft-gen.js?v=109"></script>
+<script src="js/voice.js?v=109"></script>
+<script src="js/seimei-data.js?v=109"></script>
+<script src="js/nacchin-data.js?v=109"></script>
+<script src="js/kaiun-shishin-data.js?v=109"></script>
+<script src="js/kenkou-data.js?v=109"></script>
+<script src="js/jishou-data.js?v=109"></script>
+<script src="js/yuki-data.js?v=109"></script>
+<script src="js/kyohoui-data.js?v=109"></script>
+<script src="js/kantei-ext.js?v=109"></script>
+<script src="js/app.js?v=109"></script>
+<script src="js/detail-nav.js?v=109"></script>
+<script src="js/form-ui.js?v=109"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js').catch(()=>{}));

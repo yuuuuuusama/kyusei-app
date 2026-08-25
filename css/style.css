@@ -740,7 +740,7 @@ html, body {
 .kyohoui-table td { font-size:11.5px; line-height:1.55; text-align:left; vertical-align:top; }
 .kyohoui-table .kh-remedy { color:#3f4b2e; }
 
-/* ===== 総合診断 (AI自動) / 総合判断 (鑑定者記入) ===== */
+/* ===== 自動判断 (計算から) / 総合判断 (鑑定者記入) ===== */
 .h3-sub { font-size:11px; font-weight:400; color:var(--c-kin-deep); font-family:var(--font-sans);
   letter-spacing:.04em; margin-left:8px; padding:1px 8px; border:1px solid rgba(184,146,74,.5);
   border-radius:9px; background:rgba(184,146,74,.08); vertical-align:middle; }
@@ -1872,7 +1872,7 @@ tr.transition td { border-top: 2px dashed var(--c-kin); }
 .kou-yomi { font-family: var(--font-jp); font-size: 12px; color: var(--c-sumi-soft); letter-spacing: .12em; }
 .kou-meta { font-size: 10px; color: #888; margin-top: 6px; }
 
-/* ===== メモツール (定型 / AI下書き / 音声) ===== */
+/* ===== メモツール (定型 / 下書き / 音声) ===== */
 .memo-tools {
   display: flex;
   gap: 6px;
