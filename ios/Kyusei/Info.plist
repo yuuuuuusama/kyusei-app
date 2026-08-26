@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>ja_JP</string>
+
+	<!-- 暗号の申告。通信そのものを行わない。 -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+
+	<!-- 音声入力（🎤）で使う。押されたときだけ働く。
+	     文言は個人情報の扱い（privacy.html 四）と食い違わせないこと。 -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>鑑定所見を声で書き留めるために使います。🎤を押したときだけ働きます。</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>話した言葉を文字に直して書き込むために使います。音声は Apple の音声認識へ送られます。🎤を押したときだけ働きます。</string>
+
+	<!-- 錠。相談者の情報を守るために使う。 -->
+	<key>NSFaceIDUsageDescription</key>
+	<string>鑑定の記録を開くときに、ご本人か確かめます。記録にはご相談者さまのお名前とお話が入ります。</string>
+
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<false/>
+	</dict>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchGround</string>
+	</dict>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+</dict>
+</plist>

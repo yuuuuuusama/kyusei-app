@@ -1,0 +1,311 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0BDC27093C5B234021E451A3 /* KyuseiApp.swift in Phase */ = {isa = PBXBuildFile; fileRef = 9E798942499A535A81D20E83 /* KyuseiApp.swift */; };
+		C3EF543137CB873AB784CE31 /* WebHost.swift in Phase */ = {isa = PBXBuildFile; fileRef = 2269E742DE5CDD05D8007AFE /* WebHost.swift */; };
+		123FBE3912F999E54603F460 /* AppLock.swift in Phase */ = {isa = PBXBuildFile; fileRef = 7E4E5E885EE29B2740E27D0F /* AppLock.swift */; };
+		9A105A2EE072ED16C508B072 /* SelfCheck.swift in Phase */ = {isa = PBXBuildFile; fileRef = 8F44857EAC9C8B703287EB02 /* SelfCheck.swift */; };
+		37669F2F8C6A7B31BF006618 /* Assets.xcassets in Phase */ = {isa = PBXBuildFile; fileRef = 512F5EC5115474C1D30C9BDF /* Assets.xcassets */; };
+		E599AE924915A268327129E9 /* PrivacyInfo.xcprivacy in Phase */ = {isa = PBXBuildFile; fileRef = 31D9508AB090223CFB46D1FC /* PrivacyInfo.xcprivacy */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		7E4E5E885EE29B2740E27D0F /* AppLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLock.swift"; sourceTree = "<group>"; };
+		512F5EC5115474C1D30C9BDF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
+		948BD98B1CC8D1397CF32A02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };
+		9E798942499A535A81D20E83 /* KyuseiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KyuseiApp.swift"; sourceTree = "<group>"; };
+		31D9508AB090223CFB46D1FC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PrivacyInfo.xcprivacy"; sourceTree = "<group>"; };
+		8F44857EAC9C8B703287EB02 /* SelfCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelfCheck.swift"; sourceTree = "<group>"; };
+		2269E742DE5CDD05D8007AFE /* WebHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebHost.swift"; sourceTree = "<group>"; };
+		F5BF48AA40CAD7891EB709FC /* Kyusei.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kyusei.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		349B578E88FC623128D2018B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2A44C54E23411059C3A1A1E1 = {
+			isa = PBXGroup;
+			children = (
+				7828D25FDDBD8BED31A41404 /* Kyusei */,
+				433D647A17039DC680DEAE8F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		433D647A17039DC680DEAE8F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5BF48AA40CAD7891EB709FC /* Kyusei.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7773CF984C50048D4EA42A5E /* Kyusei */ = {
+			isa = PBXGroup;
+			children = (
+				7E4E5E885EE29B2740E27D0F /* AppLock.swift */,
+				512F5EC5115474C1D30C9BDF /* Assets.xcassets */,
+				948BD98B1CC8D1397CF32A02 /* Info.plist */,
+				9E798942499A535A81D20E83 /* KyuseiApp.swift */,
+				31D9508AB090223CFB46D1FC /* PrivacyInfo.xcprivacy */,
+				8F44857EAC9C8B703287EB02 /* SelfCheck.swift */,
+				2269E742DE5CDD05D8007AFE /* WebHost.swift */,
+			);
+			path = "Kyusei";
+			sourceTree = "<group>";
+		};
+		EE225682B58451A7A250D1B8 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				7773CF984C50048D4EA42A5E /* Kyusei */,
+			);
+			path = "ios";
+			sourceTree = "<group>";
+		};
+		7828D25FDDBD8BED31A41404 /* Kyusei */ = {
+			isa = PBXGroup;
+			children = (
+				EE225682B58451A7A250D1B8 /* ios */,
+			);
+			name = "Kyusei";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		42AEFBAE01D2DFD981F7DA7D /* Kyusei */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88A9556C78F4D881C352E222;
+			buildPhases = (
+				F3F3D267CF0FD5307403D537 /* Sources */,
+				349B578E88FC623128D2018B /* Frameworks */,
+				41B260B1D2A5E0B273280C8E /* Resources */,
+				EC828B47A4B3AC5A909B28AF /* 鑑定アプリを写す */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Kyusei;
+			productName = Kyusei;
+			productReference = F5BF48AA40CAD7891EB709FC /* Kyusei.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		46F86FAA6BBF9AC94A7E4595 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					42AEFBAE01D2DFD981F7DA7D = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = 887D4B5F61EA6AAAF609F3AC;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = ja;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				ja,
+				Base,
+			);
+			mainGroup = 2A44C54E23411059C3A1A1E1;
+			productRefGroup = 433D647A17039DC680DEAE8F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				42AEFBAE01D2DFD981F7DA7D /* Kyusei */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		41B260B1D2A5E0B273280C8E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				37669F2F8C6A7B31BF006618 /* Assets.xcassets in Phase */,
+				E599AE924915A268327129E9 /* PrivacyInfo.xcprivacy in Phase */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		EC828B47A4B3AC5A909B28AF /* 鑑定アプリを写す */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "鑑定アプリを写す";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "\"$SRCROOT/ios/copy_web.sh\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F3F3D267CF0FD5307403D537 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0BDC27093C5B234021E451A3 /* KyuseiApp.swift in Phase */,
+				C3EF543137CB873AB784CE31 /* WebHost.swift in Phase */,
+				123FBE3912F999E54603F460 /* AppLock.swift in Phase */,
+				9A105A2EE072ED16C508B072 /* SelfCheck.swift in Phase */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		C090A36E8C44B198DDCAC4B9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				ONLY_ACTIVE_ARCH = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = ("DEBUG=1", "$(inherited)");
+			};
+			name = Debug;
+		};
+		F57AF71EEE492BC41B443C5A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2D2199B51CAF793C28F0BAB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P7442B37HP;
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 1.0;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ios/Kyusei/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "九星鑑定";
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks");
+				PRODUCT_BUNDLE_IDENTIFIER = "jp.myodenji.kyusei";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+			};
+			name = Debug;
+		};
+		3EEF2118F3565E69635E0BF0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P7442B37HP;
+				CURRENT_PROJECT_VERSION = 1;
+				MARKETING_VERSION = 1.0;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "ios/Kyusei/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "九星鑑定";
+				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks");
+				PRODUCT_BUNDLE_IDENTIFIER = "jp.myodenji.kyusei";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		887D4B5F61EA6AAAF609F3AC = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C090A36E8C44B198DDCAC4B9 /* Debug */,
+				F57AF71EEE492BC41B443C5A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		88A9556C78F4D881C352E222 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D2199B51CAF793C28F0BAB5 /* Debug */,
+				3EEF2118F3565E69635E0BF0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+}

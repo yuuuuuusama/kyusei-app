@@ -10,3 +10,8 @@ _misc/
 
 # 動作確認用の使い捨てページ
 __*.html
+
+# 器の組み立ての跡
+/build/
+/Kyusei.xcodeproj/project.xcworkspace/
+/Kyusei.xcodeproj/xcuserdata/
