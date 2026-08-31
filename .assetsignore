@@ -18,3 +18,9 @@ start.command
 .assetsignore
 .DS_Store
 README.md
+
+# 器の組み立ての跡（iPhone アプリ側）。Web の配り先には要らない。
+build/
+ios/
+Kyusei.xcodeproj/
+scripts/
