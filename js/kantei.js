@@ -112,24 +112,26 @@
   //   - 隣り合う二つの盤の中宮支が同じとき、後ろ側の盤の中宮支を対冲 (支+6) へ移す
   //     生年生月 同じ → 生月、生月生日 同じ → 生日、生日生時 同じ → 生時
   //   - 中宮星は動かさない (九星の一致とは別々に見る)
-  //   - 比較はどれも元の支どうしで行う
+  //   - 比較は前の盤の「変化後」の支と行う。よって生月・生日・生時が揃って午なら、
+  //     生日だけが子になり、生時は午のまま残る。
   function transformBranchesBirth(yB, mB, dB, hB) {
     const opp = b => (b + 6) % 12;
     const changed = { year: false, month: false, day: false, hour: false };
     let M = mB, D = dB, H = hB;
-    if (yB === mB) { M = opp(mB); changed.month = true; }
-    if (mB === dB) { D = opp(dB); changed.day = true; }
-    if (dB === hB) { H = opp(hB); changed.hour = true; }
+    if (yB === M) { M = opp(M); changed.month = true; }
+    if (M === D) { D = opp(D); changed.day = true; }
+    if (D === H) { H = opp(H); changed.hour = true; }
     return { year: yB, month: M, day: D, hour: H, changed };
   }
 
-  // 支を変化させた盤は干を伴わない。
-  // 干支の組が暦にないものになるため、マスには支だけを置く。
-  function branchOnlyEto(branchIdx) {
+  // 支を変化させた盤の中宮干支。
+  // 対冲は支を六つ進めるだけなので干と支の偶奇は揃ったままで、
+  // 干をそのまま残しても暦にある組になる (戊午 → 戊子)。
+  function shiftedBranchEto(eto, branchIdx) {
     return {
-      stemIdx: null, branchIdx,
-      stem: '', branch: Eto.BRANCHES[branchIdx],
-      name: Eto.BRANCHES[branchIdx]
+      stemIdx: eto.stemIdx, branchIdx,
+      stem: eto.stem, branch: Eto.BRANCHES[branchIdx],
+      name: eto.stem + Eto.BRANCHES[branchIdx]
     };
   }
 
@@ -462,11 +464,11 @@
         displayDayCenter: bTransform.day,
         displayHourCenter: bTransform.hour,
         transformModified: bTransform.modified,
-        // 変化後の中宮干支 (盤表示用)。支を変化させた盤は支だけになる
-        displayYearEto: bBranch.changed.year ? branchOnlyEto(bBranch.year) : bYearEto,
-        displayMonthEto: bBranch.changed.month ? branchOnlyEto(bBranch.month) : bMonthEto,
-        displayDayEto: bBranch.changed.day ? branchOnlyEto(bBranch.day) : bDayEto,
-        displayHourEto: bBranch.changed.hour ? branchOnlyEto(bBranch.hour) : bHourEto,
+        // 変化後の中宮干支 (盤表示用)。干は残し、支だけを対冲へ移す
+        displayYearEto: bBranch.changed.year ? shiftedBranchEto(bYearEto, bBranch.year) : bYearEto,
+        displayMonthEto: bBranch.changed.month ? shiftedBranchEto(bMonthEto, bBranch.month) : bMonthEto,
+        displayDayEto: bBranch.changed.day ? shiftedBranchEto(bDayEto, bBranch.day) : bDayEto,
+        displayHourEto: bBranch.changed.hour ? shiftedBranchEto(bHourEto, bBranch.hour) : bHourEto,
         branchModified: bBranch.changed
       },
       consult: {
