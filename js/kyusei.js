@@ -60,65 +60,88 @@
   }
 
   // ---------- 日盤中宮星 ----------
-  // 陽遁: 冬至直近の甲子日 → 一白 (1), 以降毎日 +1 (9→1)
-  // 陰遁: 夏至直近の甲子日 → 九紫 (9), 以降毎日 -1 (1→9)
-  // 「直近の甲子日」= 冬至/夏至に最も近い甲子日 (±30日内に必ず1つ存在)
+  // 陽遁: 冬至に最も近い甲子日 → 一白 (1) から、以降毎日 +1 (9→1)
+  // 陰遁: 夏至に最も近い甲子日 → 九紫 (9) から、以降毎日 -1 (1→9)
   //
-  // 与えられた date に対し:
-  //   1. その date が含まれる「陽遁期間」または「陰遁期間」を特定
-  //   2. 起点 (近い側の冬至 or 夏至 の甲子日) からの日数を計算
-  //   3. 陽遁なら startStar + days, 陰遁なら startStar - days
+  // 「最も近い甲子日」は二至の前後 30 日以内に必ず一つある。
+  // 前後が同じ日数のときは後 (未来側) の甲子日を採る。
+  //
+  // 二至の間隔は約 182.6 日、甲子は 60 日ごとなので、起点は半年ごとに
+  // 2〜3 日ずつ二至から遅れていき、隔たりが 30 日を超えると 60 日戻る。
+  // そのため遁期間は通常 180 日 (= 9 の倍数) で、切り替わりの日は
+  // 前日と同じ九星 (九紫→九紫 / 一白→一白) が続く。
+  // 約 11 年に一度だけ 240 日の「閏」期間となり、そこでは九星が連続しない。
 
-  // 「上元甲子日」アンカー
-  // 妙傳寺の万年暦における「日干支 = 甲子」かつ「九星運行の起点」となる日。
-  // - 60干支サイクル中で 180 日 (= 9*60/gcd(9,60) = 180) ごとの上元甲子のみ採用
-  // - 1900/1/1 (= 甲戌日 in user's ref) からの経過日数 mod 180 = 110 となる日
-  // - これにより冬至甲子⇔夏至甲子が常に 180 日間隔となり、
-  //   転換点で「九紫が二日連続」「一白が二日連続」のルールが自然に成立する
-  const UPPER_KOSHI_180_OFFSET = 110;
+  const DAY_MS = 86400000;
+  // 日干支と同じ基準: 1900-01-01 = 甲戌 (干支番号 10)
+  // → 1900-01-01 からの日数 % 60 === 50 の日が甲子日
+  const KOSHI_REF_UTC = Date.UTC(1900, 0, 1);
+  const KOSHI_MOD60 = 50;
 
-  // centerDate に最も近い「上元甲子日」を返す (前後どちらでも)
-  function findNearestUpperKoshi(centerDate) {
-    const refUTC = Date.UTC(1900, 0, 1);
-    const centerUTC = Date.UTC(centerDate.getFullYear(), centerDate.getMonth(), centerDate.getDate());
-    const days = Math.round((centerUTC - refUTC) / 86400000);
-    const mod = ((days % 180) + 180) % 180;
-    const forward = (UPPER_KOSHI_180_OFFSET - mod + 180) % 180;   // 0..179 (前方 = 未来側)
-    const backward = (mod - UPPER_KOSHI_180_OFFSET + 180) % 180;  // 0..179 (後方 = 過去側)
-    let offset;
-    if (forward === 0 || backward === 0) offset = 0;
-    else if (forward <= backward) offset = forward;
-    else offset = -backward;
-    const startUTC = centerUTC + offset * 86400000;
-    const dt = new Date(startUTC);
-    return new Date(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate());
+  function toUTCDay(date) {
+    return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
   }
 
-  // 与えられた date に対する 陽/陰遁 起点甲子日 を取得
-  // 規則: 冬至・夏至それぞれに最寄り (前後どちらでも近い方) の上元甲子日を起点とする
-  //   陽遁: [冬至上元甲子, 夏至上元甲子) → 一白起点、+1進行
-  //   陰遁: [夏至上元甲子, 次冬至上元甲子) → 九紫起点、-1進行
-  //   転換点では同じ星 (九紫または一白) が前日と当日で連続する
-  function getDayDontonStart(date) {
-    const ST = global.SolarTerms;
-    const y = date.getFullYear();
-    const winter = ST.jdeToJSTDate(ST.solarTermJDE(y, 18));        // 冬至 (Dec)
-    const summer = ST.jdeToJSTDate(ST.solarTermJDE(y, 6));         // 夏至 (Jun)
-    const winterPrev = ST.jdeToJSTDate(ST.solarTermJDE(y - 1, 18));// 前年冬至
-    const summerNext = ST.jdeToJSTDate(ST.solarTermJDE(y + 1, 6)); // 翌年夏至
+  function fromUTCDay(utc) {
+    const d = new Date(utc);
+    return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  }
 
-    const koshiWinter = findNearestUpperKoshi(winter);
-    const koshiSummer = findNearestUpperKoshi(summer);
-    const koshiWinterPrev = findNearestUpperKoshi(winterPrev);
-    const koshiSummerNext = findNearestUpperKoshi(summerNext);
+  // centerUTC に最も近い甲子日 (前後同距離なら後) を UTC 通日で返す
+  function nearestKoshiUTC(centerUTC) {
+    const days = Math.round((centerUTC - KOSHI_REF_UTC) / DAY_MS);
+    const mod = ((days % 60) + 60) % 60;
+    const forward = ((KOSHI_MOD60 - mod) % 60 + 60) % 60;   // 0..59 (未来側への日数)
+    const backward = ((mod - KOSHI_MOD60) % 60 + 60) % 60;  // 0..59 (過去側への日数)
+    let offset;
+    if (forward === 0) offset = 0;
+    else if (forward <= backward) offset = forward;
+    else offset = -backward;
+    return centerUTC + offset * DAY_MS;
+  }
 
-    if (date < koshiSummer) {
-      return { startDate: koshiWinterPrev, startStar: 1, direction: 1, mode: '陽遁' };
-    } else if (date < koshiWinter) {
-      return { startDate: koshiSummer, startStar: 9, direction: -1, mode: '陰遁' };
-    } else {
-      return { startDate: koshiWinter, startStar: 1, direction: 1, mode: '陽遁' };
+  // 二至の甲子起点 (節気計算が重いのでキャッシュする)
+  const dontonAnchorCache = new Map();
+  function dontonAnchorUTC(year, isWinter) {
+    const key = year + (isWinter ? 'W' : 'S');
+    let v = dontonAnchorCache.get(key);
+    if (v === undefined) {
+      const ST = global.SolarTerms;
+      const term = ST.jdeToJSTDate(ST.solarTermJDE(year, isWinter ? 18 : 6));
+      v = nearestKoshiUTC(toUTCDay(term));
+      dontonAnchorCache.set(key, v);
     }
+    return v;
+  }
+
+  // 与えられた date が属する遁期間の起点を返す
+  //   { startDate, startStar, direction, mode, periodDays, isLeap }
+  // 冬至起点 → 陽遁 (一白から +1)、夏至起点 → 陰遁 (九紫から -1)
+  function getDayDontonStart(date) {
+    const targetUTC = toUTCDay(date);
+    const y = date.getFullYear();
+    // 起点は二至から最大 30 日ずれるため、前後年まで候補に入れて時系列に並べる
+    const anchors = [];
+    for (let yy = y - 2; yy <= y + 1; yy++) {
+      anchors.push({ utc: dontonAnchorUTC(yy, false), winter: false });
+      anchors.push({ utc: dontonAnchorUTC(yy, true), winter: true });
+    }
+    anchors.sort((a, b) => a.utc - b.utc);
+
+    let idx = 0;
+    for (let i = 0; i < anchors.length; i++) {
+      if (anchors[i].utc <= targetUTC) idx = i;
+      else break;
+    }
+    const cur = anchors[idx];
+    const next = anchors[idx + 1];
+    const periodDays = next ? Math.round((next.utc - cur.utc) / DAY_MS) : null;
+
+    return cur.winter
+      ? { startDate: fromUTCDay(cur.utc), startStar: 1, direction: 1, mode: '陽遁',
+          periodDays, isLeap: periodDays !== null && periodDays % 9 !== 0 }
+      : { startDate: fromUTCDay(cur.utc), startStar: 9, direction: -1, mode: '陰遁',
+          periodDays, isLeap: periodDays !== null && periodDays % 9 !== 0 };
   }
 
   function getDayStar(date) {
