@@ -24,57 +24,45 @@
     return oppositeNeighbor === 8 ? 2 : 8;
   }
 
-  // 中宮星の変化先: 定位盤でその星の向かいの宮にいる星 (対冲)
-  //   四緑↔六白、九紫↔一白、二黒↔八白、三碧↔七赤 — いずれも 10 - X
-  // 五黄は定位盤の中宮そのもので向かいが無いため、
-  //   陽遁は二黒(2)、陰遁は八白(8) とする
-  function taichuStar(star, isInton) {
-    if (star === 5) return isInton ? 8 : 2;
-    return 10 - star;
+  // 中宮星の変化先
+  //   基本は定位盤でその星の向かいの宮にいる星 (対冲)
+  //     四緑↔六白、九紫↔一白、二黒↔八白、三碧↔七赤 — いずれも 10 - X
+  //   対冲が「逆の隣」の盤と被るときは定位 (定盤=中宮五黄) へ回す
+  //   五黄は定位盤の中宮そのもので向かいが無いため goouAlt に委ねる
+  //     (陽遁は八白、陰遁は二黒。それが逆の隣と被るなら反対の星)
+  // conflict: 逆の隣の盤の中宮星。無いときは null
+  function changedStar(star, conflict, isInton) {
+    if (star === 5) return goouAlt(isInton, conflict);
+    const taichu = 10 - star;
+    return taichu === conflict ? 5 : taichu;
   }
 
   // 鑑定法.docx の盤変化ルール
   // 相談日側 (top row): 日盤(d) は絶対変えない
-  //   - 年月日 三つ同じ → 月→定盤(5)
-  //   - 月日時 三つ同じ → 月→定盤(5), 時→定盤対冲(10-X)
-  //   - 年月 同じ → 月→定盤(5), 日盤と被るなら 10-X
-  //   - 月日 同じ → 月→定盤(5), 年盤と被るなら 10-X
-  //   - 日時 同じ → 時→定盤対冲(10-X)
-  //   - 上記で中宮 5 が更に 5 と重なれば 五黄回避 (陽遁→8, 陰遁→2)
+  //   - 年月 / 月日 が同じ → 月を変化 (逆の隣は重なっていない側)
+  //   - 日時 が同じ → 時を変化 (逆の隣なし)
+  //   - 変化先は対冲が基本。逆の隣と被るときだけ定位(5) — changedStar 参照
   function transformCenters(y, m, d, h, isInton) {
     let M = m, H = h;
     let modified = false;
     isInton = !!isInton;
-    // 月 transformation
+    // 月 transformation: 重なっていない側が「逆の隣」
     if (m === d && d === h) {
-      // 月日時 三つ同じ → 月: 年と被らないように 定盤(5) か 対冲(10-m)
-      if (m === 5 && y === 5) M = goouAlt(isInton, y);
-      else if (y === 5) M = 10 - m;
-      else M = 5;
+      M = changedStar(m, y, isInton);       // 月日時 三つ同じ → 逆の隣 = 年
       modified = true;
     } else if (y === m && m === d) {
-      // 年月日 三つ同じ → 月→定盤(5)、全て5なら五黄回避 (逆の隣=時)
-      if (m === 5) M = goouAlt(isInton, h);
-      else M = 5;
+      M = changedStar(m, h, isInton);       // 年月日 三つ同じ → 逆の隣 = 時
       modified = true;
     } else if (y === m) {
-      // 年月同じ: 月→定盤(5)、日盤と被るなら 対冲 (10-m)、全て5なら五黄回避 (逆の隣=日)
-      if (m === 5 && y === 5) M = goouAlt(isInton, d);
-      else if (d === 5 && m !== 5) M = 10 - m;
-      else M = 5;
+      M = changedStar(m, d, isInton);       // 年月 同じ → 逆の隣 = 日
       modified = true;
     } else if (m === d) {
-      // 月日同じ: 月→定盤(5)、年盤と被るなら 対冲 (10-m)、全て5なら五黄回避 (逆の隣=年)
-      if (m === 5 && d === 5) M = goouAlt(isInton, y);
-      else if (y === 5 && m !== 5) M = 10 - m;
-      else M = 5;
+      M = changedStar(m, y, isInton);       // 月日 同じ → 逆の隣 = 年
       modified = true;
     }
     // 時 transformation: 日時同じ (月日時 三つ同じ含む) — 逆の隣なし
     if (d === h) {
-      if (d === 5 && h === 5) H = isInton ? 2 : 8;  // 五黄回避 (逆の隣なし=固定)
-      else if (h === 5) H = 5;
-      else H = 10 - h;
+      H = changedStar(h, null, isInton);
       modified = true;
     }
     // 日 never changes (日盤絶対)
@@ -82,9 +70,9 @@
   }
 
   // 生年月日側 (bottom row) の盤変化ルール
-  //   - 隣り合う二つの盤の中宮星が同じとき、後ろ側の盤の中宮星を
-  //     定位盤での対冲へ移す (taichuStar)
+  //   - 隣り合う二つの盤の中宮星が同じとき、後ろ側の盤の中宮星を変化させる
   //     生年生月 同じ → 生月、生月生日 同じ → 生日、生日生時 同じ → 生時
+  //   - 変化先は対冲が基本。逆の隣と被るときだけ定位(5) — changedStar 参照
   //
   // 例: 平成八年七月八日 は 四緑年・三碧月・三碧日。
   //     生月と生日が三碧で重なるので、生日は定位盤で三碧の向かいにいる
@@ -101,9 +89,9 @@
     let modified = false;
     isInton = !!isInton;
 
-    if (Y === M) { M = taichuStar(M, isInton); modified = true; }
-    if (M === D) { D = taichuStar(D, isInton); modified = true; }
-    if (D === H) { H = taichuStar(H, isInton); modified = true; }
+    if (Y === M) { M = changedStar(M, D, isInton); modified = true; }  // 逆の隣 = 生日
+    if (M === D) { D = changedStar(D, H, isInton); modified = true; }  // 逆の隣 = 生時
+    if (D === H) { H = changedStar(H, M, isInton); modified = true; }  // 逆の隣 = 生月
 
     return { year: Y, month: M, day: D, hour: H, modified };
   }
