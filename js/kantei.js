@@ -80,32 +80,36 @@
   //
   // 変化させるのは中宮星だけで、支の一致では中宮星を動かさない。
   // 支が同じときは支の側だけを変化させる (支の変化は別途)。
+  //
+  // 比較は前の盤の「変化後」の中宮星と行う。支の変化と同じ扱いで、
+  // 生月・生日・生時の中宮星が揃っていても、変わるのは生日だけになる。
   function transformCentersBirth(y, m, d, h, yB, mB, dB, hB, isInton) {
+    const Y = y;
     let M = m, D = d, H = h;
     let modified = false;
     isInton = !!isInton;
 
-    // 生年 == 生月
-    if (y === m) {
-      if (y === 5 && m === 5) M = goouAlt(isInton, d);
-      else if (d === 5 && m !== 5) M = 10 - m;
+    // 生年 == 生月 (逆の隣 = 生日)
+    if (Y === M) {
+      if (Y === 5 && M === 5) M = goouAlt(isInton, D);
+      else if (D === 5 && M !== 5) M = 10 - M;
       else M = 5;
       modified = true;
     }
     // 生月 == 生日 (逆の隣 = 生時)
-    if (m === d) {
-      if (m === 5 && d === 5) D = goouAlt(isInton, h);
-      else if (y === 5 && d !== 5) D = 10 - d;
+    if (M === D) {
+      if (M === 5 && D === 5) D = goouAlt(isInton, H);
+      else if (Y === 5 && D !== 5) D = 10 - D;
       else D = 5;
       modified = true;
     }
-    // 生日 == 生時
-    if (d === h) {
-      if (d === 5 && h === 5) H = goouAlt(isInton, m);
+    // 生日 == 生時 (逆の隣 = 生月)
+    if (D === H) {
+      if (D === 5 && H === 5) H = goouAlt(isInton, M);
       else H = 5;
       modified = true;
     }
-    return { year: y, month: M, day: D, hour: H, modified };
+    return { year: Y, month: M, day: D, hour: H, modified };
   }
 
   // 生年月日側の支の変化ルール
