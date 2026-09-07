@@ -125,10 +125,10 @@
     const bInt = r.birth.isInton;
     const ryunenYear  = Kantei.computeRyunenAgesOnPerimeter(r.birth.yearEto.branchIdx);
     const ryunenMonth = Kantei.computeRyunenAgesOnPerimeter(r.birth.monthEto.branchIdx);
-    drawBan('ban-by', r.birth.displayYearCenter,  r.birth.honmeisei, r.birth.yearEto,  false, ryunenYear);
-    drawBan('ban-bm', r.birth.displayMonthCenter, r.birth.honmeisei, r.birth.monthEto, false, ryunenMonth);
-    drawBan('ban-bd', r.birth.displayDayCenter,   r.birth.honmeisei, r.birth.dayEto,   bInt);
-    drawBan('ban-bh', r.birth.displayHourCenter,  r.birth.honmeisei, r.birth.hourEto,  bInt);
+    drawBan('ban-by', r.birth.displayYearCenter,  r.birth.honmeisei, r.birth.displayYearEto,  false, ryunenYear);
+    drawBan('ban-bm', r.birth.displayMonthCenter, r.birth.honmeisei, r.birth.displayMonthEto, false, ryunenMonth);
+    drawBan('ban-bd', r.birth.displayDayCenter,   r.birth.honmeisei, r.birth.displayDayEto,   bInt);
+    drawBan('ban-bh', r.birth.displayHourCenter,  r.birth.honmeisei, r.birth.displayHourEto,  bInt);
     $('ban-by-info').textContent = `${r.birth.yearEto.name} / ${K.STAR_NAMES[r.birth.yearCenter]}`;
     $('ban-bm-info').textContent = `${r.birth.monthEto.name} / ${K.STAR_NAMES[r.birth.monthCenter]}`;
     $('ban-bd-info').textContent = `${r.birth.dayEto.name} / ${K.STAR_NAMES[r.birth.dayCenter]}`;

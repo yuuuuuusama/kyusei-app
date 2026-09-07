@@ -73,38 +73,64 @@
   }
 
   // 生年月日側 (bottom row) の盤変化ルール
-  //   - 生年生月 (九星 or 支) 同じ → 生月→定盤(5)、生日==5 と被るなら 10-m
-  //   - 生月生日 (九星 or 支) 同じ → 生日→定盤(5)、生年==5 と被るなら 10-d
-  //   - 生日生時 (九星 or 支) 同じ → 生時→定盤(5)
+  //   - 生年生月 の中宮星が同じ → 生月→定盤(5)、生日==5 と被るなら 10-m
+  //   - 生月生日 の中宮星が同じ → 生日→定盤(5)、生年==5 と被るなら 10-d
+  //   - 生日生時 の中宮星が同じ → 生時→定盤(5)
   //   - 上記で中宮 5 が更に 5 と重なれば 五黄回避 (陽遁→8, 陰遁→2)
+  //
+  // 変化させるのは中宮星だけで、支の一致では中宮星を動かさない。
+  // 支が同じときは支の側だけを変化させる (支の変化は別途)。
   function transformCentersBirth(y, m, d, h, yB, mB, dB, hB, isInton) {
     let M = m, D = d, H = h;
     let modified = false;
     isInton = !!isInton;
-    const matchPair = (a, b, aB, bB) =>
-      a === b || (typeof aB === 'number' && typeof bB === 'number' && aB === bB);
 
     // 生年 == 生月
-    if (matchPair(y, m, yB, mB)) {
+    if (y === m) {
       if (y === 5 && m === 5) M = goouAlt(isInton, d);
       else if (d === 5 && m !== 5) M = 10 - m;
       else M = 5;
       modified = true;
     }
     // 生月 == 生日 (逆の隣 = 生時)
-    if (matchPair(m, d, mB, dB)) {
+    if (m === d) {
       if (m === 5 && d === 5) D = goouAlt(isInton, h);
       else if (y === 5 && d !== 5) D = 10 - d;
       else D = 5;
       modified = true;
     }
     // 生日 == 生時
-    if (matchPair(d, h, dB, hB)) {
+    if (d === h) {
       if (d === 5 && h === 5) H = goouAlt(isInton, m);
       else H = 5;
       modified = true;
     }
     return { year: y, month: M, day: D, hour: H, modified };
+  }
+
+  // 生年月日側の支の変化ルール
+  //   - 隣り合う二つの盤の中宮支が同じとき、後ろ側の盤の中宮支を対冲 (支+6) へ移す
+  //     生年生月 同じ → 生月、生月生日 同じ → 生日、生日生時 同じ → 生時
+  //   - 中宮星は動かさない (九星の一致とは別々に見る)
+  //   - 比較はどれも元の支どうしで行う
+  function transformBranchesBirth(yB, mB, dB, hB) {
+    const opp = b => (b + 6) % 12;
+    const changed = { year: false, month: false, day: false, hour: false };
+    let M = mB, D = dB, H = hB;
+    if (yB === mB) { M = opp(mB); changed.month = true; }
+    if (mB === dB) { D = opp(dB); changed.day = true; }
+    if (dB === hB) { H = opp(hB); changed.hour = true; }
+    return { year: yB, month: M, day: D, hour: H, changed };
+  }
+
+  // 支を変化させた盤は干を伴わない。
+  // 干支の組が暦にないものになるため、マスには支だけを置く。
+  function branchOnlyEto(branchIdx) {
+    return {
+      stemIdx: null, branchIdx,
+      stem: '', branch: Eto.BRANCHES[branchIdx],
+      name: Eto.BRANCHES[branchIdx]
+    };
   }
 
   function computeKantei(birthDate, consultDate) {
@@ -414,6 +440,11 @@
     // 相談日側の盤変化は前段で計算済 (cTransformPre)
     const cTransform = cTransformPre;
 
+    // 生年月日側の支の変化 (中宮星とは別々に判定)
+    const bBranch = transformBranchesBirth(
+      bYearEto.branchIdx, bMonthEto.branchIdx, bDayEto.branchIdx, bHourEto.branchIdx
+    );
+
     return {
       birth: {
         date: birthDate,
@@ -430,7 +461,13 @@
         displayMonthCenter: bTransform.month,
         displayDayCenter: bTransform.day,
         displayHourCenter: bTransform.hour,
-        transformModified: bTransform.modified
+        transformModified: bTransform.modified,
+        // 変化後の中宮干支 (盤表示用)。支を変化させた盤は支だけになる
+        displayYearEto: bBranch.changed.year ? branchOnlyEto(bBranch.year) : bYearEto,
+        displayMonthEto: bBranch.changed.month ? branchOnlyEto(bBranch.month) : bMonthEto,
+        displayDayEto: bBranch.changed.day ? branchOnlyEto(bBranch.day) : bDayEto,
+        displayHourEto: bBranch.changed.hour ? branchOnlyEto(bBranch.hour) : bHourEto,
+        branchModified: bBranch.changed
       },
       consult: {
         date: consultDate,
