@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- App Store Connect（TestFlight を含む）へ出すための書き出し方。
+	     scripts/archive.sh から使う。 -->
+	<key>method</key>
+	<string>app-store-connect</string>
+	<key>teamID</key>
+	<string>P7442B37HP</string>
+	<key>signingStyle</key>
+	<string>automatic</string>
+	<!-- export = 手元に .ipa を作るだけ。archive.sh に upload を付けたときは upload に差し替える。 -->
+	<key>destination</key>
+	<string>export</string>
+	<key>uploadSymbols</key>
+	<true/>
+	<key>manageAppVersionAndBuildNumber</key>
+	<false/>
+</dict>
+</plist>

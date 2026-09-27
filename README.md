@@ -100,6 +100,15 @@ kyusei-app/
 
 個人利用向け。再配布する場合はご相談ください。
 
+## iPhone アプリとして出す
+
+`Kyusei.xcodeproj` が同梱の器。申請の手順と App Store Connect に入れる文言は
+[`ios/AppStore.md`](ios/AppStore.md) にまとめてある。
+
+```bash
+scripts/archive.sh --upload   # 組んで App Store Connect へ送る
+```
+
 ## 配り方
 
 公開先: **https://kyusei-app.myodenji7676.workers.dev**

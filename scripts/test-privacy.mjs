@@ -14,9 +14,12 @@ const APP=dirname(dirname(fileURLToPath(import.meta.url))), PORT=8906, CDP=9347;
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const profile=mkdtempSync(join(tmpdir(),'kp-'));
 const srv=spawn('python3',['-m','http.server',String(PORT)],{cwd:APP,stdio:'ignore',detached:true});
-const chrome=spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+// Mac 以外では CHROME に道を渡す（例: CHROME=/opt/pw-browsers/chromium）。
+const chrome=spawn(process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
   ['--headless=new',`--remote-debugging-port=${CDP}`,`--user-data-dir=${profile}`,
-   '--no-first-run','--no-default-browser-check','about:blank'],{stdio:'ignore',detached:true});
+   '--no-first-run','--no-default-browser-check',
+   // root で動かす箱（CI など）では、Chrome は囲いを外さないと立ち上がらない。
+   ...(process.getuid?.()===0?['--no-sandbox']:[]),'about:blank'],{stdio:'ignore',detached:true});
 let bad=0; const ok=(n,c,d='')=>{if(!c)bad++;console.log(`${c?'✓':'✗'} ${n}${d?'  '+d:''}`)};
 try{
   let ws=null;

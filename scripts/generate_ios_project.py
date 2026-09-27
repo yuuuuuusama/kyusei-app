@@ -29,6 +29,8 @@ DISPLAY_NAME = "九星鑑定"
 IOS_DEPLOYMENT_TARGET = "17.0"
 SWIFT_VERSION = "5.0"
 DEVELOPMENT_TEAM = "P7442B37HP"
+# App Store に出る版。上げたら書き出し直す。組み番号は scripts/archive.sh が日時で付ける。
+MARKETING_VERSION = "1.0"
 
 SOURCES = [
     "ios/Kyusei/KyuseiApp.swift",
@@ -164,7 +166,7 @@ def target_settings(config: str) -> str:
         "CODE_SIGN_STYLE = Automatic;",
         f"DEVELOPMENT_TEAM = {DEVELOPMENT_TEAM};",
         "CURRENT_PROJECT_VERSION = 1;",
-        "MARKETING_VERSION = 1.0;",
+        f"MARKETING_VERSION = {MARKETING_VERSION};",
         "ENABLE_PREVIEWS = YES;",
         # YES にすると、手書きの plist に CFBundleIdentifier などを足してくれる。
         # NO だと足りないまま束が出来て、端末に入らない。
