@@ -23,4 +23,5 @@ README.md
 build/
 ios/
 Kyusei.xcodeproj/
+project.yml
 scripts/

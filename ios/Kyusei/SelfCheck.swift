@@ -72,6 +72,47 @@ enum SelfCheck {
         let honmei = await js("(document.getElementById('o-honmei')||{}).innerText||''")
         say(!honmei.isEmpty && honmei != "—", "計算して本命が出る", honmei)
 
+        // 四盤のウィジェットが、鑑定書に描かれる相談日の四盤と一マスも違わないか。
+        // ウィジェットと同じ道筋（JavaScriptCore で同じ JS を読む）で組み、画面の盤と比べる。
+        if let engine = YonbanEngine() {
+            say(true, "四盤の JS を読み込める")
+            let f = DateFormatter()
+            f.locale = Locale(identifier: "en_US_POSIX")
+            f.timeZone = .current
+            f.dateFormat = "yyyy-MM-dd'T'HH:mm"
+            var compared = 0, skipped = 0, wrong = 0
+            for t in yonbanTimes {
+                _ = await js(setConsult(t))
+                try? await Task.sleep(for: .milliseconds(400))
+                let drawnJSON = await js(readBoards)
+                guard let date = f.date(from: t), let mine = engine.at(date),
+                      let data = drawnJSON.data(using: .utf8),
+                      let drawn = try? JSONDecoder().decode([[DrawnCell]].self, from: data),
+                      drawn.count == 4
+                else { say(false, "四盤 \(t)", "組めない・読めない  \(drawnJSON.prefix(60))"); wrong += 1; continue }
+                for (i, board) in mine.boards.enumerated() {
+                    let d = drawn[i]
+                    guard d.count == 9 else { say(false, "四盤 \(t) \(board.kind)盤", "\(d.count)マス"); wrong += 1; continue }
+                    // 鑑定書は月盤・時盤に盤変化を当てることがある。ウィジェットは暦のとおりなので外す
+                    if (board.kind == "月" || board.kind == "時"), d[4].star != board.cells[4].starName { skipped += 1; continue }
+                    compared += 1
+                    for c in board.cells where d[c.pos] != DrawnCell(c) {
+                        wrong += 1
+                        say(false, "四盤 \(t) \(board.kind)盤 \(c.direction)",
+                            "鑑定書 \(d[c.pos].text) / ウィジェット \(DrawnCell(c).text)")
+                        break
+                    }
+                }
+            }
+            say(wrong == 0 && compared >= 52, "四盤を鑑定書と突き合わせた",
+                "\(compared) 盤（盤変化で外した \(skipped)・違い \(wrong)）")
+            let now = engine.at(Date())
+            say(now?.boards.count == 4, "今の四盤を組める",
+                now.map { $0.boards.map { "\($0.kind)\($0.centerName)" }.joined(separator: " ") } ?? "")
+        } else {
+            say(false, "四盤の JS を読み込める")
+        }
+
         // 器へ渡す橋
         let bridge = await js("typeof window.__kyuseiNative")
         say(bridge == "boolean", "書き出しの橋が架かっている", bridge)
@@ -118,6 +159,49 @@ enum SelfCheck {
         say(backHome.contains("鑑定書"), "入口へ戻れる", backHome)
 
         log(failed == 0 ? "── すべて通りました ──" : "── 通らなかったもの \(failed)件 ──")
+    }
+
+    /// 四盤を突き合わせる日時。陽遁・陰遁、23 時（翌日の日干）、立春・節入りの前後、遁の切り替わりの前後。
+    private static let yonbanTimes = [
+        "2026-09-29T10:30", "2026-09-29T23:15", "2026-09-30T00:10", "2026-06-21T12:00", "2026-12-22T05:00",
+        "2026-02-03T20:00", "2026-02-04T08:00", "2026-02-05T08:00", "2027-01-05T12:00", "2027-01-06T12:00",
+        "2025-07-15T16:40", "2025-12-31T22:59", "2030-03-05T09:00", "2031-08-08T13:00", "2019-05-01T00:00",
+    ]
+
+    /// 生年月日は固定し、相談日時だけを替えて計算させる
+    private static func setConsult(_ t: String) -> String {
+        """
+        (function(){var b=document.getElementById('f-birth'),c=document.getElementById('f-consult');
+          b.value='1970-05-15T10:00'; b.dispatchEvent(new Event('dt-picker-set'));
+          c.value='\(t)'; c.dispatchEvent(new Event('dt-picker-set'));
+          document.getElementById('btn-compute').click(); return 'ok';})()
+        """
+    }
+
+    /// 相談日の四盤を画面から読む。drawBan は 南東,南,南西,東,中,西,北東,北,北西（宮 8→0）の順に置く
+    private static let readBoards = """
+    (function(){
+      return JSON.stringify(['ban-y','ban-m','ban-d','ban-h'].map(function(id){
+        var out=[];
+        [].slice.call(document.querySelectorAll('#'+id+' .ban-cell-inner')).forEach(function(c,i){
+          out[8-i]={star:(c.querySelector('.star')||{}).textContent||'', eto:(c.querySelector('.eto')||{}).textContent||'',
+                    anken:!!c.querySelector('.mark.anken'), ha:!!c.querySelector('.mark.ha')};
+        });
+        return out;
+      }));
+    })()
+    """
+
+    /// 画面の盤の一マス
+    private struct DrawnCell: Decodable, Equatable {
+        let star: String
+        let eto: String
+        let anken: Bool
+        let ha: Bool
+
+        init(_ c: Yonban.Cell) { star = c.starName; eto = c.eto; anken = c.anken; ha = c.ha }
+
+        var text: String { "\(star)\(eto)\(anken ? "ア" : "")\(ha ? "ハ" : "")" }
     }
 
     /// 書き出しを試すための一件。終わったら片づける。

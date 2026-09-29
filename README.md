@@ -138,3 +138,30 @@ URL を知らせても、他人の鑑定記録は見えない。
 - `start.command` … Mac で手元のサーバを立てるためのもの。公開先では要らない。
 
 手元だけで使うときは、これまでどおり `start.command` をダブルクリックすればよい。
+
+## iPhone アプリ
+
+鑑定アプリを丸ごと同梱した器（`ios/Kyusei`）。外へは繋がらず、記録はアプリの中に残る。開くときに Face ID／パスコード。
+
+```bash
+xcodegen generate            # Kyusei.xcodeproj を作り直す（project.yml）
+scripts/release.sh upload    # 組み立て → 束の検査 → TestFlight へ送る
+scripts/check-bundle.sh      # 束に入れてよいものだけが入っているか（シミュレータの組み立て後）
+```
+
+器の働きの確かめ（シミュレータ）:
+
+```bash
+xcrun simctl launch "iPhone 17" jp.myodenji.kyusei -kyusei.selfCheck YES
+xcrun simctl spawn "iPhone 17" log show --last 2m --predicate 'eventMessage CONTAINS "自己確認"'
+```
+
+### ウィジェット「今日の四盤」
+
+年盤・月盤・日盤・時盤を出す（小＝一〜九だけ、中＝四盤を一列、大＝星・干支・暗剣殺（ア）・破（ハ）まで）。上が南で、鑑定書の盤と同じ向き。
+
+- 計算は鑑定アプリと同じ `js/solar-terms.js`・`js/eto.js`・`js/kyusei.js` を JavaScriptCore で動かす（Swift に写し直さない）。盤の組み方は `ios/KyuseiWidget/yonban.js`（`js/app.js` の drawBan と同じ決まり。drawBan を直したらここも合わせる）。
+- 時盤は奇数時、日盤は 0 時、月盤・年盤は節入りの時刻に替わる。24 時間分を先に組んでおく。
+- **盤変化は当てない**（暦のとおり）。鑑定書では年月・月日・日時の中宮星が重なると月盤・時盤を変化させるので、その日は鑑定書の相談日の盤と違って見える。
+- 相談者の記録には触れない（ウィジェットの束に web/ は入れていない。`check-bundle.sh` が見る）。
+- 自己確認で、15 の日時（陽遁・陰遁、23 時、立春・節入りの前後、遁の切り替わり）について、鑑定書に描かれた盤とウィジェットの組み方を一マスずつ突き合わせる（盤変化した月盤・時盤は外す）。

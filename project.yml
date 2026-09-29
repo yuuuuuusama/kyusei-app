@@ -1,0 +1,83 @@
+# 九星鑑定の iPhone アプリ（器）とウィジェット。
+#
+#   xcodegen generate        Kyusei.xcodeproj を作り直す
+#
+# 以前は scripts/generate_ios_project.py で pbxproj を書いていたが、ウィジェットを足すにあたり
+# 法輪アプリ（horin-ios）と同じ XcodeGen に移した。
+#
+# 鑑定アプリの中身（HTML・JS）は組み立てのたびに ios/copy_web.sh が束の web/ へ丸ごと写す。
+# ウィジェットは web を持たず、四盤の計算に要る JS（js/solar-terms.js・eto.js・kyusei.js）と
+# 盤の組み方（ios/KyuseiWidget/yonban.js）だけを束に入れる。どれも写しではなく、同じファイルを指す。
+name: Kyusei
+options:
+  bundleIdPrefix: jp.myodenji
+  developmentLanguage: ja
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    DEVELOPMENT_TEAM: P7442B37HP
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1,2"
+targets:
+  Kyusei:
+    type: application
+    platform: iOS
+    scheme: {}
+    sources:
+      - path: ios/Kyusei
+      - path: ios/Shared
+      # 自己確認で、鑑定書の盤とウィジェットの組み方を突き合わせるため
+      - path: ios/KyuseiWidget/yonban.js
+        buildPhase: resources
+    postBuildScripts:
+      - name: 鑑定アプリを写す
+        script: '"$SRCROOT/ios/copy_web.sh"'
+        basedOnDependencyAnalysis: false
+    dependencies:
+      - target: KyuseiWidget
+        embed: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.myodenji.kyusei
+        PRODUCT_NAME: Kyusei
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        # YES にすると、手書きの plist に CFBundleIdentifier などを足してくれる
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_FILE: ios/Kyusei/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: 九星鑑定
+        ENABLE_PREVIEWS: YES
+  KyuseiWidget:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: ios/KyuseiWidget
+        excludes:
+          - Info.plist
+      - path: ios/Shared
+      - path: js/solar-terms.js
+        buildPhase: resources
+      - path: js/eto.js
+        buildPhase: resources
+      - path: js/kyusei.js
+        buildPhase: resources
+    info:
+      path: ios/KyuseiWidget/Info.plist
+      properties:
+        CFBundleDisplayName: 九星鑑定
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleDevelopmentRegion: ja
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: jp.myodenji.kyusei.widget
+        PRODUCT_NAME: KyuseiWidget
+        SKIP_INSTALL: YES
+        APPLICATION_EXTENSION_API_ONLY: YES
+        LD_RUNPATH_SEARCH_PATHS: ["$(inherited)", "@executable_path/Frameworks", "@executable_path/../../Frameworks"]

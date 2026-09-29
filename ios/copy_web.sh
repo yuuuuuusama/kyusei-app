@@ -33,6 +33,7 @@ rsync -a \
   --exclude '.assetsignore' \
   --exclude '.gitignore' \
   --exclude 'Kyusei.xcodeproj/' \
+  --exclude 'project.yml' \
   --exclude 'build/' \
   "$SRC/" "$DST/"
 

@@ -3,309 +3,416 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0BDC27093C5B234021E451A3 /* KyuseiApp.swift in Phase */ = {isa = PBXBuildFile; fileRef = 9E798942499A535A81D20E83 /* KyuseiApp.swift */; };
-		C3EF543137CB873AB784CE31 /* WebHost.swift in Phase */ = {isa = PBXBuildFile; fileRef = 2269E742DE5CDD05D8007AFE /* WebHost.swift */; };
-		123FBE3912F999E54603F460 /* AppLock.swift in Phase */ = {isa = PBXBuildFile; fileRef = 7E4E5E885EE29B2740E27D0F /* AppLock.swift */; };
-		9A105A2EE072ED16C508B072 /* SelfCheck.swift in Phase */ = {isa = PBXBuildFile; fileRef = 8F44857EAC9C8B703287EB02 /* SelfCheck.swift */; };
-		37669F2F8C6A7B31BF006618 /* Assets.xcassets in Phase */ = {isa = PBXBuildFile; fileRef = 512F5EC5115474C1D30C9BDF /* Assets.xcassets */; };
-		E599AE924915A268327129E9 /* PrivacyInfo.xcprivacy in Phase */ = {isa = PBXBuildFile; fileRef = 31D9508AB090223CFB46D1FC /* PrivacyInfo.xcprivacy */; };
+		10717339BF6A17E90E71138B /* yonban.js in Resources */ = {isa = PBXBuildFile; fileRef = 260C524CBC145660731C2893 /* yonban.js */; };
+		192C227116A7E4120CDA0183 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD230246568BCC6B3086317E /* Assets.xcassets */; };
+		297257F3F2CC38343984877F /* AppLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68387DAA16EF7AFFA7424277 /* AppLock.swift */; };
+		5F499B8BC724B1EE4504FA88 /* KyuseiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4166D26A2802048C1D2052 /* KyuseiApp.swift */; };
+		619DCBA15218FA7FF46B3998 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A54E80A1AE16F715787B0569 /* PrivacyInfo.xcprivacy */; };
+		67C0C60B82F2FA357364F78B /* KyuseiWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10F8542324A3DCBA9AAAB8C2 /* KyuseiWidget.swift */; };
+		77864AB5DEA848B8827DD643 /* SelfCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36670B5FEB9B89858E39B98 /* SelfCheck.swift */; };
+		9E95B10C953DD24DE0EEFB81 /* WebHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49290F5C273CF94FCE420AA5 /* WebHost.swift */; };
+		9FDBD8B9F79D5D46ABFD2CB6 /* Yonban.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE0F4FED0E3D11B30EDCE5A /* Yonban.swift */; };
+		BB481898943CFCF4C3D1D0F0 /* Yonban.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE0F4FED0E3D11B30EDCE5A /* Yonban.swift */; };
+		BC6A458950B632E6C5D66C14 /* KyuseiWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 0046B175B20F350A8752634C /* KyuseiWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		C502707B3897CD483E596FE9 /* kyusei.js in Resources */ = {isa = PBXBuildFile; fileRef = 6E425F9CDCFF9350E3990634 /* kyusei.js */; };
+		C7A894B50555A31EE586EFB2 /* eto.js in Resources */ = {isa = PBXBuildFile; fileRef = 20AF1A84ED23B5E40D636399 /* eto.js */; };
+		D634A59E96C1D96691966EEA /* yonban.js in Resources */ = {isa = PBXBuildFile; fileRef = 260C524CBC145660731C2893 /* yonban.js */; };
+		DE09F431186D73E05D7C0C75 /* solar-terms.js in Resources */ = {isa = PBXBuildFile; fileRef = F69ED32DEE19F9C269D20F96 /* solar-terms.js */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXFileReference section */
-		7E4E5E885EE29B2740E27D0F /* AppLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLock.swift"; sourceTree = "<group>"; };
-		512F5EC5115474C1D30C9BDF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
-		948BD98B1CC8D1397CF32A02 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };
-		9E798942499A535A81D20E83 /* KyuseiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KyuseiApp.swift"; sourceTree = "<group>"; };
-		31D9508AB090223CFB46D1FC /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PrivacyInfo.xcprivacy"; sourceTree = "<group>"; };
-		8F44857EAC9C8B703287EB02 /* SelfCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelfCheck.swift"; sourceTree = "<group>"; };
-		2269E742DE5CDD05D8007AFE /* WebHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WebHost.swift"; sourceTree = "<group>"; };
-		F5BF48AA40CAD7891EB709FC /* Kyusei.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kyusei.app; sourceTree = BUILT_PRODUCTS_DIR; };
-/* End PBXFileReference section */
+/* Begin PBXContainerItemProxy section */
+		AB04B49622F14F886EC3A12A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 43555CFDBC32EA53F73E9500 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA13B5F1F58578F226DCD5E0;
+			remoteInfo = KyuseiWidget;
+		};
+/* End PBXContainerItemProxy section */
 
-/* Begin PBXFrameworksBuildPhase section */
-		349B578E88FC623128D2018B /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
+/* Begin PBXCopyFilesBuildPhase section */
+		269C9D318EA4696CCCDECB63 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
 			files = (
+				BC6A458950B632E6C5D66C14 /* KyuseiWidget.appex in Embed Foundation Extensions */,
 			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXFrameworksBuildPhase section */
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0046B175B20F350A8752634C /* KyuseiWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = KyuseiWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		10F8542324A3DCBA9AAAB8C2 /* KyuseiWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KyuseiWidget.swift; sourceTree = "<group>"; };
+		20AF1A84ED23B5E40D636399 /* eto.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = eto.js; sourceTree = "<group>"; };
+		260C524CBC145660731C2893 /* yonban.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = yonban.js; sourceTree = "<group>"; };
+		49290F5C273CF94FCE420AA5 /* WebHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebHost.swift; sourceTree = "<group>"; };
+		68387DAA16EF7AFFA7424277 /* AppLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLock.swift; sourceTree = "<group>"; };
+		6E425F9CDCFF9350E3990634 /* kyusei.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = kyusei.js; sourceTree = "<group>"; };
+		A4BF4090B226F2B7082752A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A54E80A1AE16F715787B0569 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		B36670B5FEB9B89858E39B98 /* SelfCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfCheck.swift; sourceTree = "<group>"; };
+		BCE0F4FED0E3D11B30EDCE5A /* Yonban.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Yonban.swift; sourceTree = "<group>"; };
+		EE4166D26A2802048C1D2052 /* KyuseiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KyuseiApp.swift; sourceTree = "<group>"; };
+		EE76E342A5302740A3A3F4B3 /* Kyusei.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Kyusei.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F69ED32DEE19F9C269D20F96 /* solar-terms.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "solar-terms.js"; sourceTree = "<group>"; };
+		FD230246568BCC6B3086317E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		2A44C54E23411059C3A1A1E1 = {
+		22361093FD953A55CB8494A4 = {
 			isa = PBXGroup;
 			children = (
-				7828D25FDDBD8BED31A41404 /* Kyusei */,
-				433D647A17039DC680DEAE8F /* Products */,
+				61CFA236DF500AE770C23C82 /* ios */,
+				5DEA007E709F2F1F8477D754 /* js */,
+				2F4E4B026DA0CF8BBF68F2D5 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		433D647A17039DC680DEAE8F /* Products */ = {
+		2F4E4B026DA0CF8BBF68F2D5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F5BF48AA40CAD7891EB709FC /* Kyusei.app */,
+				EE76E342A5302740A3A3F4B3 /* Kyusei.app */,
+				0046B175B20F350A8752634C /* KyuseiWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7773CF984C50048D4EA42A5E /* Kyusei */ = {
+		5DEA007E709F2F1F8477D754 /* js */ = {
 			isa = PBXGroup;
 			children = (
-				7E4E5E885EE29B2740E27D0F /* AppLock.swift */,
-				512F5EC5115474C1D30C9BDF /* Assets.xcassets */,
-				948BD98B1CC8D1397CF32A02 /* Info.plist */,
-				9E798942499A535A81D20E83 /* KyuseiApp.swift */,
-				31D9508AB090223CFB46D1FC /* PrivacyInfo.xcprivacy */,
-				8F44857EAC9C8B703287EB02 /* SelfCheck.swift */,
-				2269E742DE5CDD05D8007AFE /* WebHost.swift */,
+				20AF1A84ED23B5E40D636399 /* eto.js */,
+				6E425F9CDCFF9350E3990634 /* kyusei.js */,
+				F69ED32DEE19F9C269D20F96 /* solar-terms.js */,
 			);
-			path = "Kyusei";
+			path = js;
 			sourceTree = "<group>";
 		};
-		EE225682B58451A7A250D1B8 /* ios */ = {
+		61CFA236DF500AE770C23C82 /* ios */ = {
 			isa = PBXGroup;
 			children = (
-				7773CF984C50048D4EA42A5E /* Kyusei */,
+				A6D3DF2431907655E59D07F8 /* Kyusei */,
+				DB0D47BC1A19CE4AB0332FBB /* KyuseiWidget */,
+				CECA899EAED2533DB40339D9 /* Shared */,
 			);
-			path = "ios";
+			path = ios;
 			sourceTree = "<group>";
 		};
-		7828D25FDDBD8BED31A41404 /* Kyusei */ = {
+		A6D3DF2431907655E59D07F8 /* Kyusei */ = {
 			isa = PBXGroup;
 			children = (
-				EE225682B58451A7A250D1B8 /* ios */,
+				68387DAA16EF7AFFA7424277 /* AppLock.swift */,
+				FD230246568BCC6B3086317E /* Assets.xcassets */,
+				A4BF4090B226F2B7082752A2 /* Info.plist */,
+				EE4166D26A2802048C1D2052 /* KyuseiApp.swift */,
+				A54E80A1AE16F715787B0569 /* PrivacyInfo.xcprivacy */,
+				B36670B5FEB9B89858E39B98 /* SelfCheck.swift */,
+				49290F5C273CF94FCE420AA5 /* WebHost.swift */,
 			);
-			name = "Kyusei";
+			path = Kyusei;
+			sourceTree = "<group>";
+		};
+		CECA899EAED2533DB40339D9 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				BCE0F4FED0E3D11B30EDCE5A /* Yonban.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		DB0D47BC1A19CE4AB0332FBB /* KyuseiWidget */ = {
+			isa = PBXGroup;
+			children = (
+				10F8542324A3DCBA9AAAB8C2 /* KyuseiWidget.swift */,
+				260C524CBC145660731C2893 /* yonban.js */,
+			);
+			path = KyuseiWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		42AEFBAE01D2DFD981F7DA7D /* Kyusei */ = {
+		510AA6FEF12E1E40F3943643 /* Kyusei */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 88A9556C78F4D881C352E222;
+			buildConfigurationList = 3A31E048D998AC14FE299C3D /* Build configuration list for PBXNativeTarget "Kyusei" */;
 			buildPhases = (
-				F3F3D267CF0FD5307403D537 /* Sources */,
-				349B578E88FC623128D2018B /* Frameworks */,
-				41B260B1D2A5E0B273280C8E /* Resources */,
-				EC828B47A4B3AC5A909B28AF /* 鑑定アプリを写す */,
+				70BBB221227D6A8C0F25B2CD /* Sources */,
+				E6E34BFE5B2B0408F77B645B /* Resources */,
+				269C9D318EA4696CCCDECB63 /* Embed Foundation Extensions */,
+				236BF3174E8C347B316B005D /* 鑑定アプリを写す */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4E1502F7F4E64377EE3F80F7 /* PBXTargetDependency */,
+			);
+			name = Kyusei;
+			packageProductDependencies = (
+			);
+			productName = Kyusei;
+			productReference = EE76E342A5302740A3A3F4B3 /* Kyusei.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FA13B5F1F58578F226DCD5E0 /* KyuseiWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A9DAEDDA9A608140D6EB683 /* Build configuration list for PBXNativeTarget "KyuseiWidget" */;
+			buildPhases = (
+				0BD7C43A6EA02CEAFF59387F /* Sources */,
+				B4DB1C22CE135371E6039F9D /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = Kyusei;
-			productName = Kyusei;
-			productReference = F5BF48AA40CAD7891EB709FC /* Kyusei.app */;
-			productType = "com.apple.product-type.application";
+			name = KyuseiWidget;
+			packageProductDependencies = (
+			);
+			productName = KyuseiWidget;
+			productReference = 0046B175B20F350A8752634C /* KyuseiWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		46F86FAA6BBF9AC94A7E4595 /* Project object */ = {
+		43555CFDBC32EA53F73E9500 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1600;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
-					42AEFBAE01D2DFD981F7DA7D = {
-						CreatedOnToolsVersion = 16.0;
+					510AA6FEF12E1E40F3943643 = {
+						DevelopmentTeam = P7442B37HP;
+						ProvisioningStyle = Automatic;
+					};
+					FA13B5F1F58578F226DCD5E0 = {
+						DevelopmentTeam = P7442B37HP;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = 887D4B5F61EA6AAAF609F3AC;
-			compatibilityVersion = "Xcode 14.0";
+			buildConfigurationList = 3265609CCB99EEE4354ED5F0 /* Build configuration list for PBXProject "Kyusei" */;
 			developmentRegion = ja;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				ja,
 				Base,
+				ja,
 			);
-			mainGroup = 2A44C54E23411059C3A1A1E1;
-			productRefGroup = 433D647A17039DC680DEAE8F /* Products */;
+			mainGroup = 22361093FD953A55CB8494A4;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2F4E4B026DA0CF8BBF68F2D5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				42AEFBAE01D2DFD981F7DA7D /* Kyusei */,
+				510AA6FEF12E1E40F3943643 /* Kyusei */,
+				FA13B5F1F58578F226DCD5E0 /* KyuseiWidget */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		41B260B1D2A5E0B273280C8E /* Resources */ = {
+		B4DB1C22CE135371E6039F9D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37669F2F8C6A7B31BF006618 /* Assets.xcassets in Phase */,
-				E599AE924915A268327129E9 /* PrivacyInfo.xcprivacy in Phase */,
+				C7A894B50555A31EE586EFB2 /* eto.js in Resources */,
+				C502707B3897CD483E596FE9 /* kyusei.js in Resources */,
+				DE09F431186D73E05D7C0C75 /* solar-terms.js in Resources */,
+				10717339BF6A17E90E71138B /* yonban.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E6E34BFE5B2B0408F77B645B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				192C227116A7E4120CDA0183 /* Assets.xcassets in Resources */,
+				619DCBA15218FA7FF46B3998 /* PrivacyInfo.xcprivacy in Resources */,
+				D634A59E96C1D96691966EEA /* yonban.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		EC828B47A4B3AC5A909B28AF /* 鑑定アプリを写す */ = {
+		236BF3174E8C347B316B005D /* 鑑定アプリを写す */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
 			inputPaths = (
 			);
 			name = "鑑定アプリを写す";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
+			shellPath = /bin/sh;
 			shellScript = "\"$SRCROOT/ios/copy_web.sh\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		F3F3D267CF0FD5307403D537 /* Sources */ = {
+		0BD7C43A6EA02CEAFF59387F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BDC27093C5B234021E451A3 /* KyuseiApp.swift in Phase */,
-				C3EF543137CB873AB784CE31 /* WebHost.swift in Phase */,
-				123FBE3912F999E54603F460 /* AppLock.swift in Phase */,
-				9A105A2EE072ED16C508B072 /* SelfCheck.swift in Phase */,
+				67C0C60B82F2FA357364F78B /* KyuseiWidget.swift in Sources */,
+				BB481898943CFCF4C3D1D0F0 /* Yonban.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70BBB221227D6A8C0F25B2CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				297257F3F2CC38343984877F /* AppLock.swift in Sources */,
+				5F499B8BC724B1EE4504FA88 /* KyuseiApp.swift in Sources */,
+				77864AB5DEA848B8827DD643 /* SelfCheck.swift in Sources */,
+				9E95B10C953DD24DE0EEFB81 /* WebHost.swift in Sources */,
+				9FDBD8B9F79D5D46ABFD2CB6 /* Yonban.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		4E1502F7F4E64377EE3F80F7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FA13B5F1F58578F226DCD5E0 /* KyuseiWidget */;
+			targetProxy = AB04B49622F14F886EC3A12A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
-		C090A36E8C44B198DDCAC4B9 /* Debug */ = {
+		6AB53B69CDD91D7B82B81B6B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				ONLY_ACTIVE_ARCH = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = ("DEBUG=1", "$(inherited)");
-			};
-			name = Debug;
-		};
-		F57AF71EEE492BC41B443C5A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ios/Kyusei/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "九星鑑定";
+				PRODUCT_BUNDLE_IDENTIFIER = jp.myodenji.kyusei;
+				PRODUCT_NAME = Kyusei;
 			};
 			name = Release;
 		};
-		2D2199B51CAF793C28F0BAB5 /* Debug */ = {
+		93246ADA04FAD26E24F7B8E3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = P7442B37HP;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
 				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = P7442B37HP;
-				CURRENT_PROJECT_VERSION = 1;
-				MARKETING_VERSION = 1.0;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "ios/Kyusei/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "九星鑑定";
-				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks");
-				PRODUCT_BUNDLE_IDENTIFIER = "jp.myodenji.kyusei";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				ONLY_ACTIVE_ARCH = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 			};
 			name = Debug;
 		};
-		3EEF2118F3565E69635E0BF0 /* Release */ = {
+		A0FC4E1D4CCF70974B7A55A3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = P7442B37HP;
-				CURRENT_PROJECT_VERSION = 1;
-				MARKETING_VERSION = 1.0;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "ios/Kyusei/Info.plist";
+				INFOPLIST_FILE = ios/Kyusei/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "九星鑑定";
-				LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/Frameworks");
-				PRODUCT_BUNDLE_IDENTIFIER = "jp.myodenji.kyusei";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
-				SWIFT_COMPILATION_MODE = wholemodule;
-				VALIDATE_PRODUCT = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = jp.myodenji.kyusei;
+				PRODUCT_NAME = Kyusei;
+			};
+			name = Debug;
+		};
+		B5FC0B0BB51AFBC16B28E824 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				INFOPLIST_FILE = ios/KyuseiWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = jp.myodenji.kyusei.widget;
+				PRODUCT_NAME = KyuseiWidget;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
+		};
+		CB5BBC4BEA4B15A64F7AC024 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = P7442B37HP;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FCC6F6F6465356069DC852BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				INFOPLIST_FILE = ios/KyuseiWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = jp.myodenji.kyusei.widget;
+				PRODUCT_NAME = KyuseiWidget;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		887D4B5F61EA6AAAF609F3AC = {
+		1A9DAEDDA9A608140D6EB683 /* Build configuration list for PBXNativeTarget "KyuseiWidget" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C090A36E8C44B198DDCAC4B9 /* Debug */,
-				F57AF71EEE492BC41B443C5A /* Release */,
+				FCC6F6F6465356069DC852BB /* Debug */,
+				B5FC0B0BB51AFBC16B28E824 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		88A9556C78F4D881C352E222 = {
+		3265609CCB99EEE4354ED5F0 /* Build configuration list for PBXProject "Kyusei" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2D2199B51CAF793C28F0BAB5 /* Debug */,
-				3EEF2118F3565E69635E0BF0 /* Release */,
+				93246ADA04FAD26E24F7B8E3 /* Debug */,
+				CB5BBC4BEA4B15A64F7AC024 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
+		};
+		3A31E048D998AC14FE299C3D /* Build configuration list for PBXNativeTarget "Kyusei" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0FC4E1D4CCF70974B7A55A3 /* Debug */,
+				6AB53B69CDD91D7B82B81B6B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+	rootObject = 43555CFDBC32EA53F73E9500 /* Project object */;
 }

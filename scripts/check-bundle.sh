@@ -35,7 +35,7 @@ done
 
 # 入っていてはならないもの
 for pat in "*.pdf" "*.xlsx" "service-worker.js" "*.command" "README.md" \
-           "wrangler.toml" ".assetsignore"; do
+           "wrangler.toml" ".assetsignore" "project.yml"; do
   found=$(find "$APP" -name "$pat" 2>/dev/null | head -3)
   [ -z "$found" ] && ok "$pat は入っていない" || ng "$pat が入っている" "$found"
 done
@@ -45,6 +45,14 @@ for f in kan-data.js kyusei-meaning-data.js hizu-data.js houi-data.js gogyou-dat
   found=$(find "$APP" -name "$f" 2>/dev/null | head -1)
   [ -z "$found" ] && ok "$f は入っていない" || ng "$f が入っている" "$found"
 done
+
+# 四盤のウィジェット。計算の JS と盤の組み方だけを持ち、相談者の記録（web/）は持たない
+W="$APP/PlugIns/KyuseiWidget.appex"
+for p in solar-terms.js eto.js kyusei.js yonban.js Info.plist; do
+  [ -e "$W/$p" ] && ok "ウィジェットに $p がある" || ng "ウィジェットに $p が無い"
+done
+[ ! -e "$W/web" ] && ok "ウィジェットは鑑定アプリの画面を持たない" || ng "ウィジェットに web/ が入っている"
+[ -e "$APP/yonban.js" ] && ok "yonban.js がある（自己確認で突き合わせる）" || ng "yonban.js が無い"
 
 # 申告のたぐい
 for key in NSMicrophoneUsageDescription NSSpeechRecognitionUsageDescription \

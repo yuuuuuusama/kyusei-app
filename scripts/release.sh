@@ -28,6 +28,9 @@ ARCHIVE="$BUILD/Kyusei.xcarchive"
 EXPORT="$BUILD/export"
 KEY_ID="43C7HV2U64"   # ~/.appstoreconnect/private_keys/AuthKey_<これ>.p8
 
+echo "▼ プロジェクトを作り直す"
+/Users/myoudennji/.local/bin/xcodegen generate >/dev/null
+
 echo "▼ 版を上げる"
 # 送るたびにビルド番号を上げないと App Store Connect が受け取らない。
 # 日時から作るので、手で数えなくてよい。
