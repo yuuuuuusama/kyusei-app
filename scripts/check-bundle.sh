@@ -48,7 +48,7 @@ done
 
 # 四盤のウィジェット。計算の JS と盤の組み方だけを持ち、相談者の記録（web/）は持たない
 W="$APP/PlugIns/KyuseiWidget.appex"
-for p in solar-terms.js eto.js kyusei.js yonban.js Info.plist; do
+for p in solar-terms.js eto.js kyusei.js kantei.js yonban.js Info.plist; do
   [ -e "$W/$p" ] && ok "ウィジェットに $p がある" || ng "ウィジェットに $p が無い"
 done
 [ ! -e "$W/web" ] && ok "ウィジェットは鑑定アプリの画面を持たない" || ng "ウィジェットに web/ が入っている"

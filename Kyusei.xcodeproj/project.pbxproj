@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04A8C934FDD9D48D1ACC8CDF /* kantei.js in Resources */ = {isa = PBXBuildFile; fileRef = 849BB8FF3FD73C2DCBB0A85A /* kantei.js */; };
 		10717339BF6A17E90E71138B /* yonban.js in Resources */ = {isa = PBXBuildFile; fileRef = 260C524CBC145660731C2893 /* yonban.js */; };
 		192C227116A7E4120CDA0183 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD230246568BCC6B3086317E /* Assets.xcassets */; };
 		297257F3F2CC38343984877F /* AppLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68387DAA16EF7AFFA7424277 /* AppLock.swift */; };
@@ -56,6 +57,7 @@
 		49290F5C273CF94FCE420AA5 /* WebHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebHost.swift; sourceTree = "<group>"; };
 		68387DAA16EF7AFFA7424277 /* AppLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLock.swift; sourceTree = "<group>"; };
 		6E425F9CDCFF9350E3990634 /* kyusei.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = kyusei.js; sourceTree = "<group>"; };
+		849BB8FF3FD73C2DCBB0A85A /* kantei.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = kantei.js; sourceTree = "<group>"; };
 		A4BF4090B226F2B7082752A2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A54E80A1AE16F715787B0569 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		B36670B5FEB9B89858E39B98 /* SelfCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfCheck.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				20AF1A84ED23B5E40D636399 /* eto.js */,
+				849BB8FF3FD73C2DCBB0A85A /* kantei.js */,
 				6E425F9CDCFF9350E3990634 /* kyusei.js */,
 				F69ED32DEE19F9C269D20F96 /* solar-terms.js */,
 			);
@@ -223,6 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7A894B50555A31EE586EFB2 /* eto.js in Resources */,
+				04A8C934FDD9D48D1ACC8CDF /* kantei.js in Resources */,
 				C502707B3897CD483E596FE9 /* kyusei.js in Resources */,
 				DE09F431186D73E05D7C0C75 /* solar-terms.js in Resources */,
 				10717339BF6A17E90E71138B /* yonban.js in Resources */,

@@ -3,11 +3,12 @@ import JavaScriptCore
 
 /// その日時の四盤（年盤・月盤・日盤・時盤）。
 ///
-/// 計算は鑑定アプリの JS（solar-terms.js・eto.js・kyusei.js）を JavaScriptCore でそのまま動かす。
+/// 計算は鑑定アプリの JS（solar-terms.js・eto.js・kyusei.js・kantei.js）を JavaScriptCore でそのまま動かす。
 /// Swift に写し直さないのは、写せば鑑定書とウィジェットで答えが食い違いうるため。
 /// 盤の並べ方は `yonban.js`（js/app.js の drawBan と同じ決まり）。
 ///
-/// 盤変化（鑑定書で中宮星が重なったときの変化）は当てない。暦のとおりの四盤。
+/// 盤変化は鑑定書の相談日（上段）と同じに当てる（js/kantei.js の transformCenters）。
+/// 年盤・日盤は変わらず、月盤・時盤が隣の盤と中宮星が重なったときに変わる。
 struct Yonban: Decodable, Equatable {
     let year: Int
     let month: Int
@@ -23,8 +24,13 @@ struct Yonban: Decodable, Equatable {
     struct Board: Decodable, Equatable {
         /// 年・月・日・時
         let kind: String
+        /// 盤変化の後の中宮星（盤に並べる星）
         let center: Int
         let centerName: String
+        /// 暦のとおりの中宮星（盤変化の前）
+        let rawCenter: Int
+        /// 盤変化で中宮星が変わったか
+        let shifted: Bool
         /// その盤の中宮の干支（年干支・月干支…）
         let eto: String
         /// 宮 0..8 = 北西, 北, 北東, 西, 中宮, 東, 南西, 南, 南東
@@ -60,7 +66,7 @@ struct Yonban: Decodable, Equatable {
 /// 四盤を組む。JS を一度だけ読み込み、日時を替えて何度でも組める。
 final class YonbanEngine {
     /// 読み込む順（後のものが前のものを使う）
-    static let scripts = ["solar-terms", "eto", "kyusei", "yonban"]
+    static let scripts = ["solar-terms", "eto", "kyusei", "kantei", "yonban"]
 
     private let context: JSContext
     private(set) var lastError: String?

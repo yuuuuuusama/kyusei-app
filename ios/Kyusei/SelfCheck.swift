@@ -80,7 +80,7 @@ enum SelfCheck {
             f.locale = Locale(identifier: "en_US_POSIX")
             f.timeZone = .current
             f.dateFormat = "yyyy-MM-dd'T'HH:mm"
-            var compared = 0, skipped = 0, wrong = 0
+            var compared = 0, shifted = 0, wrong = 0
             for t in yonbanTimes {
                 _ = await js(setConsult(t))
                 try? await Task.sleep(for: .milliseconds(400))
@@ -93,9 +93,15 @@ enum SelfCheck {
                 for (i, board) in mine.boards.enumerated() {
                     let d = drawn[i]
                     guard d.count == 9 else { say(false, "四盤 \(t) \(board.kind)盤", "\(d.count)マス"); wrong += 1; continue }
-                    // 鑑定書は月盤・時盤に盤変化を当てることがある。ウィジェットは暦のとおりなので外す
-                    if (board.kind == "月" || board.kind == "時"), d[4].star != board.cells[4].starName { skipped += 1; continue }
+                    // 盤変化も鑑定書と同じに当てるので、四盤とも外さずに比べる
                     compared += 1
+                    if board.shifted {
+                        shifted += 1
+                        if board.kind == "年" || board.kind == "日" || board.rawCenter == board.center {
+                            wrong += 1
+                            say(false, "四盤 \(t) \(board.kind)盤", "変わらないはずの盤が変わった・印が合わない")
+                        }
+                    }
                     for c in board.cells where d[c.pos] != DrawnCell(c) {
                         wrong += 1
                         say(false, "四盤 \(t) \(board.kind)盤 \(c.direction)",
@@ -104,8 +110,8 @@ enum SelfCheck {
                     }
                 }
             }
-            say(wrong == 0 && compared >= 52, "四盤を鑑定書と突き合わせた",
-                "\(compared) 盤（盤変化で外した \(skipped)・違い \(wrong)）")
+            say(wrong == 0 && compared == yonbanTimes.count * 4 && shifted >= 12, "四盤を鑑定書と突き合わせた",
+                "\(compared) 盤（うち盤変化 \(shifted)・違い \(wrong)）")
             let now = engine.at(Date())
             say(now?.boards.count == 4, "今の四盤を組める",
                 now.map { $0.boards.map { "\($0.kind)\($0.centerName)" }.joined(separator: " ") } ?? "")
@@ -162,10 +168,17 @@ enum SelfCheck {
     }
 
     /// 四盤を突き合わせる日時。陽遁・陰遁、23 時（翌日の日干）、立春・節入りの前後、遁の切り替わりの前後。
+    /// 後の段は盤変化が起きる日時（年月・月日・日時・月日時・年月日の重なり、五黄の変化、対冲が逆の隣と被る定位）。
     private static let yonbanTimes = [
         "2026-09-29T10:30", "2026-09-29T23:15", "2026-09-30T00:10", "2026-06-21T12:00", "2026-12-22T05:00",
         "2026-02-03T20:00", "2026-02-04T08:00", "2026-02-05T08:00", "2027-01-05T12:00", "2027-01-06T12:00",
         "2025-07-15T16:40", "2025-12-31T22:59", "2030-03-05T09:00", "2031-08-08T13:00", "2019-05-01T00:00",
+        // 年月 重なり（一白が対冲の九紫でなく定位の五黄へ）・月日・日時・月日時・年月日
+        "2026-09-08T10:30", "2026-09-09T14:30", "2026-01-07T10:30", "2026-01-01T10:30", "2026-11-11T14:30",
+        "2026-09-16T10:30",
+        // 五黄の時盤（陽遁は八白、陰遁は二黒）・2029〜2030 年
+        "2027-01-07T02:20", "2027-06-18T20:20", "2029-03-03T10:30", "2029-07-05T10:30", "2030-05-04T10:30",
+        "2030-10-04T10:30",
     ]
 
     /// 生年月日は固定し、相談日時だけを替えて計算させる

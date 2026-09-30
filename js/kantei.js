@@ -687,6 +687,8 @@
 
   global.Kantei = {
     computeKantei,
+    // 相談日側の盤変化。ウィジェット「今日の四盤」(ios/KyuseiWidget/yonban.js) もこれを使う
+    transformCenters,
     compute60YearFlow,
     compute60YearFlowTable,
     computeYearFlowDetail,

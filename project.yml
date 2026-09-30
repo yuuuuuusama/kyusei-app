@@ -6,7 +6,7 @@
 # 法輪アプリ（horin-ios）と同じ XcodeGen に移した。
 #
 # 鑑定アプリの中身（HTML・JS）は組み立てのたびに ios/copy_web.sh が束の web/ へ丸ごと写す。
-# ウィジェットは web を持たず、四盤の計算に要る JS（js/solar-terms.js・eto.js・kyusei.js）と
+# ウィジェットは web を持たず、四盤の計算に要る JS（js/solar-terms.js・eto.js・kyusei.js・kantei.js）と
 # 盤の組み方（ios/KyuseiWidget/yonban.js）だけを束に入れる。どれも写しではなく、同じファイルを指す。
 name: Kyusei
 options:
@@ -64,6 +64,8 @@ targets:
       - path: js/eto.js
         buildPhase: resources
       - path: js/kyusei.js
+        buildPhase: resources
+      - path: js/kantei.js
         buildPhase: resources
     info:
       path: ios/KyuseiWidget/Info.plist

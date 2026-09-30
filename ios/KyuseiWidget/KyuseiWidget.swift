@@ -4,6 +4,7 @@ import WidgetKit
 /// 九星鑑定のウィジェット。
 ///
 /// 今日の四盤（年盤・月盤・日盤・時盤）を出す。計算は鑑定アプリと同じ JS（`YonbanEngine`）。
+/// 盤変化は鑑定書の相談日と同じに当て、変わった盤の名の横に小さく「変」と添える。
 /// 相談者の情報は一切使わない（暦だけ）。錠の掛かったアプリの記録には触れない。
 @main
 struct KyuseiWidgetBundle: WidgetBundle {
@@ -135,6 +136,12 @@ struct YonbanWidgetView: View {
                 Text(verbatim: "\(board.kind)盤")
                     .font(.system(size: style == .full ? 10 : 8.5, weight: .semibold, design: .serif))
                     .foregroundStyle(tone.kin)
+                if board.shifted {
+                    // 盤変化を当てた盤。鑑定書の相談日と同じ
+                    Text("変")
+                        .font(.system(size: style == .full ? 8 : 7, design: .serif))
+                        .foregroundStyle(tone.ink.opacity(0.45))
+                }
                 if style != .numeral {
                     Text(board.eto)
                         .font(.system(size: style == .full ? 10 : 8.5, design: .serif))
@@ -151,8 +158,8 @@ struct YonbanWidgetView: View {
         HStack(spacing: 10) {
             Text("ア").foregroundStyle(tone.shu).bold() + Text(" 暗剣殺").foregroundStyle(tone.ink.opacity(0.6))
             Text("ハ").foregroundStyle(tone.ai).bold() + Text(" 破").foregroundStyle(tone.ink.opacity(0.6))
+            Text("変").foregroundStyle(tone.ink.opacity(0.6)) + Text(" 盤変化").foregroundStyle(tone.ink.opacity(0.6))
             Spacer(minLength: 0)
-            Text("盤変化は当てていません").foregroundStyle(tone.ink.opacity(0.4))
         }
         .font(.system(size: 8.5))
         .lineLimit(1)
